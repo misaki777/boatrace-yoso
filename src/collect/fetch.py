@@ -34,6 +34,10 @@ TIMEOUT_SEC = 30
 URL_TEMPLATES = {
     "turnmark": "https://turnmark.github.io/api/v1/{year}/{ymd}.json",
     "openapi": "https://boatraceopenapi.github.io/api/v1/{year}/{ymd}.json",
+    # 旧API(v3)。取得は src/collect/fetch_legacy.py から(PC で夜間のみ)
+    "legacy_programs": "https://boatraceopenapi.github.io/programs/v3/{year}/{ymd}.json",
+    "legacy_previews": "https://boatraceopenapi.github.io/previews/v3/{year}/{ymd}.json",
+    "legacy_results": "https://boatraceopenapi.github.io/results/v3/{year}/{ymd}.json",
 }
 MIN_SLEEP_SEC = 1.0
 DEFAULT_SLEEP_SEC = 1.5
@@ -100,6 +104,9 @@ def is_final(source: str, target: date, fetched_at: datetime) -> bool:
     """取得時点でそのデータを確定とみなせるか。"""
     if source == "turnmark":
         return True
+    if source.startswith("legacy_"):
+        # 旧API: 対象日の翌々日以降に取得していれば確定
+        return fetched_at.date() >= target + timedelta(days=2)
     threshold = datetime.combine(target + timedelta(days=1), datetime.min.time(), JST) + timedelta(
         hours=OPENAPI_FINAL_HOUR
     )
@@ -109,6 +116,15 @@ def is_final(source: str, target: date, fetched_at: datetime) -> bool:
 def check_payload(source: str, data) -> list[str]:
     """保存前の簡易チェック。異常があれば warning の文字列を返す(保存はする)。"""
     warnings = []
+    if source.startswith("legacy_"):
+        kind = source.removeprefix("legacy_")
+        races = data.get(kind) if isinstance(data, dict) else None
+        if not isinstance(races, list):
+            return [f"トップレベルが {{{kind}: [...]}} ではない"]
+        n_stadiums = len({r.get("stadium_number") for r in races if isinstance(r, dict)})
+        if not 1 <= n_stadiums <= 24:
+            warnings.append(f"開催場数が範囲外: {n_stadiums}")
+        return warnings
     programs = data.get("programs") if isinstance(data, dict) else None
     stadiums = programs.get("stadiums") if isinstance(programs, dict) else None
     if not isinstance(stadiums, dict):

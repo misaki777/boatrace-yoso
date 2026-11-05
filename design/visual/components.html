@@ -58,7 +58,7 @@
 
 <div class="page">
   <h1>部品カタログ</h1>
-  <p class="note">デザイナーB 案 v0.6 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
+  <p class="note">デザイナーB 案 v0.8 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
 
   <div class="themebar">
     <div class="seg" role="tablist" aria-label="表示モード">
@@ -599,6 +599,53 @@
   </nav>
   <h3>吹き出し(.tip)</h3>
   <div class="card"><div class="row"><b>合成オッズ</b><button class="help" aria-expanded="true" aria-label="合成オッズとは">?</button></div><div class="tip">選んだ買い目を同じ金額で買ったとき、どれが当たっても戻る倍率の目安。</div></div>
+
+  <!-- ===== v0.7(DB-6: Phase 3b) ===== -->
+  <h2>25. 更新停止の帯</h2>
+  <div class="stale" role="status"><svg><use href="#i-alert"/></svg><div class="stale__body"><b>データの更新が止まっています</b><span>最終更新 <span class="stale__time">14:05</span>(2時間前)。表示中の予想・結果は古い可能性があります。</span></div><button class="stale__close" aria-label="閉じる">閉じる</button></div>
+  <div class="row" style="margin-top:8px"><span class="u-muted" style="font-size:12px">アプリバーの更新時刻:</span><span class="updated-at is-stale num" style="font-size:12px">更新 08:10</span><span class="u-muted" style="font-size:12px">/ 選手名:</span><button class="racer-link">中村 健</button></div>
+  <h3>カードが無い日・読み込み失敗</h3>
+  <div class="emptybox"><svg><use href="#i-info"/></svg><b>この日の選手カードはありません</b><span>選手カードは当日と前日の分だけ見られます。</span></div>
+  <h3>ミニ着順(.mini、A の名前)</h3>
+  <div class="mini"><span class="p1">1</span><span class="p2">2</span><span>6</span><span>4</span><span class="pf">F</span></div>
+  <p class="note">最終成功から90分を超えたとき画面上部に(.stale--sticky)。開催時間中だけ。閉じても、次に開いて古ければまた出す。</p>
+
+  <h2>26. 展開予想(決まり手の確率)</h2>
+  <div class="card tenkai">
+    <div class="row"><span class="chip chip--pre">前日版 07:30 確定</span></div>
+    <div class="tenkai__hero"><span class="boat boat--lg boat-1">1</span><div class="tenkai__hero-text"><span class="tenkai__hero-label">1コース(1号艇)が逃げる確率</span><span class="tenkai__hero-val num">55<small>%</small></span></div></div>
+    <div><div class="tkbar" aria-hidden="true"><i class="tk-nige" style="--p:0.55"></i><i class="tk-sashi" style="--p:0.18"></i><i class="tk-makuri" style="--p:0.14"></i><i class="tk-makurizashi" style="--p:0.09"></i><i class="tk-other" style="--p:0.04"></i></div><div class="tkbar-labels" aria-hidden="true"><span style="--p:0.55">逃げ 55%</span><span style="--p:0.18">差し 18%</span><span style="--p:0.14"></span><span style="--p:0.09"></span><span style="--p:0.04"></span></div></div>
+    <ul class="tk-rows" aria-label="決まり手ごとの確率"><li class="tk-row is-main"><span class="tk-row__name">逃げ</span><div class="pbar" style="--p:0.55"><span class="pbar__fill"></span></div><span class="tk-row__pct">55%</span></li><li class="tk-row"><span class="tk-row__name">差し</span><div class="pbar" style="--p:0.18"><span class="pbar__fill"></span></div><span class="tk-row__pct">18%</span></li><li class="tk-row"><span class="tk-row__name">まくり</span><div class="pbar" style="--p:0.14"><span class="pbar__fill"></span></div><span class="tk-row__pct">14%</span></li><li class="tk-row"><span class="tk-row__name">まくり差し</span><div class="pbar" style="--p:0.09"><span class="pbar__fill"></span></div><span class="tk-row__pct">9%</span></li><li class="tk-row"><span class="tk-row__name">その他</span><div class="pbar" style="--p:0.04"><span class="pbar__fill"></span></div><span class="tk-row__pct">4%</span></li></ul>
+    <div class="oddsnote"><svg><use href="#i-info"/></svg><span>着順の確率とは別のモデルで計算しているため、数字が一致しないことがあります。</span></div>
+  </div>
+  <p class="note">逃げ = 塗り + ★ + 太字、差し・まくり・まくり差し = 向きの違う斜線、その他 = 破線。帯の下には15%以上の区間だけ名前と%を書き、全部の値は下の行に必ず書く。</p>
+
+  <h2>27. 選手カード(シート)</h2>
+  <section class="sheet sheet--inline" role="dialog" aria-labelledby="rc-title">
+    <div class="sheet__handle"></div>
+    <header class="sheet__head"><span class="boat boat--lg boat-3">3</span><div><div class="sheet__title" id="rc-title">中村 健</div><div class="sheet__sub">4321 · A2 · 静岡</div></div><button class="sheet__close" aria-label="閉じる">×</button></header>
+    <div class="sheet__body">
+      <div class="sheet__sec"><h4>出走表の成績</h4>
+        <dl class="statgrid"><div><dt>全国勝率</dt><dd class="best-value">6.85</dd></div><div><dt>当地勝率</dt><dd>5.92</dd></div><div><dt>平均ST</dt><dd>0.15</dd></div><div><dt>全国2連率</dt><dd>48.1%</dd></div><div><dt>当地2連率</dt><dd>39.0%</dd></div><div><dt>F / L</dt><dd>1 / 0 <span class="flag-f">F1</span></dd></div></dl></div>
+      <div class="sheet__sec"><h4>今節の着順<small>前日まで</small></h4>
+        <ol class="fins fins--detail" aria-label="今節の着順"><li class="fin fin--2">2<small>11/2 5R</small></li><li class="fin fin--1">1<small>11/2 10R</small></li><li class="fin fin--6">6<small>11/3 3R</small></li><li class="fin fin--3">3<small>11/3 8R</small></li></ol></div>
+      <div class="sheet__sec"><h4>コース別<small>自前の集計・直近の全期間</small></h4>
+        <table class="cstable"><thead><tr><th>コース</th><th>件数</th><th>1着</th><th>2着</th><th>3着</th><th>平均ST</th></tr></thead><tbody><tr class=""><td><span class="course">1</span></td><td class="n">42</td><td>52%</td><td>19%</td><td>12%</td><td>0.14</td></tr><tr class=""><td><span class="course">2</span></td><td class="n">38</td><td>18%</td><td>24%</td><td>18%</td><td>0.15</td></tr><tr class="is-plan"><td><span class="course">3</span></td><td class="n">35</td><td>14%</td><td>17%</td><td>20%</td><td>0.15</td></tr><tr class=""><td><span class="course">4</span></td><td class="n">31</td><td>12%</td><td>15%</td><td>17%</td><td>0.16</td></tr><tr class="is-lown"><td><span class="course">5</span></td><td class="n">8</td><td>13%</td><td>13%</td><td>25%</td><td>0.17</td></tr><tr class="is-lown"><td><span class="course">6</span></td><td class="n">4</td><td>0%</td><td>25%</td><td>25%</td><td>0.18</td></tr></tbody></table></div>
+      <div class="sheet__sec"><h4>直近10走</h4>
+        <ol class="fins" aria-label="直近10走"><li class="fin fin--1">1</li><li class="fin fin--2">2</li><li class="fin fin--6">6</li><li class="fin fin--4">4</li><li class="fin fin--1">1</li><li class="fin fin--3">3</li><li class="fin fin--f">F</li><li class="fin fin--5">5</li><li class="fin fin--2">2</li><li class="fin fin--x">欠</li></ol></div>
+      <div class="sheet__sec"><h4>選手単位</h4>
+        <dl class="statgrid"><div><dt>フライング率</dt><dd>1.2%<small>402走</small></dd></div><div><dt>出遅れ率</dt><dd>0.5%<small>402走</small></dd></div><div class="is-lown"><dt>前付け率</dt><dd>4.0%<small>25走</small></dd></div></dl></div>
+      <p class="sheet__note">率は自前の集計で、公式の成績とは計算の仕方が違います。件数が少ない値は薄く表示しています。</p>
+    </div>
+  </section>
+  <p class="note">着順: 1着 = 塗り、2・3着 = 太い枠、4〜6着 = 細い枠、F・L・欠 = 赤の破線。コース別の今回の行は 淡い藍 + 左の帯 + 「今回」、件数10未満は薄く + 「参考」。</p>
+
+  <h2>28. モデルの更新履歴(S5)</h2>
+  <div class="card"><ol class="mhists">
+    <li class="mhist mhist--adopted"><span class="mhist__date num">2026-12-02</span><div class="mhist__head"><span class="mhist__tag">切り替えた</span><span class="mhist__id">pre_20261202_a9c1</span></div><div class="mhist__body">基準 a〜e をすべて満たした。<span class="mhist__metric">logloss <b>1.301</b>(前 1.305)</span></div></li>
+    <li class="mhist mhist--kept"><span class="mhist__date num">2026-11-04</span><div class="mhist__head"><span class="mhist__tag">切り替えなし</span><span class="mhist__id">pre_20261104_77b0</span></div><div class="mhist__body">基準 c(較正)を満たさなかったため、今のモデルのまま。<span class="mhist__metric">logloss <b>1.309</b>(今 1.305)</span></div></li>
+  </ol></div>
+  <p class="note">「切り替えた」= 藍の太枠 + ⇄、「切り替えなし」= 灰の枠 + ＝。大きさは同じ。</p>
 </div>
 
 <script src="charts.js"></script>

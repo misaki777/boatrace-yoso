@@ -49,7 +49,7 @@
   </section>
 
   <section class="card">
-    <div class="card__head"><h2 class="card__title">データの状態</h2></div>
+    <div class="card__head"><h2 class="card__title">データの状態</h2><a class="right" href="#/about/models">モデルの更新履歴 ›</a></div>
     <div class="prose" style="font-size:12px">
       <p>データの出どころ: <b>公開版</b>(GitHub Pages。オッズの数値なし)<br>データ生成: 2026-11-02 21:05<br>モデル: pre_20261101_a1b2(学習 〜10/31)<br>データ形式: schema_version 1 · アプリ版: 0.1.0</p>
     </div>
@@ -102,7 +102,7 @@
   </section>
 
   <section class="card">
-    <div class="card__head"><h2 class="card__title">データの状態</h2></div>
+    <div class="card__head"><h2 class="card__title">データの状態</h2><a class="right" href="#/about/models">モデルの更新履歴 ›</a></div>
     <div class="prose" style="font-size:12px">
       <p>データの出どころ: <b>ローカル</b>(PC の data-local。締切前オッズ・期待値の数値あり。私的使用のため公開しない)<br>オフライン表示: 使えません(LAN の http のため)<br>データ生成: 2026-11-02 21:05<br>モデル: pre_20261101_a1b2(学習 〜10/31)<br>データ形式: schema_version 1 · アプリ版: 0.1.0</p>
     </div>
@@ -115,6 +115,28 @@
   </nav>
 </div>
 </section>
+<!-- ================================================================= -->
+<section class="state" data-state="models" data-title="モデルの更新履歴(S5 から入る・DA-6)">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/about">‹</a>
+    <h1 class="appbar__title">モデルの更新履歴</h1>
+  </header>
+  <section class="card"><p class="card__note" style="padding-top:12px">毎月、新しいデータで学び直した候補を、前月のデータで今のモデルと比べ、決めた基準をすべて満たしたときだけ切り替えています。確定した予想は、切り替えの後も書き換えません。</p>
+    <div class="mh"><div class="t">2026-12-02 <span class="res">切り替えた</span><span class="fewnote" style="margin-left:auto">前日版</span></div><div class="k">候補 pre_20261202_7c1d · 比較に使った月 2026-11</div><table class="tbl" style="margin-top:4px"><tr><td>1着 logloss(候補/今)</td><td>1.301 / 1.305</td></tr><tr><td>較正のずれ ECE(候補/今)</td><td>0.021 / 0.024</td></tr></table><div class="fewnote">基準 a〜e を満たした</div></div>
+    <div class="mh"><div class="t">2026-11-01 <span class="res">切り替えた</span><span class="fewnote" style="margin-left:auto">前日版</span></div><div class="k">候補 pre_20261101_a1b2 · 比較に使った月 2026-10</div><table class="tbl" style="margin-top:4px"><tr><td>1着 logloss(候補/今)</td><td>1.312 / 1.318</td></tr><tr><td>較正のずれ ECE(候補/今)</td><td>0.024 / 0.027</td></tr></table><div class="fewnote">基準 a〜e を満たした</div></div>
+    <div class="mh"><div class="t">2026-10-01 <span class="res">切り替えず</span><span class="fewnote" style="margin-left:auto">前日版</span></div><div class="k">候補 pre_20261001_e5f0 · 比較に使った月 2026-09</div><table class="tbl" style="margin-top:4px"><tr><td>1着 logloss(候補/今)</td><td>1.320 / 1.319</td></tr><tr><td>較正のずれ ECE(候補/今)</td><td>0.030 / 0.026</td></tr></table><div class="fewnote">候補は基準を満たさなかったため、切り替えていません(a: 改善が0.002未満、c: 較正が悪化)</div></div>
+  </section>
+  <p class="disclaimer">指標は小さいほど良い。切り替えは翌日の朝の予想から効きます。</p>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
 <script src="mock.js"></script>
 </body>
 </html>

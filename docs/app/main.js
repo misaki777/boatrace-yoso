@@ -4,7 +4,7 @@ import { html, toHtmlString } from './html.js';
 import { initClock, todayJst, fmtUpdated, fmtMonthDay, isClockFixed } from './time.js';
 import { fmtRoi } from './format.js';
 import {
-  peek, loadIndex, loadDay, loadPerformance, describeError, onProvisional, lastFetchedAt, isLocalData, isLocalMode, dataBase,
+  peek, load, loadIndex, loadDay, loadPerformance, describeError, onProvisional, lastFetchedAt, isLocalData, isLocalMode, dataBase,
 } from './data.js';
 import {
   getSettings, saveSettings, resetSettings, isCustomSettings, takeResetNotice, getDisplay, saveDisplay, applyTheme,
@@ -17,6 +17,8 @@ import { settingsView } from './views/settings.js';
 import * as localdb from './localdb.js';
 import { summarize, byMonth, budgetWarnings, normalizeBudget, normalizeMarks, markStats } from './ledger.js';
 import { ledgerView, marksView } from './views/ledger.js';
+import { racerSheet, modelsView } from './views/phase3b.js';
+import { ICONS, tabbar } from './parts.js';
 import { copyText, ALLOCATION_METHODS } from './betsum.js';
 import { currentAllocation } from './views/race.js';
 import { t, WORDING } from './wording.js';
@@ -56,6 +58,7 @@ function parseRoute() {
   if (hash === '/performance') return { name: 'performance' };
   if (hash === '/about') return { name: 'about' };
   if (hash === '/ledger') return { name: 'ledger' };
+  if (hash === '/models') return { name: 'models' };
   if (hash === '/marks') return { name: 'marks' };
   if (hash === '/settings' || hash === '/settings/worker') return { name: 'settings', focus: hash.endsWith('/worker') ? 'worker' : null };
   return { name: 'unknown' };
@@ -468,6 +471,7 @@ function render() {
     else if (route.name === 'settings') view = renderSettings(route);
     else if (route.name === 'ledger') view = renderLedger();
     else if (route.name === 'marks') view = renderMarks();
+    else if (route.name === 'models') view = renderModels();
     else view = renderAbout();
   } catch (e) {
     console.error(e);
@@ -486,6 +490,7 @@ function titleFor(route) {
   if (route.name === 'about') return `その他 - ${base}`;
   if (route.name === 'settings') return `設定 - ${base}`;
   if (route.name === 'ledger') return `収支 - ${base}`;
+  if (route.name === 'models') return `${t('models.heading')} - ${base}`;
   if (route.name === 'marks') return `自分の予想の成績 - ${base}`;
   if (route.name === 'race') {
     const h1 = appEl.querySelector('.appbar__title');
@@ -602,6 +607,12 @@ window.addEventListener('scroll', updateHeadSwap, { passive: true });
 let sheetReturnFocus = null;
 
 function renderSheet() {
+  if (state.card) {
+    const had = !!overlayEl.querySelector('[data-cardsheet]');
+    overlayEl.innerHTML = toHtmlString(racerSheet(state.card));
+    if (!had) { const el = overlayEl.querySelector('[data-cardsheet]'); if (el) el.focus(); }
+    return;
+  }
   const idx = peek('index.json');
   if (!state.sheetOpen || !idx) {
     overlayEl.innerHTML = '';
@@ -765,6 +776,12 @@ document.addEventListener('click', (e) => {
     case 'alloc-budget-reset':
       saveAlloc({ ...getAlloc(), budget: null });
       render();
+      break;
+    case 'card-open':
+      openCard(el, route);
+      break;
+    case 'card-close':
+      closeCard();
       break;
     case 'help':
       toggleHelp(el);
@@ -1068,7 +1085,7 @@ document.addEventListener('toggle', (e) => {
 }, true);
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeHelp();
+  if (e.key === 'Escape') { closeHelp(); if (state.card) closeCard(); }
   if (e.key === 'Escape' && state.sheetOpen) closeSheet();
 });
 
@@ -1129,6 +1146,7 @@ document.addEventListener('pointermove', (e) => {
 
 window.addEventListener('hashchange', () => {
   state.cameFromApp = true;
+  state.card = null;
   if (parseRoute().name !== 'settings') {
     state.settingsResetNotice = false;
     state.workerFocused = false;
@@ -1342,15 +1360,67 @@ function staleState() {
 
 function insertStale() {
   const s = staleState();
+  appEl.classList.toggle('has-stale', !!s && stale.dismissedFor !== (s && s.last));
   if (!s || stale.dismissedFor === s.last) return;
   const bar = appEl.querySelector('.appbar');
   if (!bar) return;
   const host = document.createElement('div');
   host.className = 'stale-host';
-  host.innerHTML = toHtmlString(html`<div class="banner banner--warn banner--stack" role="status"><span class="banner__icon" aria-hidden="true">!</span>
-    <div class="banner__body"><b class="banner__title">${t('stale.banner', { time: fmtUpdated(s.last, todayJst()) })}</b><span class="banner__text">${t('stale.detail', { min: s.min })}</span></div>
-    <button class="banner__close" data-action="stale-close" data-last="${s.last}" aria-label="閉じる">閉じる</button></div>`);
+  host.innerHTML = toHtmlString(html`<div class="stale" role="status"><div class="stale__body"><b>${t('stale.banner', { time: fmtUpdated(s.last, todayJst()) })}</b><span>${t('stale.detail', { min: s.min })}</span></div>
+    <button class="stale__close" data-action="stale-close" data-last="${s.last}" aria-label="閉じる">閉じる</button></div>`);
   bar.after(host);
+}
+
+// ---------------------------------------------------------------- 選手カード(W-16)・モデルの更新履歴(W-17)
+
+/** 選手カードを開く。racers/YYYYMMDD.json は開いたときに初めて読む。失敗しても S2 は壊さない */
+function openCard(el, route) {
+  const parsed = parseRaceId(route.raceId);
+  if (!parsed) return;
+  const cur = currentRace(route);
+  const b = cur && cur.race.prediction ? cur.race.prediction.boats.find((x) => String(x.entry) === el.dataset.entry) : null;
+  const course = b ? (b.exhibition_course || b.entry) : Number(el.dataset.entry);
+  state.cardReturn = el;
+  const path = `racers/${parsed.compact}.json`;
+  const base = { entry: Number(el.dataset.entry), name: el.dataset.name, state: { status: 'loading', course } };
+  state.card = base;
+  renderSheet();
+  load(path).then((entry) => {
+    if (state.card !== base) return;
+    const j = entry.json;
+    const racer = j.racers ? j.racers[el.dataset.racer] : null;
+    state.card = { ...base, state: { status: racer ? 'ok' : 'failed', racer, course, techniques: j.techniques } };
+    renderSheet();
+  }).catch((err) => {
+    if (state.card !== base) return;
+    state.card = { ...base, state: { status: err && err.kind === 'notfound' ? 'none' : 'failed', course } };
+    renderSheet();
+  });
+}
+function closeCard() {
+  if (!state.card) return;
+  state.card = null;
+  renderSheet();
+  if (state.cardReturn && document.body.contains(state.cardReturn)) state.cardReturn.focus();
+}
+// シートを下へスワイプで閉じる
+let cardTouch = null;
+document.addEventListener('touchstart', (e) => {
+  cardTouch = state.card && e.target.closest && e.target.closest('.sheet__head, .sheet__handle') ? e.touches[0].clientY : null;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (cardTouch !== null && e.changedTouches[0].clientY - cardTouch > 80) closeCard();
+  cardTouch = null;
+}, { passive: true });
+
+const modelsState = { data: null, error: null, loading: false };
+function renderModels() {
+  if (!modelsState.data && !modelsState.error && !modelsState.loading) {
+    modelsState.loading = true;
+    load('models.json').then((e) => { modelsState.data = e.json; }).catch((err) => { modelsState.error = describeError(err).text; }).finally(() => { modelsState.loading = false; render(); });
+  }
+  const bar = html`<header class="appbar"><a class="iconbtn" href="#/about" aria-label="戻る">${ICONS.back}</a><h1 class="appbar__title">${t('models.heading')}</h1></header>`;
+  return modelsView({ data: modelsState.data, error: modelsState.error, appbar: bar, tabbar: tabbar('about') });
 }
 
 // ---------------------------------------------------------------- 起動

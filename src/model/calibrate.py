@@ -49,6 +49,32 @@ def valid_matrices(features: pd.DataFrame, booster, meta: dict):
     return S, F, (F == 1).argmax(axis=1), dates
 
 
+def calibration_updates(booster, meta: dict, feats: pd.DataFrame, use_gamma: bool = True) -> dict:
+    """valid だけで較正と γ を選び、meta に上書きする項目(calibration, temperature, harville_gamma など)を返す。"""
+    periods = Periods(**meta["periods"])
+    prior = course_prior(feats, periods)
+    S, F, winner, dates = valid_matrices(feats, booster, meta)
+    calib, cv = select_calibration(S, winner, dates, prior)
+    P = apply_matrix(S, calib)
+    ok, idx = trifecta_index(F)
+    tri_g1 = trifecta_logloss(P[ok], idx, 1.0, 1.0)
+    g2, g3, tri_best = search_gamma(P[ok], idx) if use_gamma else (1.0, 1.0, tri_g1)
+    return {
+        "calibration": calib,
+        # 温度T を使う方法なら、その T(他の方法では参考値として元の T を残す)
+        "temperature": calib["params"].get("T", meta["temperature"]),
+        "harville_gamma": harville_gamma_meta(g2, g3),
+        "gamma2": g2,
+        "gamma3": g3,
+        "calibration_selection": {
+            "selected_on": "valid のみ(日付で2分割の交差検証)",
+            "cv_win_logloss": cv,
+            "valid_trifecta_logloss_gamma1": tri_g1,
+            "valid_trifecta_logloss_selected": tri_best,
+        },
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="較正と γ を valid で選び直す")
     parser.add_argument("--model-id", required=True)
@@ -60,37 +86,22 @@ def main() -> None:
     args = parser.parse_args()
 
     booster, meta = load_model(args.model_id, args.models_dir, args.variant)
-    periods = Periods(**meta["periods"])
     feats = load_features(args.features or features_path(meta["variant"]))
-    prior = course_prior(feats, periods)
-    S, F, winner, dates = valid_matrices(feats, booster, meta)
-
-    calib, cv = select_calibration(S, winner, dates, prior)
-    P = apply_matrix(S, calib)
-    ok, idx = trifecta_index(F)
-    tri_g1 = trifecta_logloss(P[ok], idx, 1.0, 1.0)
-    g2, g3, tri_best = (1.0, 1.0, tri_g1) if args.no_gamma else search_gamma(P[ok], idx)
+    upd = calibration_updates(booster, meta, feats, use_gamma=not args.no_gamma)
+    calib, cv = upd["calibration"], upd["calibration_selection"]["cv_win_logloss"]
+    g2, g3 = upd["gamma2"], upd["gamma3"]
+    tri_g1 = upd["calibration_selection"]["valid_trifecta_logloss_gamma1"]
+    tri_best = upd["calibration_selection"]["valid_trifecta_logloss_selected"]
 
     new = dict(meta)
     created = datetime.now(JST)
     tag = hashlib.sha256((meta["model_id"] + json.dumps(calib, sort_keys=True) + f"{g2},{g3}").encode()).hexdigest()[:4]
+    new.update(upd)
     new.update(
         {
             "model_id": f"{meta['variant']}_{created:%Y%m%d}_{tag}",
             "base_model_id": meta["model_id"],
             "created_at": created.isoformat(timespec="seconds"),
-            "calibration": calib,
-            # 温度T を使う方法なら、その T(他の方法では参考値として base の T を残す)
-            "temperature": calib["params"].get("T", meta["temperature"]),
-            "harville_gamma": harville_gamma_meta(g2, g3),
-            "gamma2": g2,
-            "gamma3": g3,
-            "calibration_selection": {
-                "selected_on": "valid のみ(日付で2分割の交差検証)",
-                "cv_win_logloss": cv,
-                "valid_trifecta_logloss_gamma1": tri_g1,
-                "valid_trifecta_logloss_selected": tri_best,
-            },
         }
     )
     d = model_dir(new["model_id"], args.models_dir)

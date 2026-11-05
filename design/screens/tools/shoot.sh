@@ -26,6 +26,7 @@ LIST=(
   "s2-race:fetch-ready:1000" "s2-race:fetch-loading:1000" "s2-race:fetch-ok:1100" "s2-race:fetch-cached:1100"
   "s1-home:stadium-focus:1000" "s1-home:gentle:760" "s2-race:p3a-before:2600" "s2-race:p3a-skip-reason:900"
   "s3-performance:p3a:2000" "s8-ledger:normal:2000" "s8-ledger:over:760" "s8-ledger:empty:760" "s9-marks:normal:900"
+  "s1-home:stale:760" "s2-race:tenkai:900" "s2-race:racer-card:1300" "s2-race:racer-card-none:800" "s5-about:models:1000"
   "s2-race:fetch-partial:1100" "s2-race:fetch-nokey:1000" "s2-race:fetch-errors:1500" "s2-race:source-manual:1100"
 )
 THEME="${THEME:-light}"

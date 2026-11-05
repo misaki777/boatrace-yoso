@@ -899,3 +899,141 @@ tr.is-lown td { color: var(--c-text-3); }
 /* ---------- 吹き出し(A の名前): .tip = .helppop の短い版(反転色) ---------- */
 .tip { position: relative; margin-top: 8px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--c-text); color: var(--c-surface); font-size: var(--size-xs); line-height: 1.5; max-width: 320px; }
 .tip::before { content: ""; position: absolute; top: -6px; left: var(--arrow-x, 16px); border: 6px solid transparent; border-top: 0; border-bottom-color: var(--c-text); }
+
+/* =====================================================================
+   v0.7 追加(DB-6): spec/10 Phase 3b
+   ===================================================================== */
+
+/* ---------- 更新停止の帯(最終成功から90分超) ----------
+   <div class="stale" role="status"><svg>…</svg><div class="stale__body"><b>データの更新が止まっています</b><span>最終更新 14:05(2時間前)…</span></div><button class="stale__close">閉じる</button></div>
+   画面上部に固定する場合は .stale--sticky。閉じられるが、次に開いて古ければまた出す(フロント) */
+.stale { display: flex; align-items: flex-start; gap: var(--space-3); padding: 10px var(--space-2) 10px var(--space-4); background: var(--c-warn-weak); color: var(--c-text); border-bottom: 2px solid var(--c-warn); font-size: var(--size-xs); }
+.stale > svg { width: 18px; height: 18px; flex: none; color: var(--c-warn); margin-top: 1px; }
+.stale__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; color: var(--c-text-2); line-height: 1.5; }
+.stale__body b { color: var(--c-text); font-size: var(--size-sm); }
+.stale__time { font-variant-numeric: tabular-nums; font-weight: var(--weight-bold); color: var(--c-text); }
+.stale__close { flex: none; min-width: var(--tap-min); min-height: 32px; border: 0; background: none; color: var(--c-text-2); font: inherit; font-size: var(--size-xs); cursor: pointer; }
+.stale--sticky { position: sticky; top: 0; z-index: 20; }
+
+/* ---------- 展開予想(決まり手の確率) ----------
+   主役は「1コース(◯号艇)が逃げる確率」。帯グラフは 逃げ = 塗り(アクセント)、他 = 斜線の模様で区別し、
+   区切りに 2px の隙間、各区間の下に名前と % を直接書く(色だけに頼らない)。下に同じ値の行(.tk-rows)を並べる */
+.tenkai { display: flex; flex-direction: column; gap: var(--space-4); }
+.tenkai__hero { display: flex; align-items: center; gap: var(--space-3); }
+.tenkai__hero-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tenkai__hero-label { font-size: var(--size-sm); color: var(--c-text-2); }
+.tenkai__hero-val { font-size: var(--size-3xl); font-weight: var(--weight-heavy); line-height: 1; font-variant-numeric: tabular-nums; }
+.tenkai__hero-val small { font-size: var(--size-md); font-weight: var(--weight-bold); margin-left: 2px; }
+.tkbar { display: flex; gap: 2px; height: 22px; }
+.tkbar > i { display: block; flex: var(--p) 0 0; min-width: 4px; border-radius: 3px; background: var(--c-bar-fill); }
+.tkbar > i.tk-nige { background: var(--c-bar-fill-top); }
+.tkbar > i.tk-sashi { background: repeating-linear-gradient(45deg, var(--c-bar-fill) 0 3px, var(--c-bar-track) 3px 6px); }
+.tkbar > i.tk-makuri { background: repeating-linear-gradient(-45deg, var(--c-bar-fill) 0 3px, var(--c-bar-track) 3px 6px); }
+.tkbar > i.tk-makurizashi { background: repeating-linear-gradient(90deg, var(--c-bar-fill) 0 2px, var(--c-bar-track) 2px 5px); }
+.tkbar > i.tk-other { background: var(--c-bar-track); border: 1px dashed var(--c-border-strong); }
+.tkbar-labels { display: flex; gap: 2px; font-size: var(--size-2xs); color: var(--c-text-2); }
+.tkbar-labels > span { flex: var(--p) 0 0; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: clip; }
+.tkbar-labels > span:first-child { color: var(--c-accent-text); font-weight: var(--weight-heavy); }
+/* 行の一覧(帯グラフと同じ値) */
+.tk-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.tk-row { display: grid; grid-template-columns: 5.5em minmax(0, 1fr) 3.2em; align-items: center; gap: var(--space-3); font-size: var(--size-sm); }
+.tk-row__name { white-space: nowrap; }
+.tk-row__pct { text-align: right; font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+.tk-row .pbar { height: 8px; }
+.tk-row.is-main .tk-row__name, .tk-row.is-main .tk-row__pct { font-weight: var(--weight-heavy); color: var(--c-text); }
+.tk-row.is-main .tk-row__name::before { content: "★"; color: var(--c-accent-text); margin-right: 2px; }
+.tk-row.is-main .pbar .pbar__fill { background: var(--c-bar-fill-top); }
+
+/* ---------- 下から出るシート(選手カード) ----------
+   <div class="scrim"></div><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="…"><div class="sheet__handle"></div><header class="sheet__head">…</header><div class="sheet__body">…</div></section> */
+.scrim { position: fixed; inset: 0; background: var(--c-overlay); z-index: 30; }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-width: 430px; margin: 0 auto; max-height: 88vh; display: flex; flex-direction: column;
+  background: var(--c-surface); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: var(--shadow-lg); padding-bottom: env(safe-area-inset-bottom); }
+.sheet--inline { position: relative; inset: auto; z-index: auto; max-height: none; border: 1px solid var(--c-border); } /* カタログ・モック用 */
+.sheet__handle { width: 40px; height: 4px; border-radius: 2px; background: var(--c-border-strong); margin: 8px auto 4px; flex: none; }
+.sheet__head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-2) var(--space-3) var(--space-4); border-bottom: 1px solid var(--c-border); flex: none; }
+.sheet__title { font-size: var(--size-lg); font-weight: var(--weight-heavy); }
+.sheet__sub { font-size: var(--size-xs); color: var(--c-text-2); }
+.sheet__close { margin-left: auto; width: var(--tap-min); height: var(--tap-min); border: 0; background: none; color: var(--c-text-2); font-size: 20px; cursor: pointer; }
+.sheet__body { overflow-y: auto; padding: var(--space-3) var(--space-4) var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); overscroll-behavior: contain; }
+.sheet__sec h4 { margin: 0 0 var(--space-3); font-size: var(--size-sm); font-weight: var(--weight-heavy); display: flex; align-items: baseline; gap: var(--space-3); }
+.sheet__sec h4 small { font-weight: var(--weight-regular); color: var(--c-text-3); font-size: var(--size-2xs); }
+.sheet__note { font-size: var(--size-2xs); color: var(--c-text-3); line-height: 1.5; }
+
+/* 選手カードの中の小さな数値の並び(全国勝率など): <dl class="statgrid"><div><dt>全国勝率</dt><dd>6.85</dd></div>…</dl> */
+.statgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0; background: var(--c-border); border: 1px solid var(--c-border); border-radius: var(--radius-sm); overflow: hidden; }
+.statgrid > div { background: var(--c-surface); padding: 6px var(--space-3); }
+.statgrid dt { font-size: var(--size-2xs); color: var(--c-text-3); }
+.statgrid dd { margin: 0; font-size: var(--size-md); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+.statgrid dd small { font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); margin-left: 3px; }
+.statgrid .is-lown dd { color: var(--c-text-3); }
+
+/* ---------- コース別の表(1〜6コース) ----------
+   今回の予定コースの行は .is-plan(淡い藍の地 + 左の帯 + 「今回」)。件数の少ない行は tr.is-lown(既存)で薄く */
+.cstable { width: 100%; border-collapse: collapse; font-size: var(--size-xs); font-variant-numeric: tabular-nums; }
+.cstable th { font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-3); text-align: right; padding: 0 4px 6px; white-space: nowrap; }
+.cstable td { text-align: right; padding: 7px 4px; border-top: 1px solid var(--c-border); white-space: nowrap; }
+.cstable th:first-child, .cstable td:first-child { text-align: left; padding-left: 6px; }
+.cstable .course { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--c-border-strong); font-weight: var(--weight-heavy); font-size: var(--size-2xs); }
+.cstable tr.is-plan td { background: var(--c-accent-weak); }
+.cstable tr.is-plan td:first-child { box-shadow: inset 3px 0 0 var(--c-accent); }
+.cstable tr.is-plan .course { border-color: var(--c-accent); background: var(--c-accent); color: var(--c-text-on-accent); }
+.cstable tr.is-plan td:first-child::after { content: "今回"; margin-left: 4px; font-size: var(--size-2xs); font-weight: var(--weight-heavy); color: var(--c-accent-text); }
+.cstable .n { color: var(--c-text-3); }
+.cstable tr.is-lown td:first-child::after { content: "参考"; margin-left: 4px; font-size: var(--size-2xs); padding: 0 3px; border: 1px dashed var(--c-border-strong); border-radius: 3px; color: var(--c-text-2); }
+
+/* ---------- 着順の並び(直近10走・今節) ----------
+   <ol class="fins" aria-label="直近10走"><li class="fin fin--1">1</li><li class="fin fin--2">2</li><li class="fin fin--6">6</li><li class="fin fin--f">F</li></ol>
+   1着 = 塗り(濃い)、2・3着 = 太い枠、4〜6着 = 細い枠・薄い文字、F・L・欠・失 = 破線 + 文字。数字そのものが情報なので色に頼らない */
+.fins { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.fin { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: var(--radius-xs);
+  border: 1px solid var(--c-border); color: var(--c-text-2); font-size: var(--size-sm); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; line-height: 1; }
+.fin--1 { background: var(--c-text); border-color: var(--c-text); color: var(--c-surface); font-weight: var(--weight-heavy); }
+.fin--2, .fin--3 { border: 2px solid var(--c-text-2); color: var(--c-text); font-weight: var(--weight-heavy); }
+.fin--f, .fin--l, .fin--x { border: 1.5px dashed var(--c-danger); color: var(--c-danger); font-size: var(--size-xs); }
+/* 日付などの小さな注記つき(今節): <li class="fin fin--1">1<small>11/3</small></li> */
+.fins--detail .fin { height: auto; min-height: 36px; padding: 3px 5px; gap: 2px; }
+.fin small { font-size: 9px; font-weight: var(--weight-regular); opacity: .85; }
+
+/* ---------- モデルの更新履歴(S5) ----------
+   <li class="mhist mhist--adopted">…</li> / mhist--kept(切り替えなし)。同じ重さ: 形と記号と文字で区別 */
+.mhists { list-style: none; margin: 0; padding: 0; }
+.mhist { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--c-border); }
+.mhist:first-child { border-top: 0; }
+.mhist__date { grid-row: span 2; font-size: var(--size-xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; color: var(--c-text-2); min-width: 4.5em; }
+.mhist__head { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.mhist__tag { display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 8px; border-radius: var(--radius-pill); font-size: var(--size-xs); font-weight: var(--weight-bold); border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text); white-space: nowrap; }
+.mhist--adopted .mhist__tag::before { content: "⇄"; }
+.mhist--kept .mhist__tag::before { content: "＝"; }
+.mhist--adopted .mhist__tag { border: 2px solid var(--c-accent); color: var(--c-accent-text); }
+.mhist__id { font-family: var(--font-family-mono); font-size: var(--size-2xs); color: var(--c-text-3); }
+.mhist__body { font-size: var(--size-xs); color: var(--c-text-2); line-height: 1.5; }
+.mhist__metric { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mhist__metric b { color: var(--c-text); }
+
+/* =====================================================================
+   v0.8 追加: デザイナーAの DA-6(design/screens/README.md 17章)に合わせた部品
+   ===================================================================== */
+/* 停止の帯(A の名前)。色は B 案の黄(注意)。赤はエラー専用(統括判断) */
+.stalebar { display: flex; gap: var(--space-3); padding: 10px var(--space-4); border-radius: var(--radius-sm); background: var(--c-warn-weak); border-left: 4px solid var(--c-warn); color: var(--c-text); font-size: var(--size-xs); }
+.stalebar b { display: block; font-size: var(--size-sm); }
+.stalebar .x { margin-left: auto; flex: none; min-width: var(--tap-min); color: var(--c-text-2); background: none; border: 0; font: inherit; cursor: pointer; }
+/* 帯が出ている間のアプリバーの「更新 08:10」: 黄土の文字 + ⚠(色だけにしない) */
+.updated-at.is-stale { color: var(--c-warn); font-weight: var(--weight-bold); }
+.updated-at.is-stale::before { content: "⚠ "; }
+/* 選手名(タップで選手カード): 点線の下線 */
+.racer-link { color: inherit; text-decoration: underline dotted var(--c-text-3); text-underline-offset: 3px; cursor: pointer; background: none; border: 0; padding: 0; font: inherit; }
+.racer-link:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+/* ミニ着順(A の名前): <div class="mini"><span class="p1">1</span><span>4</span></div>。.fins と同じ見た目の簡易版 */
+.mini { display: flex; gap: 3px; flex-wrap: wrap; }
+.mini span { min-width: 26px; height: 26px; display: inline-grid; place-items: center; border-radius: var(--radius-xs); border: 1px solid var(--c-border); color: var(--c-text-2); font-size: var(--size-sm); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+.mini .p1 { background: var(--c-text); color: var(--c-surface); border-color: var(--c-text); font-weight: var(--weight-heavy); }
+.mini .p2, .mini .p3 { border: 2px solid var(--c-text-2); color: var(--c-text); }
+.mini .pf { border: 1.5px dashed var(--c-danger); color: var(--c-danger); }
+/* 予定コースの行(A の .tbl でも使えるように) */
+.tbl tr.is-plan td { background: var(--c-accent-weak); font-weight: var(--weight-bold); }
+.tbl tr.is-plan td:first-child { box-shadow: inset 3px 0 0 var(--c-accent); }
+/* 選手カードが無い日・読み込み失敗(シートの中身を置き換える) */
+.emptybox { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-8) var(--space-4); text-align: center; color: var(--c-text-2); font-size: var(--size-sm); border: 1.5px dashed var(--c-border-strong); border-radius: var(--radius-md); }
+.emptybox svg { width: 28px; height: 28px; color: var(--c-text-3); }
+.emptybox b { color: var(--c-text); }

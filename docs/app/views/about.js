@@ -6,7 +6,7 @@ import { tabbar } from '../parts.js';
 import { t, WORDING_META } from '../wording.js';
 import { SCHEMA_VERSION, isSample, isLocalData, dataBase } from '../data.js';
 
-export const APP_VERSION = '0.6.0';
+export const APP_VERSION = '0.7.1';
 
 /** S5 本体。index は読めていなければ null */
 export function aboutView({ index, dayModel, banners }) {
@@ -57,7 +57,7 @@ export function aboutView({ index, dayModel, banners }) {
     </section>
 
     <section class="card">
-      <div class="card__head"><h2 class="card__title">データの状態</h2></div>
+      <div class="card__head"><h2 class="card__title">データの状態</h2><span class="right"><a href="#/models">${t('models.heading')} ›</a></span></div>
       <div class="prose prose--small">
         <p>データ生成: ${index ? fmtDateTime(index.generated_at) : '—'}${index && index.latest_date ? ` · 最新の日付: ${index.latest_date}` : ''}<br>
         ${dayModel ? html`モデル: ${dayModel.model_id}${dayModel.train_until ? `(学習 〜${dayModel.train_until})` : ''}<br>` : ''}

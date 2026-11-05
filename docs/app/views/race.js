@@ -8,6 +8,7 @@ import { boat, combo, conf, mark, raceSubText, disclaimer, emptyBox, ICONS } fro
 import { evaluatePicks } from '../strategy.js';
 import { t } from '../wording.js';
 import { marksCard } from './ledger.js';
+import { tenkaiCard } from './phase3b.js';
 import { helpBtn } from '../parts.js';
 import { syntheticOdds, allocateBets, allocationSummary, ALLOCATION_METHODS, NEEDS_ODDS } from '../betsum.js';
 
@@ -184,7 +185,7 @@ function boatsCard({ race }) {
     }
     return html`<div class="${cls('racer', b.p_rank === 1 && 'is-top', isAbsent && 'is-absent')}">
       <span class="racer__waku">${boat(b.entry, { size: 'lg', absent: isAbsent })}</span>
-      <div class="racer__name">${mark(b.p_rank)}<span class="racer__nm">${b.racer_name || (b.racer_number ? `登録 ${b.racer_number}` : '—')}</span>${isAbsent
+      <div class="racer__name">${mark(b.p_rank)}<span class="racer__nm">${b.racer_number && b.racer_name ? html`<button class="racer-link" type="button" data-action="card-open" data-racer="${b.racer_number}" data-entry="${b.entry}" data-name="${b.racer_name}" aria-haspopup="dialog">${b.racer_name}</button>` : (b.racer_name || (b.racer_number ? `登録 ${b.racer_number}` : '—'))}</span>${isAbsent
         ? html`<span class="chip chip--cancel">欠場</span>`
         : html`<span class="racer__rank">${[b.rank, b.branch].filter(Boolean).join(' · ')}</span>${b.flying_count > 0 ? html`<span class="flag-f">F${b.flying_count}</span>` : ''}${placeIndex >= 0 ? html`<span class="racer__place">${placeIndex + 1}着</span>` : ''}`}</div>
       <div class="racer__pwin">${pctInt(b.p_win)}<small>%</small></div>
@@ -340,6 +341,7 @@ function predictionBlocks(ctx) {
   const rec = raceRecommendation(race, day);
   return [
     recommendedCard({ race, day, status, rec, ui }),
+    tenkaiCard(race.prediction),
     boatsCard({ race }),
     ui.local ? marksCard({ race, marks: ui.local.marks[race.race_id] || {}, note: ui.local.notes[race.race_id] || '' }) : '',
     rankCard({ race, day, tab: prefs.rankTab || (day.strategy && day.strategy.bet_type), more: ui.rankMore, rec, rankTypes: prefs.rankTypes }),

@@ -4,7 +4,7 @@
 //   (画面はこのヘッダを見て「オフライン表示中(21:05時点)」を出す)
 // - パスはすべてこのファイルの場所からの相対(GitHub Pages のサブパス /boatrace-yoso/ で動かすため)
 
-const APP_VERSION = '0.4.3';
+const APP_VERSION = '0.7.1';
 const APP_CACHE = `br-app-${APP_VERSION}`;
 const DATA_CACHE = 'br-data-v1'; // app/data.js の DATA_CACHE と合わせる
 
@@ -34,6 +34,7 @@ const APP_FILES = [
   './app/wording.js',
   './app/charts.js',
   './app/betsum.js',
+  './app/views/phase3b.js',
   './app/views/ledger.js',
   './app/styles/tokens.css',
   './app/styles/components.css',

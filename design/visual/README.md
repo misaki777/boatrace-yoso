@@ -1,9 +1,15 @@
 # design/visual(デザイナーB: ビジュアル・トークン・部品・アイコン)
 
-版: v0.6(2026-11-04)/ 状態: PMレビュー待ち(DB-1〜DB-5)
+版: v0.8(2026-11-05)/ 状態: PMレビュー待ち(DB-1〜DB-6)
 
 ### 変更履歴
 
+- v0.8: デザイナーAの DA-6(`design/screens/README.md` 17章)に対応。**追加のみ**。A の名前で使える `.stalebar`(黄)`.mini`(`.p1/.p2/.p3/.pf`)`.tbl tr.is-plan`、アプリバーの更新時刻 `.updated-at.is-stale`、選手名のリンク `.racer-link`、カードが無い日の `.emptybox`
+- v0.7: DB-6(`spec/10` Phase 3b)。**追加のみ**(色トークンの追加なし。検査を5組追加)。
+  - 更新停止の帯 `.stale`(`--sticky`)
+  - 展開予想 `.tenkai`(`__hero`)、帯グラフ `.tkbar` + `.tkbar-labels`、行 `.tk-rows > .tk-row`(`.is-main`)
+  - シート `.sheet`(`--inline`)`.scrim`、選手カードの部品 `.statgrid`、コース別の表 `.cstable`(`tr.is-plan` / `tr.is-lown`)、着順の並び `.fins > .fin--1〜6/f/l/x`(`.fins--detail`)
+  - モデルの更新履歴 `.mhists > .mhist--adopted/kept`
 - v0.6: デザイナーAの DA-5(`design/screens/README.md` 16章)に対応。**追加のみ**。
   - 同じ重さの結果チップ `.res--hit/miss/refund/pending`、予算メーター `.meter`(`is-warn/is-over`)、場のタブ `.stabs`、下部タブ `.tabbar.tabbar--4`
   - A の名前で使える別名: `.warnbar`(`--over`)`.gentle` `.few` `.fewnote` `.tip`
@@ -185,6 +191,20 @@ python3 design/visual/tools/contrast.py       # NG が 0 件であること
 | 「?」の説明 | `button.help[aria-expanded][aria-controls]` + `.helppop[role=dialog]` | 見た目20pxの丸・タップ領域44px。開くと藍に反転。吹き出しの三角の位置は `--arrow-x`。Esc と外側タップで閉じる(フロント) |
 | 収支の推移 | `BRCharts.pnl(days)` → `{svg, total, maxDrawdown}` | 累積収支の線、それまでの最高(細い点線)、最高からの下落を帯で塗る。最大ドローダウンに縦線と「最大 −3,400」。0円の破線 |
 
+### v0.7 の部品(DB-6: 停止の帯・展開予想・選手カード・モデルの履歴)
+
+| 部品 | クラス | 要点 |
+|---|---|---|
+| 更新停止の帯 | `.stale`(画面上部に固定は `--sticky`)、時刻は `.stale__time` | 最終成功から90分超・開催時間中だけ。黄の地 + 下に黄土の線 + ⚠。「データの更新が止まっています / 最終更新 14:05(2時間前)…」。閉じられる(`.stale__close`) |
+| 展開予想 | `.tenkai` > `__hero`(枠番バッジ lg + 「1コース(1号艇)が逃げる確率」+ 大きな %) | 主役は逃げ。版のチップ(`.chip--pre/--preview`)と、別モデルである注記(`.oddsnote`)を添える |
+| 決まり手の帯 | `.tkbar > i.tk-nige/sashi/makuri/makurizashi/other`(`--p`)+ `.tkbar-labels` | **逃げ = 塗り(アクセント)、差し・まくり・まくり差し = 向きの違う斜線(45°・−45°・縦)、その他 = 破線**。2px の隙間。帯の下には15%以上の区間だけ名前と%(細い区間は重なるため) |
+| 決まり手の行 | `.tk-rows > .tk-row`(逃げは `.is-main` = ★ + 太字 + 濃いバー) | 帯と同じ値を全部書く(色や模様を見なくても読める) |
+| シート | `.scrim` + `.sheet[role=dialog][aria-modal]` > `__handle` `__head` `__body` `__sec` `__note` | 下から出る。最大高さ88vh、中身だけスクロール。閉じるは × と下スワイプと scrim のタップ(フロント) |
+| 数値の並び | `dl.statgrid`(`div.is-lown` で薄く) | 3列の格子。件数は `dd small` で添える |
+| コース別の表 | `table.cstable` | 1〜6コースの行。**今回の予定コース = `tr.is-plan`**(淡い藍の地 + 左の帯 + 丸の塗り + 「今回」)。件数10未満 = `tr.is-lown`(薄い文字 + 「参考」)。件数の列 `.n` |
+| 着順の並び | `ol.fins > li.fin.fin--N` | **1着 = 濃い塗り、2・3着 = 太い枠、4〜6着 = 細い枠・薄い文字、F・L・欠 = 赤の破線 + 文字**。数字が情報なので色だけに頼らない。今節は `.fins--detail` で日付・Rを小さく添える |
+| モデルの履歴 | `ol.mhists > li.mhist.mhist--adopted/kept` | 日付 / タグ(「⇄ 切り替えた」= 藍の太枠、「＝ 切り替えなし」= 灰の枠。大きさは同じ)/ モデルID(等幅)/ 理由と logloss の比較 |
+
 #### 状態ごとの文言案(`components.html` 15節に同じものがある)
 
 | 場面(API) | 帯 | 見出し | 説明 | ボタン |
@@ -254,7 +274,7 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 
 ## 6. コントラスト比(`tools/contrast.py --md` の出力)
 
-基準: 文字は WCAG 2.x AA の 4.5:1(小さい文字を含むため、大きい文字の 3:1 は使わない)。枠線・バー・アイコンなど文字でないものは WCAG 2.1 の 1.4.11 に従い 3:1。**全81組、ライト・ダークとも基準を満たす(NG 0件)。**
+基準: 文字は WCAG 2.x AA の 4.5:1(小さい文字を含むため、大きい文字の 3:1 は使わない)。枠線・バー・アイコンなど文字でないものは WCAG 2.1 の 1.4.11 に従い 3:1。**全86組、ライト・ダークとも基準を満たす(NG 0件)。**
 
 | 組み合わせ | 基準 | ライト | ダーク |
 |---|---|---|---|
@@ -339,6 +359,11 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 | 自分の印 文字・枠 / カード (`mine` / `surface`) | 4.5:1 | 6.26 | 9.29 |
 | 結果チップ(的中・不的中 同じ重さ) / カード (`text` / `surface`) | 4.5:1 | 17.78 | 14.58 |
 | 個人データ帯の補足 / 地 (`text-2` / `mine-weak`) | 4.5:1 | 7.46 | 7.66 |
+| コース別の表(今回の行)文字 / 地 (`text` / `accent-weak`) | 4.5:1 | 14.96 | 11.52 |
+| コース別の表(今回の行)件数 / 地 (`text-3` / `accent-weak`) | 4.5:1 | 4.80 | 5.05 |
+| 展開予想の帯・斜線(非テキスト) / カード (`bar-fill` / `surface`) | 3.0:1 | 3.86 | 4.22 |
+| 着順チップ(1着)文字 / 塗り (`surface` / `text`) | 4.5:1 | 17.78 | 14.58 |
+| 更新停止の帯 文字 / 地 (`text` / `warn-weak`) | 4.5:1 | 16.22 | 12.36 |
 
 補足:
 - 確率バーの薄い層(2着内・3着内)は `color-mix()` で作る補助の表現で、数値を必ず併記するため、コントラスト基準の対象外とした。
@@ -365,6 +390,18 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 | `.choice` `.choice--fill` `.radio-row` `.radio` `.flow` `.toast` `.stepper.is-off` | 同名 |
 | `.set-label .changed`(「変更」) | `.changed-tag.changed-tag--end`(「● 既定から変更」) |
 | `.set-summary` | `.setsummary` |
+| **DA-6(17章)** | |
+| `.stalebar`(赤系の地 + 左帯) | `.stale`(または同名の `.stalebar`)。**差: 色は黄(`--c-warn-weak` の地 + 黄土の線 + ⚠)**。統括判断: 停止は故障ではなく注意なので黄、赤はエラー専用 |
+| アプリバーの「更新 08:10」を赤字 | `.updated-at.is-stale`。**差: 赤ではなく黄土の文字 + ⚠**(同じ理由) |
+| `.tk-hero`(`.v` `.lbl`) | `.tenkai__hero`(`__hero-val` `__hero-label`)。数字は A 36px / B 30px(`--size-3xl`)。枠番バッジを左に添える |
+| `.tk-row`(`.p`、`.is-main`) | `.tk-rows > .tk-row`(`__name` `__pct` `.pbar`、`.is-main` = ★ + 太字)。B は上に模様つきの帯 `.tkbar` も置く(任意) |
+| `.cardsheet` | `.sheet`(`__head` `__body` `__sec` `__note`)+ `.scrim` |
+| `.mini`(`.p1`) | `.fins > .fin--1〜6/f/l/x`。同名の `.mini` も用意(`.p1` 塗り、`.p2/.p3` 太枠、`.pf` 赤の破線) |
+| `tr.is-plan`(`.tbl`) | `.cstable tr.is-plan`(淡い藍 + 左の帯 + 「今回」)。`.tbl tr.is-plan` も同じ見た目で用意 |
+| `.few`(行・値) | 既存の `.few` / `tr.is-lown` / `.statgrid .is-lown`(文字色を下げる方式) |
+| `.mh`(`.t` `.k`)+ `.res` のタグ | `.mhists > .mhist--adopted/kept`。タグは `.mhist__tag`(⇄ / ＝、同じ大きさ)。A の `.res` のままでもよい(どちらも同じ重さ) |
+| 選手名の点線の下線 | `.racer-link` |
+| `card.unavailable` / `card.load_failed` | `.emptybox` |
 | **DA-5(16章)** | |
 | 較正グラフ(`.chart` の拡張) | `BRCharts.calibration()` → `svg.chart.calib`。**差**: A は「点の大きさ = 件数」、B は点の大きさを一定にし、件数30未満を白抜き + 点線の区間にした(大きさの差は小さい画面で読み取りにくいため。件数は下の表と title で出す) |
 | `.ci` | `.ci-num`(大きい値 + 区間バー)/ 表では `.ci-inline` |

@@ -829,3 +829,23 @@ html.mock-all .toast { position: absolute; }
 /* 結果の同じ重さのチップ */
 .res { display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 8px; border-radius: var(--r-full); font-size: var(--fs-xs); font-weight: 700; border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text); }
 .pick-row > span:first-child { display: flex; align-items: center; white-space: nowrap; }
+
+/* ===== DA-6(Phase 3b)。Bの DB-6 部品が出来たら置き換える(README 17章) ===== */
+.stalebar { margin: var(--sp-2) var(--gutter) 0; padding: 10px 12px; border-radius: var(--r-m); background: var(--c-danger-weak); border-left: 4px solid var(--c-danger); font-size: var(--fs-s); display: flex; gap: 8px; }
+.stalebar b { font-size: var(--fs-m); display: block; }
+.stalebar .x { margin-left: auto; flex: none; color: var(--c-text-3); }
+.tk-hero { display: flex; align-items: baseline; gap: 8px; padding: 4px var(--sp-3) 0; flex-wrap: wrap; }
+.tk-hero .v { font-size: 36px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+.tk-hero .lbl { font-size: var(--fs-m); font-weight: 700; }
+.tk-row { display: grid; grid-template-columns: 76px 1fr 44px; gap: 8px; align-items: center; padding: 4px var(--sp-3); font-size: var(--fs-m); font-variant-numeric: tabular-nums; }
+.tk-row .p { text-align: right; font-weight: 700; }
+.tk-row.is-main .bar > i { background: var(--c-bar-fill-top); }
+.racer__nm.is-link { text-decoration: underline dotted; text-underline-offset: 3px; }
+.cardsheet { max-height: 88vh; }
+.mini { display: flex; gap: 3px; flex-wrap: wrap; }
+.mini span { min-width: 26px; height: 26px; display: inline-grid; place-items: center; border-radius: 4px; border: 1px solid var(--c-border); font-size: var(--fs-s); font-weight: 700; font-variant-numeric: tabular-nums; }
+.mini .p1 { background: var(--c-text); color: var(--c-surface); border-color: var(--c-text); }
+.tbl tr.is-plan td { background: var(--c-accent-weak); font-weight: 700; }
+.mh { padding: 10px var(--sp-3); border-top: 1px solid var(--c-border); font-size: var(--fs-s); }
+.mh .t { display: flex; gap: 6px; align-items: center; font-size: var(--fs-m); font-weight: 700; }
+.mh .k { color: var(--c-text-2); }

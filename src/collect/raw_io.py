@@ -15,6 +15,18 @@ from pathlib import Path
 RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
 FETCH_LOG_NAME = "_fetch_log.jsonl"
 SOURCES = ("turnmark", "openapi")
+# 旧API(v3。2016-08-01〜2025-12-31)。種類ごとに別ファイル。ソース名は "legacy_{kind}"
+LEGACY_KINDS = ("programs", "previews", "results")
+LEGACY_SOURCES = tuple(f"legacy_{k}" for k in LEGACY_KINDS)
+
+
+def _source_dir(source: str) -> Path:
+    """ソース名から data/raw/ 以下の相対ディレクトリを返す。"""
+    if source in SOURCES:
+        return Path(source)
+    if source in LEGACY_SOURCES:
+        return Path("legacy") / source.removeprefix("legacy_")
+    raise ValueError(f"未知のソースです: {source}")
 
 
 def to_date(value: date | str) -> date:
@@ -31,11 +43,9 @@ def to_date(value: date | str) -> date:
 
 def raw_path(source: str, target: date | str, raw_dir: Path | None = None) -> Path:
     """ソースと日付から保存先のパスを返す(ファイルの有無は見ない)。"""
-    if source not in SOURCES:
-        raise ValueError(f"未知のソースです: {source}")
     d = to_date(target)
     base = Path(raw_dir) if raw_dir is not None else RAW_DIR
-    return base / source / f"{d.year:04d}" / f"{d.strftime('%Y%m%d')}.json.gz"
+    return base / _source_dir(source) / f"{d.year:04d}" / f"{d.strftime('%Y%m%d')}.json.gz"
 
 
 def load_raw(source: str, target: date | str, raw_dir: Path | None = None) -> dict | None:
@@ -67,11 +77,20 @@ def load_raw_any(
     return None
 
 
+def load_legacy(kind: str, target: date | str, raw_dir: Path | None = None) -> dict | None:
+    """旧API(v3)の1日分を dict で返す。kind: "programs" / "previews" / "results"。無ければ None。
+
+    中身は {kind: [レース, ...]} (例: {"programs": [{"stadium_number": 1, "number": 1, "boats": [...]}, ...]})。
+    形式の詳細は src/collect/LEGACY_FORMAT.md。
+    """
+    if kind not in LEGACY_KINDS:
+        raise ValueError(f"未知の種類です: {kind}")
+    return load_raw(f"legacy_{kind}", target, raw_dir)
+
+
 def list_raw_dates(source: str, raw_dir: Path | None = None) -> list[date]:
     """保存済みの日付を昇順で返す。"""
-    if source not in SOURCES:
-        raise ValueError(f"未知のソースです: {source}")
-    base = (Path(raw_dir) if raw_dir is not None else RAW_DIR) / source
+    base = (Path(raw_dir) if raw_dir is not None else RAW_DIR) / _source_dir(source)
     if not base.exists():
         return []
     dates = []
