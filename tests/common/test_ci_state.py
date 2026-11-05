@@ -146,7 +146,7 @@ def test_ci_run_daytime_order():
     assert mods == ["src.collect.fetch", "src.features.build_interim", "src.features.build_features",
                     "src.features.build_features", "src.model.predict", "src.features.build_tenkai",
                     "src.model.predict_tenkai", "src.features.racer_cards", "src.export.export_day",
-                    "src.export.export_index"]
+                    "src.export.export_index", "src.export.phase3b"]
     assert any("predict_tenkai --date 2026-11-05 --variant preview --per-race-lock" in c
                for c in _dry("daytime", "2026-11-05"))
 
