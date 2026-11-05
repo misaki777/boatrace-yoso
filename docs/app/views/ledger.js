@@ -114,7 +114,7 @@ export function ledgerView({ s, daily, months, warnings, budget, spent, ui, race
       <div class="backup-btns"><button class="btn" data-action="backup-export">${t('label.backup_export')}</button><label class="btn">${t('label.backup_import')}<input type="file" accept="application/json,.json" data-backup-import hidden></label></div>
       ${ui.backupMsg ? html`<p class="card__note" role="status">${ui.backupMsg}</p>` : ''}
     </section>
-    <p class="disclaimer">${t('warn.losing_streak', { n: budget.streak_warn || 5 }).replace(/^.*?。/, '')} <a href="#/marks">自分の予想の成績</a> · <a href="#/about">困ったときの相談先</a></p>
+    <p class="disclaimer">${t('warn.losing_streak', { n: budget.streak_warn || 5 }).replace(/^.*?。/, '')} <a href="#/analytics/you">あなたの収支分析</a> · <a href="#/marks">自分の予想の成績</a> · <a href="#/about">困ったときの相談先</a></p>
     ${tabbar('ledger')}`;
 }
 
@@ -150,4 +150,25 @@ export function marksCard({ race, marks, note }) {
       <textarea class="input memo" id="memo-${race.race_id}" maxlength="500" rows="3" data-memo data-race="${race.race_id}">${note}</textarea>
     </div>
   </section>`;
+}
+
+/** あなたの収支分析(W-21)。切り口ごとに件数・回収率と区間・的中率。後で「分析」タブの「あなた」に移す */
+export function analysisView({ sections, total, busy, subtabs }) {
+  const cell = (g) => {
+    if (g.level === 'insufficient') return html`<td colspan="2" class="faint">${t('ana.insufficient', { n: g.races })}</td>`;
+    const straddle = g.ci && g.ci[0] < 1 && g.ci[1] > 1;
+    return html`<td><span class="${cls('ci-inline', straddle && 'is-straddle')}">${fmtRoi(g.roi)}${g.ci ? html`<small>(${Math.round(g.ci[0] * 100)}〜${Math.round(g.ci[1] * 100)})</small>` : ''}</span></td>
+      <td>${fmtPct(g.hitRate, 0)}${g.hitCi ? html`<small class="faint">(${Math.round(g.hitCi[0] * 100)}〜${Math.round(g.hitCi[1] * 100)})</small>` : ''}</td>`;
+  };
+  return html`
+    <header class="appbar"><h1 class="appbar__title is-pad">${t('ana.tab')}</h1>${reloadButton(busy)}</header>
+    ${subtabs}
+    <p class="disclaimer" style="margin-top:12px">🔒 ${t('ana.own_local')} 結果の出た ${fmtNumber(total)}レース。回収率の区間はレース単位のブートストラップ(200回)、的中率の区間は Wilson です。</p>
+    ${sections.map(({ title, rows }) => html`<section class="card" aria-label="${title}">
+      <div class="card__head"><h2 class="card__title">${title}</h2><span class="right">回収率(95%区間)${helpBtn('help.confidence_interval')}</span></div>
+      ${rows.length ? html`<div class="tbl-wrap"><table class="tbl"><thead><tr><th class="l">区分</th><th>件数</th><th>回収率</th><th>的中率</th></tr></thead>
+      <tbody>${rows.map((g) => html`<tr class="${cls(g.level === 'few' && 'is-lown')}"><td class="l">${g.key}${g.level === 'few' ? html` <span class="lown-tag" title="${t('ana.few', { n: g.races })}"></span>` : ''}</td><td>${fmtNumber(g.races)}R<br><small class="faint">${fmtNumber(g.bets)}点</small></td>${cell(g)}</tr>`)}</tbody></table></div>` : html`<p class="card__note" style="padding-top:8px">まだ結果の出た記録がありません。</p>`}
+    </section>`)}
+    <p class="disclaimer">${t('notice.simulation')} この数字は振り返り用です。賭け金を増やす方向の提案はしません。</p>
+    ${tabbar('analytics')}`;
 }

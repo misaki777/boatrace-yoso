@@ -67,6 +67,7 @@ export const ICONS = {
   back: svg('<path d="M15 5l-7 7 7 7"/>', 2.2),
   races: svg('<path d="M4 6h16M4 12h16M4 18h10"/>'),
   performance: svg('<path d="M3 20h18M6 16l4-5 3 3 6-7"/>'),
+  analytics: svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
   ledger: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'),
   more: svg('<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>'),
 };
@@ -75,9 +76,10 @@ export const ICONS = {
 export function tabbar(current) {
   const item = (key, href, icon, label) =>
     html`<a href="${href}" ${raw(current === key ? 'aria-current="page"' : '')}>${icon}${label}</a>`;
-  return html`<nav class="tabbar tabbar--4" aria-label="画面の切り替え">
+  return html`<nav class="tabbar tabbar--5" aria-label="画面の切り替え">
     ${item('home', '#/', ICONS.races, 'レース')}
     ${item('performance', '#/performance', ICONS.performance, '成績')}
+    ${item('analytics', '#/analytics/stadium', ICONS.analytics, '分析')}
     ${item('ledger', '#/ledger', ICONS.ledger, '収支')}
     ${item('about', '#/about', ICONS.more, 'その他')}
   </nav>`;

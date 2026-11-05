@@ -1,6 +1,7 @@
 // app/ledger.js のテスト(手計算の値と比べる)。ブラウザで実行する
 import * as lg from '../ledger.js';
 import * as bs from '../betsum.js';
+import * as an from '../analytics.js';
 
 const rows = document.getElementById('rows');
 const results = [];
@@ -78,6 +79,20 @@ check('配分のまとめ(どれか的中・払戻の幅・期待される払戻
 check('配分関数の引数は3つだけ', bs.allocateBets.length, 3);
 check('買い目に収支・連敗の値を混ぜても結果は同じ', JSON.stringify(bs.allocateBets('top', B5.map((b) => ({ ...b, profit: -50000, losing_streak: 9, last_result: 'miss' })), 900)), JSON.stringify(bs.allocateBets('top', B5, 900)));
 check('同じ入力なら何度呼んでも同じ出力', [1, 2, 3, 4, 5].map(() => JSON.stringify(bs.allocateBets('ev', E4, 1000))).every((x, i, a) => x === a[0]), true);
+
+// あなたの収支分析(手計算): R1 は 1-2-3 200円的中(5,500円)と 1-3-2 100円、R2 は 300円外れ
+const sumA = lg.summarize(bets, (id) => races[id] || null);
+const g = an.groupStats(sumA.rows, () => 'all', { reps: 50 });
+check('全体の件数(レース・点)・投資・払戻(結果待ちは除く)', [g[0].races, g[0].bets, g[0].stake, g[0].ret], [5, 7, 1500, 6300]);
+check('的中率はレース単位(R1 だけ的中 → 1/5)', g[0].hitRate, 0.2);
+check('30レース未満は「件数不足」で区間を出さない', [g[0].level, g[0].ci, g[0].hitCi], ['insufficient', null, null]);
+const many = []; for (let i = 0; i < 40; i++) many.push({ bet: { race_id: `X${i}`, amount: 100 }, status: i < 10 ? 'hit' : 'miss', payout: i < 10 ? 300 : 0 });
+const gm = an.groupStats(many, () => 'k');
+check('40レース: 回収率75%・的中率25%・「参考」', [gm[0].roi, gm[0].hitRate, gm[0].level], [0.75, 0.25, 'few']);
+check('回収率の区間は点の値を含み、同じ入力なら同じ', [gm[0].ci[0] <= 0.75 && 0.75 <= gm[0].ci[1], JSON.stringify(an.groupStats(many, () => 'k')[0].ci) === JSON.stringify(gm[0].ci)], [true, true]);
+check('的中率の区間は Wilson(10/40)', gm[0].hitCi.map((x) => Math.round(x * 1000) / 1000), lg.wilson(10, 40).map((x) => Math.round(x * 1000) / 1000));
+check('時間帯の区切り', [an.timeBand(11), an.timeBand(12), an.timeBand(16), an.timeBand(17)], ['〜12時', '12〜17時', '12〜17時', '17時〜']);
+check('古い記録は「不明」、ランク無しは「なし」', [an.evRankKey({}), an.evRankKey({ ev_rank: null }), an.evRankKey({ ev_rank: 'A' }), an.allocationKey({}), an.allocationKey({ allocation: 'top' })], ['不明', 'なし', 'ランクA', '不明', '上位厚め']);
 
 const pass = results.filter(Boolean).length;
 const el = document.getElementById('summary');

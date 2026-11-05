@@ -688,3 +688,10 @@ details.fold.fold--flow > .flow { padding: 0 var(--sp-3) var(--sp-3); }
 .sheet.cardsheet { max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: env(safe-area-inset-bottom); z-index: 31; }
 .cardsheet .sheet__body { overflow-y: auto; }
 .cardsheet .tbl th, .cardsheet .tbl td { padding-left: 4px; padding-right: 4px; }
+.subtabs { position: sticky; top: calc(var(--h-appbar) + env(safe-area-inset-top)); z-index: 9; background: var(--c-surface); }
+.subtabs > a { display: inline-flex; align-items: center; justify-content: center; position: relative; }
+.filter { display: flex; align-items: center; gap: 8px; margin: 8px var(--gutter) 0; }
+.filter .fchips { flex: 1; min-width: 0; }
+.atable-h { font-size: var(--fs-s); margin: 12px 0 4px; color: var(--c-text-2); }
+.card .atable { margin-top: 4px; }
+.tabbar.tabbar--5 { grid-template-columns: repeat(5, 1fr); }

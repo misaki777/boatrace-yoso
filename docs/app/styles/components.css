@@ -1037,3 +1037,193 @@ tr.is-lown td { color: var(--c-text-3); }
 .emptybox { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-8) var(--space-4); text-align: center; color: var(--c-text-2); font-size: var(--size-sm); border: 1.5px dashed var(--c-border-strong); border-radius: var(--radius-md); }
 .emptybox svg { width: 28px; height: 28px; color: var(--c-text-3); }
 .emptybox b { color: var(--c-text); }
+
+/* =====================================================================
+   v0.9 追加(DB-7): spec/11 分析画面
+   ===================================================================== */
+
+/* ---------- 推移の折れ線(BRCharts.trend) ---------- */
+.trend .line--2 { stroke: var(--c-chart-ci); stroke-dasharray: 6 4; }
+.trend .dot { fill: var(--c-chart-line); stroke: var(--c-surface); stroke-width: 1.5; }
+.trend .dot--2 { fill: var(--c-chart-ci); }
+.trend .dot.is-lown { fill: var(--c-surface); stroke: var(--c-chart-line); stroke-width: 2; }
+.trend .vmark { stroke: var(--c-text-2); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.trend .vmark-lbl, .trend .ref-lbl { fill: var(--c-text-2); font-size: 10px; font-weight: 700; }
+
+/* ---------- 横棒の比較(BRCharts.hbars)・積み上げ(BRCharts.stacked) ---------- */
+.hbars, .stacked { display: flex; flex-direction: column; }
+.hb-row, .sb-row { display: grid; grid-template-columns: 5.2em minmax(0, 1fr) 6.4em; align-items: center; gap: var(--space-3); min-height: 36px; border-top: 1px solid var(--c-border); font-size: var(--size-sm); }
+.hb-row:first-child, .sb-row:first-child { border-top: 0; }
+.hb-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: var(--weight-bold); }
+.hb-track { position: relative; height: 12px; border-radius: 3px; background: var(--c-bar-track); }
+.hb-fill { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: var(--c-bar-fill); }
+.hb-row.is-hl .hb-fill { background: var(--c-bar-fill-top); }
+.hb-row.is-hl .hb-label::before { content: "▶"; font-size: .7em; margin-right: 3px; color: var(--c-accent-text); }
+.hb-ci { position: absolute; top: 4px; height: 4px; border-radius: 2px; background: var(--c-chart-ci); opacity: .55; }
+.hbars--dot .hb-ci { opacity: 1; }
+.hb-dot { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--c-chart-line); border: 2px solid var(--c-surface); }
+.hb-ref { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px dashed var(--c-text-2); z-index: 1; }
+.hb-val { text-align: right; font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; white-space: nowrap; display: flex; flex-direction: column; line-height: 1.15; }
+.hb-val small { font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.hb-row.is-lown .hb-label, .hb-row.is-lown .hb-val, .sb-row.is-lown .hb-label { color: var(--c-text-3); }
+.hb-row.is-lown .hb-fill { background: repeating-linear-gradient(45deg, var(--c-bar-fill) 0 3px, var(--c-bar-track) 3px 6px); }
+.hb-row.is-none .hb-track { background: transparent; border: 1px dashed var(--c-border); }
+.hb-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-4); margin-top: var(--space-3); font-size: var(--size-2xs); color: var(--c-text-2); }
+.hb-legend > span { display: inline-flex; align-items: center; gap: 4px; }
+.lg-ref { display: inline-block; width: 0; height: 12px; border-left: 2px dashed var(--c-text-2); margin-right: 4px; }
+.sb-row { grid-template-columns: 5.2em minmax(0, 1fr) 4em; }
+.sb-bar { height: 20px; }
+.sb-bar > i { display: flex; align-items: center; justify-content: center; }
+.sb-bar > i b { font-size: 10px; font-weight: var(--weight-heavy); color: var(--c-text); background: var(--c-surface); border-radius: 3px; padding: 0 2px; line-height: 1.3; }
+.sb-n { text-align: right; font-size: var(--size-2xs); color: var(--c-text-3); font-variant-numeric: tabular-nums; }
+.sb-key { display: inline-block; width: 14px; height: 10px; border-radius: 2px; }
+.sb-key.tk-nige { background: var(--c-bar-fill-top); }
+.sb-key.tk-sashi { background: repeating-linear-gradient(45deg, var(--c-bar-fill) 0 2px, var(--c-bar-track) 2px 4px); }
+.sb-key.tk-makuri { background: repeating-linear-gradient(-45deg, var(--c-bar-fill) 0 2px, var(--c-bar-track) 2px 4px); }
+.sb-key.tk-makurizashi { background: repeating-linear-gradient(90deg, var(--c-bar-fill) 0 2px, var(--c-bar-track) 2px 4px); }
+.sb-key.tk-other { background: var(--c-bar-track); border: 1px dashed var(--c-border-strong); }
+/* 件数不足(30未満): 数字を出さない */
+.insuff { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: var(--radius-xs); border: 1px dotted var(--c-skip-border); color: var(--c-text-3); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; }
+
+/* ---------- ヒートマップ(BRCharts.heatmap) ----------
+   濃さは アクセント 0〜50%(文字の 4.5:1 を保つ上限)。各マスに数字。参考 = 斜線の地、件数不足 = 「–」 */
+.heat { width: 100%; border-collapse: separate; border-spacing: 2px; font-size: var(--size-xs); font-variant-numeric: tabular-nums; table-layout: fixed; }
+.heat th { font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-2); padding: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.heat th[scope="row"] { text-align: left; width: 4.2em; }
+.heat td { height: 30px; text-align: center; border-radius: 3px; color: var(--c-text); font-weight: var(--weight-bold);
+  background: color-mix(in srgb, var(--c-chart-line) calc(var(--t, 0) * 50%), var(--c-surface)); }
+.heat td.is-lown { color: var(--c-text); font-weight: var(--weight-regular); text-decoration: underline dotted; text-underline-offset: 2px;
+  background: repeating-linear-gradient(45deg, transparent 0 4px, color-mix(in srgb, var(--c-border) 70%, transparent) 4px 6px), color-mix(in srgb, var(--c-chart-line) calc(var(--t, 0) * 50%), var(--c-surface)); }
+.heat td.is-none { color: var(--c-text-3); background: var(--c-surface-2); font-weight: var(--weight-regular); }
+.heat-scale { display: inline-flex; gap: 1px; }
+.heat-scale i { width: 16px; height: 10px; background: color-mix(in srgb, var(--c-chart-line) calc(var(--t) * 50%), var(--c-surface)); border: 1px solid var(--c-border); }
+.sb-key.heat-few { background: repeating-linear-gradient(45deg, var(--c-surface) 0 2px, var(--c-border-strong) 2px 3px); border: 1px solid var(--c-border); }
+
+/* ---------- 小タブ(分析の中のタブ) ----------
+   <nav class="subtabs" role="tablist"><button role="tab" aria-selected="true">場</button>…</nav>。下線 + 太字で選択を示す。横スクロール可 */
+.subtabs { display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--c-border); }
+.subtabs::-webkit-scrollbar { display: none; }
+.subtabs > * { flex: 1 0 auto; min-height: var(--tap-min); padding: 0 var(--space-4); border: 0; background: none; color: var(--c-text-2); font: inherit; font-size: var(--size-sm); font-weight: var(--weight-bold); white-space: nowrap; cursor: pointer; position: relative; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.subtabs [aria-selected="true"] { color: var(--c-accent-text); font-weight: var(--weight-heavy); }
+.subtabs [aria-selected="true"]::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--c-accent); }
+.subtabs > *:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -3px; }
+
+/* ---------- 条件の選択(チップ・セレクト) ----------
+   単一選択: <div class="fchips" role="radiogroup"><button class="fchip" role="radio" aria-checked="true">全期間</button>…
+   複数選択: role="checkbox" / aria-pressed。選ぶと ✓ + 塗り(色だけにしない)。高さ36px・タップ領域44px */
+.filters { display: flex; flex-direction: column; gap: var(--space-3); }
+.filter { display: grid; grid-template-columns: 4.6em minmax(0, 1fr); align-items: center; gap: var(--space-3); }
+.filter__label { font-size: var(--size-xs); color: var(--c-text-2); font-weight: var(--weight-bold); }
+.fchips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; }
+.fchips::-webkit-scrollbar { display: none; }
+.fchip { position: relative; flex: none; display: inline-flex; align-items: center; gap: 3px; height: 36px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text); font: inherit; font-size: var(--size-xs); font-weight: var(--weight-bold); white-space: nowrap; cursor: pointer; }
+.fchip::after { content: ""; position: absolute; inset: -4px 0; } /* タップ領域 44px */
+.fchip[aria-checked="true"], .fchip[aria-pressed="true"] { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-text-on-accent); }
+.fchip[aria-checked="true"]::before, .fchip[aria-pressed="true"]::before { content: "✓"; }
+.fchip:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.select--sm { min-height: 36px; font-size: var(--size-sm); padding-left: var(--space-3); }
+.filter-reset { font-size: var(--size-xs); }
+
+/* ---------- 集計表 ----------
+   列: 条件 / 件数 / 率(+区間)/ 全国平均との差。30〜199 = tr.is-lown(既存)+「参考」、30未満 = .insuff で率を出さない */
+.atable { width: 100%; border-collapse: collapse; font-size: var(--size-sm); font-variant-numeric: tabular-nums; }
+.atable th { font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-3); text-align: right; padding: 0 var(--space-2) 6px; white-space: nowrap; }
+.atable td { text-align: right; padding: 8px var(--space-2); border-top: 1px solid var(--c-border); white-space: nowrap; vertical-align: middle; }
+.atable th:first-child, .atable td:first-child { text-align: left; padding-left: 0; white-space: normal; }
+.atable td:last-child, .atable th:last-child { padding-right: 0; }
+.atable .rate { font-weight: var(--weight-bold); }
+.atable .rate small { display: block; font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.atable .n { color: var(--c-text-3); }
+.atable tr.is-lown .rate { color: var(--c-text-3); }
+/* 全国平均との差: ▲ +3.2pt / ▼ −1.5pt / ＝ 0.0pt(記号 + 符号。色は補助) */
+.diff { display: inline-flex; align-items: center; gap: 1px; font-size: var(--size-xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.diff--up { color: var(--c-reason-up); }
+.diff--up::before { content: "▲"; font-size: .8em; }
+.diff--down { color: var(--c-reason-down); }
+.diff--down::before { content: "▼"; font-size: .8em; }
+.diff--flat { color: var(--c-text-2); }
+.diff--flat::before { content: "＝"; }
+.is-lown .diff { color: var(--c-text-3); }
+.hb-val .diff { font-size: var(--size-2xs); }
+
+/* ---------- ランキングの行 ----------
+   <ol class="ranks"><li class="rank"><span class="rank__no">1</span><span class="boat boat--sm boat-1">1</span><span class="rank__who"><button class="racer-link">…</button><small>戸田 1R・A1</small></span><span class="rank__val">72.4%<small>156走</small></span></li></ol>
+   順位は数字。1〜3位も色を変えず太字だけ(勝ち負けを煽らない) */
+.ranks { list-style: none; margin: 0; padding: 0; }
+.rank { display: grid; grid-template-columns: 1.8em auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); min-height: 52px; border-top: 1px solid var(--c-border); }
+.rank:first-child { border-top: 0; }
+.rank__no { text-align: center; font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums; color: var(--c-text-2); }
+.rank:nth-child(-n+3) .rank__no { color: var(--c-text); }
+.rank__who { display: flex; flex-direction: column; min-width: 0; font-size: var(--size-sm); font-weight: var(--weight-bold); }
+.rank__who small { font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank__val { text-align: right; font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums; display: flex; flex-direction: column; line-height: 1.2; }
+.rank__val small { font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.rank.is-lown .rank__val { color: var(--c-text-3); }
+
+/* ---------- シミュレーターの比較表 ----------
+   1列目(条件)を固定して横スクロール。既定の並びは回収率順にしない(spec/11 W-20)。
+   今の設定の行は .is-current(左の帯 + 「今の設定」)、基準は .is-base(「基準」タグ) */
+.simwrap { overflow-x: auto; border: 1px solid var(--c-border); border-radius: var(--radius-md); }
+.simtable { border-collapse: separate; border-spacing: 0; font-size: var(--size-xs); font-variant-numeric: tabular-nums; min-width: 560px; width: 100%; }
+.simtable th, .simtable td { padding: 8px 10px; text-align: right; white-space: nowrap; border-top: 1px solid var(--c-border); background: var(--c-surface); }
+.simtable thead th { border-top: 0; font-size: var(--size-2xs); color: var(--c-text-3); font-weight: var(--weight-bold); background: var(--c-surface-2); }
+.simtable th:first-child, .simtable td:first-child { position: sticky; left: 0; z-index: 1; text-align: left; box-shadow: 1px 0 0 var(--c-border); max-width: 9.5em; white-space: normal; }
+.simtable td:first-child { font-weight: var(--weight-bold); font-size: var(--size-xs); }
+.simtable .sim-ci { display: block; font-size: var(--size-2xs); color: var(--c-text-3); }
+.simtable tr.is-current td { background: var(--c-accent-weak); }
+.simtable tr.is-current td:first-child { box-shadow: inset 3px 0 0 var(--c-accent), 1px 0 0 var(--c-border); }
+.simtable tr.is-current td:first-child::after { content: "今の設定"; display: block; font-size: var(--size-2xs); color: var(--c-accent-text); font-weight: var(--weight-heavy); }
+.simtable tr.is-lown td { color: var(--c-text-3); }
+.basetag { display: inline-flex; align-items: center; height: 16px; padding: 0 4px; margin-left: 4px; border-radius: 3px; border: 1px solid var(--c-border-strong); color: var(--c-text-2); font-size: 10px; font-weight: var(--weight-bold); vertical-align: 1px; }
+.sortnote { font-size: var(--size-2xs); color: var(--c-text-3); margin-top: 6px; }
+
+/* ---------- 後知恵の注意の帯 ----------
+   検証(バックテスト)の画面の上に常に出す。閉じられない。黄土の地ではなく「破線の枠 + ⚠ + 本文」で、警告(予算)と区別 */
+.hindsight { display: flex; gap: var(--space-3); align-items: flex-start; padding: 10px var(--space-4); border-radius: var(--radius-sm); border: 1.5px dashed var(--c-warn); background: var(--c-warn-weak); color: var(--c-text); font-size: var(--size-xs); line-height: 1.55; }
+.hindsight svg { width: 18px; height: 18px; flex: none; color: var(--c-warn); margin-top: 1px; }
+.hindsight b { display: block; font-size: var(--size-sm); }
+/* 検証と実運用の区別の小さな印: <span class="periodtag periodtag--bt">検証</span> / --live 実運用 */
+.periodtag { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--radius-xs); font-size: var(--size-2xs); font-weight: var(--weight-heavy); white-space: nowrap; }
+.periodtag--bt { border: 1.5px dashed var(--c-warn); color: var(--c-warn); }
+.periodtag--live { border: 1.5px solid var(--c-text); color: var(--c-text); }
+
+/* ---------- 下部タブ 5つ(レース / 成績 / 分析 / 収支 / その他) ---------- */
+.tabbar--5 { grid-template-columns: repeat(5, 1fr); }
+.tabbar--5 a { font-size: 10px; }
+.tabbar--5 a svg { width: 22px; height: 22px; }
+
+/* =====================================================================
+   v1.0 追加: デザイナーAの DA-7(design/screens/README.md 18章)に合わせた部品
+   ===================================================================== */
+/* 無効なチップ(事前集計の無い組合せ): 破線の枠 + 薄い文字 + 斜線。押せない理由は直後の .fchip-reason に1行で */
+.fchip:disabled, .fchip[aria-disabled="true"] { cursor: not-allowed; color: var(--c-text-3); border-style: dashed; border-color: var(--c-skip-border);
+  background: repeating-linear-gradient(135deg, transparent 0 5px, var(--c-surface-2) 5px 8px); }
+.fchip:disabled::before, .fchip[aria-disabled="true"]::before { content: "⊘"; }
+.fchip-reason { display: flex; align-items: center; gap: 4px; font-size: var(--size-2xs); color: var(--c-text-2); margin-top: 2px; }
+.fchip-reason::before { content: "ⓘ"; color: var(--c-text-3); }
+/* A の名前: .chips(折り返すチップ。button[aria-pressed] / [disabled]) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { display: inline-flex; align-items: center; gap: 3px; min-height: 36px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text); font: inherit; font-size: var(--size-xs); font-weight: var(--weight-bold); cursor: pointer; }
+.chips button[aria-pressed="true"], .chips button[aria-checked="true"] { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-text-on-accent); }
+.chips button[aria-pressed="true"]::before, .chips button[aria-checked="true"]::before { content: "✓"; }
+.chips button:disabled { cursor: not-allowed; color: var(--c-text-3); border-style: dashed; border-color: var(--c-skip-border); background: repeating-linear-gradient(135deg, transparent 0 5px, var(--c-surface-2) 5px 8px); }
+.chips button:disabled::before { content: "⊘"; }
+/* A の名前: .insuf(件数不足の札)= .insuff、.ref(参考の札)= .lown-tag と同じ見た目 */
+.insuf { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: var(--radius-xs); border: 1px dotted var(--c-skip-border); color: var(--c-text-3); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; }
+.ref { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; margin-left: 3px; border-radius: var(--radius-xs); border: 1px dashed var(--c-border-strong); color: var(--c-text-2); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; }
+/* A の名前: .cbar(コース別の1行: 番号 / 棒 / 率 / 件数)。棒は <span class="cbar__bar" style="--p:.58"><i></i></span> */
+.cbar { display: grid; grid-template-columns: 22px minmax(0, 1fr) 52px 54px; gap: 6px; align-items: center; min-height: 28px; font-size: var(--size-sm); font-variant-numeric: tabular-nums; }
+.cbar .p { text-align: right; font-weight: var(--weight-bold); }
+.cbar .n { text-align: right; color: var(--c-text-3); font-size: var(--size-2xs); }
+.cbar__bar { position: relative; height: 10px; border-radius: 3px; background: var(--c-bar-track); }
+.cbar__bar > i { position: absolute; inset: 0 auto 0 0; width: calc(var(--p, 0) * 100%); border-radius: 3px; background: var(--c-bar-fill); }
+.cbar.is-hl .cbar__bar > i { background: var(--c-bar-fill-top); }
+.cbar.few .p, .cbar.is-lown .p { color: var(--c-text-3); }
+/* A の名前: .stack(積み上げ)。**色だけで分けない**ため、B は v0.7 の模様(.tkbar の tk-* クラス)で描く。
+   <div class="stack tkbar"><i class="tk-nige" style="--p:.55"><b>55</b></i>…</div>(BRCharts.stacked と同じ) */
+.stack.tkbar { height: 22px; margin: 4px 0; }
+.stack.tkbar > i { display: flex; align-items: center; justify-content: center; }
+.stack.tkbar > i b { font-size: 10px; font-weight: var(--weight-heavy); color: var(--c-text); background: var(--c-surface); border-radius: 3px; padding: 0 2px; line-height: 1.3; }
+/* 小タブをアプリバーの下に固定 */
+.subtabs--sticky { position: sticky; top: var(--appbar-h, 52px); z-index: 9; background: var(--c-surface); }
+.subtabs--fill > * { flex: 1 1 0; min-width: 0; padding: 0 2px; font-size: var(--size-xs); }

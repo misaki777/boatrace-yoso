@@ -16,8 +16,10 @@ import { fetchPanel, raceRecommendation, describeSettings, localMark } from './o
 import { settingsView } from './views/settings.js';
 import * as localdb from './localdb.js';
 import { summarize, byMonth, budgetWarnings, normalizeBudget, normalizeMarks, markStats } from './ledger.js';
-import { ledgerView, marksView } from './views/ledger.js';
+import { ledgerView, marksView, analysisView } from './views/ledger.js';
+import { groupStats, timeBand, evRankKey, allocationKey } from './analytics.js';
 import { racerSheet, modelsView } from './views/phase3b.js';
+import { stadiumTab, playersTab, modelTab, simTab } from './views/analytics.js';
 import { ICONS, tabbar } from './parts.js';
 import { copyText, ALLOCATION_METHODS } from './betsum.js';
 import { currentAllocation } from './views/race.js';
@@ -59,6 +61,9 @@ function parseRoute() {
   if (hash === '/about') return { name: 'about' };
   if (hash === '/ledger') return { name: 'ledger' };
   if (hash === '/models') return { name: 'models' };
+  if (hash === '/analysis') return { name: 'analytics', sub: 'you' };
+  if ((m = /^\/analytics\/(stadium|players|model|sim|you)$/.exec(hash))) return { name: 'analytics', sub: m[1] };
+  if (hash === '/analytics') return { name: 'analytics', sub: 'stadium' };
   if (hash === '/marks') return { name: 'marks' };
   if (hash === '/settings' || hash === '/settings/worker') return { name: 'settings', focus: hash.endsWith('/worker') ? 'worker' : null };
   return { name: 'unknown' };
@@ -472,6 +477,7 @@ function render() {
     else if (route.name === 'ledger') view = renderLedger();
     else if (route.name === 'marks') view = renderMarks();
     else if (route.name === 'models') view = renderModels();
+    else if (route.name === 'analytics') view = route.sub === 'you' ? renderAnalysis() : renderAnalyticsPlaceholder(route.sub);
     else view = renderAbout();
   } catch (e) {
     console.error(e);
@@ -490,6 +496,7 @@ function titleFor(route) {
   if (route.name === 'about') return `その他 - ${base}`;
   if (route.name === 'settings') return `設定 - ${base}`;
   if (route.name === 'ledger') return `収支 - ${base}`;
+  if (route.name === 'analytics') return `${t('ana.tab')} - ${base}`;
   if (route.name === 'models') return `${t('models.heading')} - ${base}`;
   if (route.name === 'marks') return `自分の予想の成績 - ${base}`;
   if (route.name === 'race') {
@@ -783,6 +790,15 @@ document.addEventListener('click', (e) => {
     case 'card-close':
       closeCard();
       break;
+    case 'ana-stadium': anaUi.stadium = Number(el.dataset.value); anaUi.cube = {}; render(); break;
+    case 'ana-period': anaUi.period = el.dataset.value; render(); break;
+    case 'ana-cube': { const [d, v] = el.dataset.value.split(':'); anaUi.cube = { ...anaUi.cube, [d]: v }; render(); break; }
+    case 'ana-rkind': anaUi.rkind = el.dataset.value; render(); break;
+    case 'ana-rscope': anaUi.rscope = Number(el.dataset.value); render(); break;
+    case 'ana-mver': anaUi.mver = el.dataset.value; render(); break;
+    case 'ana-week': anaUi.week = el.dataset.value; render(); break;
+    case 'ana-simsrc': anaUi.simsrc = el.dataset.value; render(); break;
+    case 'ana-simsort': anaUi.simsort = el.dataset.value; render(); break;
     case 'help':
       toggleHelp(el);
       break;
@@ -814,7 +830,9 @@ document.addEventListener('click', (e) => {
       const now = new Date().toISOString();
       // 表示中の金額で記録する(0円の買い目は記録しない)
       const shown = currentAllocation(rec, new Set(), getAlloc());
-      addBets(shown.map((x) => ({ id: localdb.newId(), race_id: cur.race.race_id, bet_type: x.bet.bet_type, combination: x.bet.combination, amount: x.amount, bought_at: now, source: 'model', memo: '' })));
+      // 分析用に、記録した時点の期待値ランクと配分のしかたも残す(spec/11 2.5)
+      const method = getAlloc().method;
+      addBets(shown.map((x) => ({ id: localdb.newId(), race_id: cur.race.race_id, bet_type: x.bet.bet_type, combination: x.bet.combination, amount: x.amount, bought_at: now, source: 'model', memo: '', ev_rank: x.bet.ev_rank || null, allocation: method })));
       showToast(`${shown.length}点を記録しました(収支で確認・削除できます)`);
       break;
     }
@@ -833,7 +851,7 @@ document.addEventListener('click', (e) => {
       else {
         ledgerUi.formError = '';
         ledgerUi.form = { bet_type };
-        addBets([{ id: localdb.newId(), race_id, bet_type, combination, amount, bought_at: new Date().toISOString(), source: 'self', memo: '' }]);
+        addBets([{ id: localdb.newId(), race_id, bet_type, combination, amount, bought_at: new Date().toISOString(), source: 'self', memo: '', allocation: 'manual' }]);
         showToast('記録しました');
         break;
       }
@@ -1421,6 +1439,63 @@ function renderModels() {
   }
   const bar = html`<header class="appbar"><a class="iconbtn" href="#/about" aria-label="戻る">${ICONS.back}</a><h1 class="appbar__title">${t('models.heading')}</h1></header>`;
   return modelsView({ data: modelsState.data, error: modelsState.error, appbar: bar, tabbar: tabbar('about') });
+}
+
+// ---------------------------------------------------------------- あなたの収支分析(W-21)
+const STADIUM_NAMES_SHORT = ['桐生', '戸田', '江戸川', '平和島', '多摩川', '浜名湖', '蒲郡', '常滑', '津', '三国', 'びわこ', '住之江', '尼崎', '鳴門', '丸亀', '児島', '宮島', '徳山', '下関', '若松', '芦屋', '福岡', '唐津', '大村'];
+function renderAnalysis() {
+  if (!local.loaded) return html`<header class="appbar"><h1 class="appbar__title is-pad">あなたの収支分析</h1></header>`;
+  const s = summarize(local.bets, raceById);
+  const hourOf = (row) => { const r = raceById(row.bet.race_id); const ms = r ? parseIso(r.closed_at) : NaN; return Number.isNaN(ms) ? null : new Date(ms + 9 * 3600000).getUTCHours(); };
+  const sections = [
+    ['券種別', (row) => betTypeLabel(row.bet.bet_type)],
+    ['場別', (row) => { const p = parseRaceId(row.bet.race_id); return p ? STADIUM_NAMES_SHORT[p.stadiumNumber - 1] || '不明' : '不明'; }],
+    ['時間帯別(締切時刻)', (row) => timeBand(hourOf(row))],
+    ['期待値ランク別(記録したとき)', (row) => evRankKey(row.bet)],
+    ['配分のしかた別', (row) => allocationKey(row.bet)],
+    ['自分の印', (row) => (local.marks[row.bet.race_id] && Object.keys(local.marks[row.bet.race_id]).length ? '印あり' : '印なし')],
+  ].map(([title, keyOf]) => ({ title, rows: groupStats(s.rows, keyOf) }));
+  return analysisView({ sections, total: s.races, busy: state.busy, subtabs: analyticsSubtabs('you') });
+}
+
+// ---------------------------------------------------------------- 分析タブの骨組み(W-18。中身は W-19・W-20)
+const ANALYTICS_TABS = [['stadium', '場'], ['players', '今日の選手'], ['model', 'モデル'], ['sim', '買い方'], ['you', 'あなた']];
+function analyticsSubtabs(current) {
+  return html`<nav class="subtabs subtabs--sticky subtabs--fill" role="tablist" aria-label="${t('ana.tab')}">${ANALYTICS_TABS.map(([k, name]) => html`<a role="tab" href="#/analytics/${k}" aria-selected="${String(k === current)}" data-replace>${name}</a>`)}</nav>`;
+}
+const anaUi = { stadium: 0, period: 'all', cube: {}, rkind: null, rscope: 0, mver: 'pre', week: null, simsrc: 'validation', simsort: 'default' };
+const anaFiles = {};
+function anaLoad(path) {
+  if (anaFiles[path] !== undefined) return anaFiles[path] && anaFiles[path].json;
+  anaFiles[path] = null;
+  load(`analytics/${path}`).then((e) => { anaFiles[path] = e; }).catch(() => { anaFiles[path] = false; }).finally(render);
+  return undefined;
+}
+function renderAnalyticsPlaceholder(sub) {
+  const idx = anaLoad('index.json');
+  let body;
+  if (anaFiles['index.json'] === false) body = html`<div class="emptybox" role="alert">分析のデータを読み込めませんでした。</div>`;
+  else if (!idx) body = html`<div class="emptybox" role="status">読み込み中…</div>`;
+  else if (sub === 'stadium') {
+    const data = anaLoad('stadiums.json');
+    const sid = data && Object.keys(data.stadiums).map(Number).includes(anaUi.stadium) ? anaUi.stadium : 0;
+    const cube = sid ? anaLoad(`cube/${String(sid).padStart(2, '0')}.json`) : null;
+    body = stadiumTab({ data, cube: sid ? cube : { rows: [] }, ui: { ...anaUi, stadium: sid } });
+  } else if (sub === 'players') {
+    const dates = (idx.files.rankings || []).slice().sort();
+    const want = todayJst().replace(/-/g, '');
+    const d = dates.includes(want) ? want : dates[dates.length - 1];
+    const stad = anaLoad('stadiums.json');
+    body = d ? playersTab({ data: anaLoad(`rankings/${d}.json`), ui: anaUi, stadiumName: (n) => (stad && stad.stadiums[n] ? stad.stadiums[n].name : `${n}場`) }) : playersTab({ data: null, ui: anaUi });
+  } else if (sub === 'model') {
+    const weeks = (idx.files.weekly || []).slice().sort();
+    const w = weeks.includes(anaUi.week) ? anaUi.week : weeks[weeks.length - 1];
+    body = modelTab({ weak: anaLoad('model_weakness.json'), weekly: w ? anaLoad(`weekly/${w}.json`) : null, weeks, ui: { ...anaUi, week: w } });
+  } else body = simTab({ data: anaLoad('simulator.json'), ui: anaUi });
+  return html`<header class="appbar"><h1 class="appbar__title is-pad">${t('ana.tab')}</h1></header>
+    ${analyticsSubtabs(sub)}
+    ${body}
+    ${tabbar('analytics')}`;
 }
 
 // ---------------------------------------------------------------- 起動

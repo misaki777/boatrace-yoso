@@ -86,5 +86,112 @@
   }
   function yen(v) { return (v < 0 ? '−' : v > 0 ? '+' : '') + Math.abs(Math.round(v)).toLocaleString('ja-JP'); }
 
-  global.BRCharts = {wilson, calibration, pnl, yen};
+
+  // ===================== v0.9 追加(DB-7: 分析画面) =====================
+  /** 件数の扱い(spec/11 1.3)。'ok' / 'few'(30〜199: 薄く「参考」)/ 'none'(30未満: 数字を出さず「件数不足」) */
+  const RULES = {okN: 200, minN: 30};
+  function nClass(n) { return n >= RULES.okN ? 'ok' : n >= RULES.minN ? 'few' : 'none'; }
+  const pct = (v, d = 1) => (v * 100).toFixed(d) + '%';
+
+  /**
+   * 推移の折れ線。series: [{name, values:[0〜1 or null], n:[件数]}](1〜2本)、labels: x軸の名前(週・月)。
+   * opts.marks: [{at: index, label: 'モデル切替'}] → 縦の破線と上の注記。opts.ref: 基準線(例 全国平均 0.55)と opts.refLabel。
+   * 件数 < minN の点は線を切り、白抜きの点(few)/点なし(none)。2本目は破線で描く(色だけにしない)。
+   * opts.format: 'pct'(既定。0.55 → 55%)/ 'num'(ECE など。opts.digits 桁の小数)。opts.step: 目盛りの間隔(既定は自動)。
+   */
+  function trend(series, labels, opts = {}) {
+    const W = opts.width || 360, H = opts.height || 220, L = 40, R = 14, T = 22, B = 26;
+    const all = series.flatMap(s => s.values.filter(v => v != null)).concat(opts.ref != null ? [opts.ref] : []);
+    const lo0 = opts.min ?? Math.max(0, Math.floor((Math.min(...all) - .05) * 10) / 10), hi0 = opts.max ?? Math.min(1, Math.ceil((Math.max(...all) + .05) * 10) / 10);
+    // ECE など小さい値は opts.min / opts.max / opts.step を指定する(例 min 0, max .08, step .02)
+    const x = i => L + (labels.length > 1 ? i * (W - L - R) / (labels.length - 1) : (W - L - R) / 2);
+    const y = v => T + (1 - (v - lo0) / (hi0 - lo0 || 1)) * (H - T - B);
+    let s = `<svg class="chart trend" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label || '推移')}">`;
+    const step = opts.step || ((hi0 - lo0) > .5 ? .2 : .1);
+    const fmt = v => opts.format === 'num' ? v.toFixed(opts.digits ?? 2) : `${Math.round(v * 100)}%`;
+    for (let v = lo0; v <= hi0 + 1e-9; v += step) s += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+    if (opts.ref != null) s += `<line class="base" x1="${L}" x2="${W - R}" y1="${y(opts.ref)}" y2="${y(opts.ref)}"/><text class="ref-lbl" x="${L + 4}" y="${y(opts.ref) - 4}">${esc(opts.refLabel || '基準')}</text>`;
+    (opts.marks || []).forEach(m => { s += `<line class="vmark" x1="${x(m.at)}" x2="${x(m.at)}" y1="${T - 4}" y2="${H - B}"/><text class="vmark-lbl" x="${x(m.at) + 3}" y="${T - 8}">${esc(m.label)}</text>`; });
+    series.forEach((sr, si) => {
+      let seg = [], segs = [];
+      sr.values.forEach((v, i) => { const c = v == null ? 'none' : nClass(sr.n ? sr.n[i] : RULES.okN); if (c === 'none') { if (seg.length) segs.push(seg); seg = []; } else seg.push([i, v]); });
+      if (seg.length) segs.push(seg);
+      segs.forEach(g => { s += `<polyline class="line${si ? ' line--2' : ''}" points="${g.map(([i, v]) => `${x(i)},${y(v)}`).join(' ')}"/>`; });
+      sr.values.forEach((v, i) => { if (v == null) return; const n = sr.n ? sr.n[i] : RULES.okN, c = nClass(n); if (c === 'none') return;
+        s += `<circle class="dot${c === 'few' ? ' is-lown' : ''}${si ? ' dot--2' : ''}" cx="${x(i)}" cy="${y(v)}" r="3.5"><title>${esc(`${labels[i]} ${sr.name || ''} ${opts.format === 'num' ? v.toFixed(opts.digits ?? 3) : pct(v)}(${n}件${c === 'few' ? '・参考' : ''})`)}</title></circle>`; });
+      const li = sr.values.map((v, i) => v != null && nClass(sr.n ? sr.n[i] : RULES.okN) !== 'none' ? i : -1).filter(i => i >= 0).pop();
+      if (li != null && series.length > 1) {
+        // 2本の名前が重ならないよう、最後の値が大きい方を線の上、小さい方を線の下に置く
+        const other = series[1 - si] && series[1 - si].values[li], below = other != null && sr.values[li] < other;
+        s += `<text class="lbl" x="${x(li) - 4}" y="${y(sr.values[li]) + (below ? 15 : -7)}" text-anchor="end">${esc(sr.name)}</text>`;
+      }
+    });
+    s += `<text x="${L}" y="${H - 6}">${esc(labels[0] || '')}</text><text x="${W - R}" y="${H - 6}" text-anchor="end">${esc(labels[labels.length - 1] || '')}</text>`;
+    return s + '</svg>';
+  }
+
+  /**
+   * 横棒の比較(場・コース)。HTML を返す(行ごとに文字が読めるように)。
+   * items: [{label, value(0〜1), n, lo?, hi?}]、opts.ref: 全国平均などの基準(縦線と「全国 55%」)。
+   * opts.mode: 'bar'(既定)/ 'dot'(区間つきの点)。件数で ok/few/none を切り替え、none は「件数不足」。
+   * opts.max: 目盛りの上限(既定 1)。opts.highlight: 強調する label。
+   * opts.diff: true のときだけ基準との差(▲▼pt)を出す(既定 false。同じ基準と比べて意味があるときだけ使う)。
+   */
+  function hbars(items, opts = {}) {
+    const max = opts.max || 1, mode = opts.mode || 'bar', ref = opts.ref;
+    const rows = items.map(it => {
+      const c = nClass(it.n), hl = opts.highlight === it.label ? ' is-hl' : '';
+      if (c === 'none') return `<div class="hb-row is-none${hl}"><span class="hb-label">${esc(it.label)}</span><span class="hb-track"></span><span class="hb-val"><span class="insuff">件数不足</span><small>${it.n}件</small></span></div>`;
+      const w = v => `${Math.max(0, Math.min(1, v / max)) * 100}%`;
+      const ci = it.lo != null ? `<i class="hb-ci" style="left:${w(it.lo)};width:calc(${w(it.hi)} - ${w(it.lo)})"></i>` : '';
+      const mark = mode === 'dot' ? `<i class="hb-dot" style="left:${w(it.value)}"></i>` : `<i class="hb-fill" style="width:${w(it.value)}"></i>`;
+      const refl = ref != null ? `<i class="hb-ref" style="left:${w(ref)}"></i>` : '';
+      const diff = ref != null && opts.diff ? `<small class="diff ${it.value - ref >= 0 ? 'diff--up' : 'diff--down'}">${it.value - ref >= 0 ? '+' : '−'}${Math.abs((it.value - ref) * 100).toFixed(1)}pt</small>` : '';
+      return `<div class="hb-row${c === 'few' ? ' is-lown' : ''}${hl}"><span class="hb-label">${esc(it.label)}</span><span class="hb-track">${refl}${ci}${mark}</span><span class="hb-val">${pct(it.value)}<small>${it.n.toLocaleString()}件${c === 'few' ? '・参考' : ''}</small>${diff}</span></div>`;
+    }).join('');
+    const legend = ref != null ? `<div class="hb-legend"><i class="lg-ref"></i>${esc(opts.refLabel || '全国平均')} ${pct(ref)}${mode === 'dot' || items.some(i => i.lo != null) ? '<i class="lg-ci" style="margin-left:10px"></i>95%区間' : ''}</div>` : '';
+    return `<div class="hbars${mode === 'dot' ? ' hbars--dot' : ''}" role="list">${rows}</div>${legend}`;
+  }
+
+  /**
+   * 積み上げ横棒(決まり手の割合など)。rows: [{label, n, parts:[{key, name, p}]}]。key は tk-nige などの模様のクラス名。
+   * 15%以上の区間には中に % を書き、全体の凡例を下に付ける(色と模様の両方で区別)。
+   */
+  function stacked(rows, opts = {}) {
+    const keys = [];
+    const body = rows.map(r => {
+      const c = nClass(r.n);
+      if (c === 'none') return `<div class="sb-row is-none"><span class="hb-label">${esc(r.label)}</span><span class="insuff">件数不足</span><small class="sb-n">${r.n}件</small></div>`;
+      const seg = r.parts.map(pt => { if (!keys.find(k => k.key === pt.key)) keys.push(pt); return `<i class="${pt.key}" style="--p:${pt.p}" title="${esc(pt.name)} ${pct(pt.p, 0)}">${pt.p >= .15 ? `<b>${Math.round(pt.p * 100)}</b>` : ''}</i>`; }).join('');
+      return `<div class="sb-row${c === 'few' ? ' is-lown' : ''}"><span class="hb-label">${esc(r.label)}</span><span class="tkbar sb-bar">${seg}</span><small class="sb-n">${r.n.toLocaleString()}件</small></div>`;
+    }).join('');
+    const legend = `<div class="hb-legend">${keys.map(k => `<span><i class="sb-key ${k.key}"></i>${esc(k.name)}</span>`).join('')}<span>(数字は%)</span></div>`;
+    return `<div class="stacked">${body}</div>${legend}`;
+  }
+
+  /**
+   * ヒートマップ(場×コースなど)。HTML の表を返す。cells[r][c] = {v(0〜1), n} / null。
+   * 濃さは1色(アクセント)で 0〜50% まで(文字の 4.5:1 を保つため)、**各マスに必ず数字**。
+   * 件数 few は斜線の地 + 数字を薄く、none は「–」(件数不足)。行・列の見出しはそのまま th。
+   */
+  function heatmap(rowLabels, colLabels, cells, opts = {}) {
+    const vals = cells.flat().filter(c => c && nClass(c.n) !== 'none').map(c => c.v);
+    const lo = opts.min ?? Math.min(...vals), hi = opts.max ?? Math.max(...vals);
+    let s = `<table class="heat" aria-label="${esc(opts.label || 'ヒートマップ')}"><thead><tr><th scope="col">${esc(opts.corner || '')}</th>${colLabels.map(c => `<th scope="col">${esc(c)}</th>`).join('')}</tr></thead><tbody>`;
+    rowLabels.forEach((rl, r) => {
+      s += `<tr><th scope="row">${esc(rl)}</th>`;
+      colLabels.forEach((cl, c) => {
+        const cell = cells[r][c];
+        if (!cell || nClass(cell.n) === 'none') { s += `<td class="is-none" title="${esc(`${rl} ${cl} 件数不足(${cell ? cell.n : 0}件)`)}">–</td>`; return; }
+        const t = hi > lo ? (cell.v - lo) / (hi - lo) : .5, few = nClass(cell.n) === 'few';
+        s += `<td class="${few ? 'is-lown' : ''}" style="--t:${t.toFixed(3)}" title="${esc(`${rl} ${cl} ${pct(cell.v)}(${cell.n}件${few ? '・参考' : ''})`)}">${Math.round(cell.v * 100)}</td>`;
+      });
+      s += '</tr>';
+    });
+    s += '</tbody></table>';
+    s += `<div class="hb-legend"><span class="heat-scale"><i style="--t:0"></i><i style="--t:.5"></i><i style="--t:1"></i></span>${Math.round(lo * 100)}% → ${Math.round(hi * 100)}%<span><i class="sb-key heat-few"></i>参考(件数少)</span><span>– 件数不足</span></div>`;
+    return s;
+  }
+
+  global.BRCharts = {wilson, calibration, pnl, yen, trend, hbars, stacked, heatmap, nClass, RULES};
 })(typeof window !== 'undefined' ? window : globalThis);
