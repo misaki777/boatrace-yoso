@@ -251,3 +251,6 @@ design/visual/shots/
 
 # 履歴の状態(日次ジョブ用。R2 に置く)
 data/history/
+
+# 自動実行の成功時刻(毎回書き換えて公開するだけ。コミットしない)
+docs/data/status.json
