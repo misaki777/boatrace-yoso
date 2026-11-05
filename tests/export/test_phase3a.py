@@ -149,3 +149,62 @@ def test_live_performance_3a():
     assert lv["models"] == [{"model_id": "pre_20261101_test", "from": "2026-11-02", "to": "2026-11-02"},
                             {"model_id": "preview_20261101_test", "from": "2026-11-02", "to": "2026-11-02"}]
     assert sum(x["n"] for x in lv["calibration"]) == 6 * sum(1 for r in rows if not r["result"]["absent_entries"])
+
+
+def _write_inputs(tmp_path, preds_pre, preds_preview):
+    races, entries, payouts, _, _ = make_tables()
+    pdir = tmp_path / "pred"
+    pdir.mkdir(exist_ok=True)
+    preds_pre.to_parquet(pdir / f"{YMD}_pre.parquet", index=False)
+    (pdir / f"{YMD}_preview.parquet").unlink(missing_ok=True)
+    if preds_preview is not None:
+        preds_preview.to_parquet(pdir / f"{YMD}_preview.parquet", index=False)
+    interim = tmp_path / "interim"
+    for name, df in (("races", races), ("entries", entries), ("payouts", payouts)):
+        (interim / name).mkdir(parents=True, exist_ok=True)
+        df.to_parquet(interim / name / "2026-11.parquet", index=False)
+    return ed.load_inputs(D, interim_dir=interim, predictions_dir=pdir, models_dir=tmp_path,
+                          official_odds_dir=tmp_path / "oo")
+
+
+def test_per_race_preview_lock_appended_later(tmp_path):
+    """直前版はレースごとに確定・追記される(--per-race-lock)。追記の前後で、確定済みの予想は変わらない。"""
+    _, _, _, _, preds = make_tables()
+    pre = preds[preds["variant"] == "pre"].copy()
+    pre["locked_at"] = pd.Timestamp("2026-11-02 07:30:00", tz="Asia/Tokyo")
+    # 直前版にする元: 場12の全レースに preview の行を作り、締切12分前に確定したことにする
+    pv_all = pre[pre["race_id"].str.startswith(f"{YMD}-12-")].copy()
+    pv_all["variant"] = "preview"
+    pv_all["model_id"] = "preview_x"
+    pv_all["p_win"] = pv_all.groupby("race_id")["p_win"].transform(lambda s: s[::-1].values)
+    rn = pv_all["race_id"].str[-2:].astype(int)
+    pv_all["locked_at"] = pd.Timestamp("2026-11-02 09:48:00", tz="Asia/Tokyo") + pd.to_timedelta(30 * (rn - 1), "m")
+    pv_all["predicted_at"] = pv_all["locked_at"]
+    first = pv_all[rn <= 3]          # 1回目: 1〜3R だけ直前版が確定
+    second = pv_all[rn <= 6]         # 2回目: 4〜6R が追記された(1〜3R の行はそのまま)
+
+    def run(preview):
+        return ed.build_day(D, _write_inputs(tmp_path, pre, preview), generated_at=GEN)
+
+    d0, d1, d2 = run(None), run(first), run(second)
+    for rn_ in [x for x in range(1, 13) if x != 5]:   # 12-05 は合成データで予想なし
+        v0, v1, v2 = (find(d, 12, rn_)["prediction"] for d in (d0, d1, d2))
+        assert v0["version"] == "pre" and v0["locked_at"] == "2026-11-02T07:30:00+09:00"
+        assert v1["version"] == ("preview" if rn_ <= 3 else "pre")
+        assert v2["version"] == ("preview" if rn_ <= 6 else "pre")
+        if rn_ <= 3:
+            assert v1 == v2                               # 確定済みの直前版は追記で変わらない
+            assert v1["locked_at"] == f"2026-11-02T{9 + (48 + 30 * (rn_ - 1)) // 60:02d}:" \
+                                      f"{(48 + 30 * (rn_ - 1)) % 60:02d}:00+09:00"
+            assert v1["model_id"] == "preview_x"
+        elif rn_ > 6:
+            assert v0 == v1 == v2                         # 前日版のままのレースも変わらない
+    # 他の場は前日版のまま
+    assert all(r["prediction"]["version"] == "pre" for r in d2["stadiums"][0]["races"])
+    assert validate_day(d2, local=True) == []
+    # live の by_version はレース単位(場12の1〜6Rのうち結果のあるものだけが直前版)
+    perf = build_performance([strip_numeric_odds(d2)], GEN, None)
+    n_preview = sum(1 for r in iter_races(d2) if r["result"] and r["prediction"]
+                    and r["prediction"]["version"] == "preview"
+                    and r["prediction"]["recommended"])
+    assert (perf["live"]["by_version"]["preview"] or {"races": 0})["races"] == n_preview

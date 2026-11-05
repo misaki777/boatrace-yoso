@@ -12,6 +12,11 @@ CLI:
 終わる。--force のときだけ上書きし、旧版を data/predictions/superseded/YYYYMMDD_{variant}_{旧model_id}.parquet
 (根拠は ..._contrib.parquet)へ退避する。locked_at は最初に書いた時刻(= predicted_at)。
 
+--variant preview --per-race-lock(日中ジョブ用): 既にファイルにあるレースは行も locked_at もそのまま。
+未確定のうち、全艇の直前情報がそろい、締切前のレースだけを予想して追記する(locked_at はレースごとの追記時刻)。
+直前情報が無いレースは追記しない(pre へのフォールバックで確定させない)。締切後のレースは追加しない。
+根拠ファイルも同じ規則で追記する。現在時刻は --now で渡せる。--force を付けたときは従来どおりの全体上書き。
+
 予想は6艇で行う(欠場は予想時点では未知。欠場が判明したときの再正規化は export 時に
 combinations.py の関数で行う)。組合せ確率は保存しない(export 時に p_win から計算し直す)。
 """
@@ -168,6 +173,90 @@ def write_locked(out: pd.DataFrame, contrib: pd.DataFrame | None, out_dir: str |
     return status
 
 
+# ---------------------------------------------------------------------------
+# レースごとの確定(GitHub Actions の日中ジョブ用。--variant preview --per-race-lock)
+# ---------------------------------------------------------------------------
+
+
+def race_status(feats: pd.DataFrame, closed_at: pd.Series, now: datetime, locked: set) -> pd.Series:
+    """レースごとの状態: locked(確定済み)/ ready(追記する)/ waiting(直前情報待ち)/ closed(締切後で見送り)。
+
+    ready = 未確定・6艇そろって全艇の直前情報(pv_exhibition_time)がある・締切前(now < closed_at)。
+    締切時刻が不明なレースは追記しない(waiting に数える)。
+    """
+    g = feats.assign(_pv=feats["pv_exhibition_time"].notna()).groupby(feats["race_id"].astype(str))
+    complete = (g["_pv"].sum() == 6) & (g.size() == 6)
+    now_ts = pd.Timestamp(now)
+    ca = pd.to_datetime(closed_at.reindex(complete.index))
+    before = ca.notna() & (now_ts < ca)
+    after = ca.notna() & (now_ts >= ca)
+    status = pd.Series("waiting", index=complete.index)
+    status[after] = "closed"
+    status[complete & before] = "ready"
+    status[status.index.isin(locked)] = "locked"
+    return status
+
+
+def per_race_update(
+    feats: pd.DataFrame,
+    closed_at: pd.Series,
+    now: datetime,
+    booster,
+    meta: dict,
+    existing: pd.DataFrame | None,
+    existing_contrib: pd.DataFrame | None,
+) -> tuple[pd.DataFrame, pd.DataFrame | None, dict]:
+    """確定済みの行はそのままにして、ready のレースだけを予想して追記した (予想, 根拠, 件数) を返す。
+
+    追記した行の predicted_at と locked_at は now(レースごとの追記時刻)。
+    """
+    locked = set(existing["race_id"].astype(str)) if existing is not None else set()
+    st = race_status(feats, closed_at, now, locked)
+    ready = set(st[st == "ready"].index)
+    counts = {k: int((st == k).sum()) for k in ("ready", "locked", "waiting", "closed")}
+    counts["added"] = counts.pop("ready")
+    if not ready:
+        return existing, existing_contrib, counts
+    part = feats[feats["race_id"].astype(str).isin(ready)]
+    new = predict_frame(part, booster, meta, now)
+    new_c = contrib_frame(part, booster, meta)
+    out = new if existing is None else pd.concat([existing, new], ignore_index=True)
+    con = new_c if existing_contrib is None else pd.concat([existing_contrib, new_c], ignore_index=True)
+    out = out.sort_values(["race_id", "entry_number"]).reset_index(drop=True)
+    con = con.sort_values(["race_id", "entry_number", "rank"]).reset_index(drop=True)
+    return out, con, counts
+
+
+def load_closed_at(feats: pd.DataFrame, date: pd.Timestamp) -> pd.Series:
+    """レースの締切時刻(race_id → JST の Timestamp)。特徴量に closed_at が無ければ interim の races から読む。"""
+    if "closed_at" in feats.columns:
+        return feats.groupby(feats["race_id"].astype(str))["closed_at"].first()
+    from src.features.build_interim import read_interim
+
+    races = read_interim("races", date.date(), date.date())
+    return races.set_index(races["race_id"].astype(str))["closed_at"]
+
+
+def main_per_race(args, ymd: str) -> None:
+    now = pd.Timestamp(args.now) if args.now else pd.Timestamp(datetime.now(JST))
+    if now.tzinfo is None:
+        now = now.tz_localize(JST)
+    path = Path(args.features) if args.features else FEATURES_DIR / "today" / f"{ymd}_{args.variant}.parquet"
+    feats = pd.read_parquet(path)
+    pred_path, contrib_path = output_paths(args.out_dir, ymd, args.variant)
+    existing = pd.read_parquet(pred_path) if pred_path.exists() else None
+    existing_c = pd.read_parquet(contrib_path) if contrib_path.exists() else None
+    closed_at = load_closed_at(feats, pd.Timestamp(args.date))
+    booster, meta = load_model(args.model_id, args.models_dir, args.variant)
+    out, con, c = per_race_update(feats, closed_at, now, booster, meta, existing, existing_c)
+    if c["added"]:
+        pred_path.parent.mkdir(parents=True, exist_ok=True)
+        _write_atomic(con, contrib_path)  # 根拠を先に、予想ファイルを最後に置く
+        _write_atomic(out, pred_path)
+    print(f"[per-race-lock {now.isoformat(timespec='minutes')}] 追加 {c['added']} / 確定済み {c['locked']} / "
+          f"直前情報待ち {c['waiting']} / 締切後で見送り {c['closed']}(model_id={meta['model_id']})→ {pred_path}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="当日の予想")
     parser.add_argument("--date", required=True, help="YYYY-MM-DD")
@@ -179,9 +268,17 @@ def main() -> None:
     parser.add_argument("--fallback-model-id", default="latest",
                         help="直前情報が欠けたレースに使う pre 系モデル(既定は対応する pre 系 variant の latest)")
     parser.add_argument("--force", action="store_true", help="確定版を上書きする(旧版は superseded/ へ退避)")
+    parser.add_argument("--per-race-lock", action="store_true",
+                        help="直前版をレースごとに確定して追記する(直前情報がそろった締切前のレースだけ)")
+    parser.add_argument("--now", default=None, help="現在時刻(--per-race-lock 用。例 2026-11-05T10:30+09:00)")
     args = parser.parse_args()
 
     ymd = pd.Timestamp(args.date).strftime("%Y%m%d")
+    if args.per_race_lock and not args.force:
+        if not is_preview_variant(args.variant):
+            parser.error("--per-race-lock は preview 系の variant だけで使えます")
+        main_per_race(args, ymd)
+        return
     if is_locked(args.out_dir, ymd, args.variant) and not args.force:
         print(f"{ymd}_{args.variant} は確定済みのためスキップしました(上書きは --force)")
         return

@@ -130,6 +130,67 @@ New-NetFirewallRule -DisplayName "boatrace-yoso 8000" -Direction Inbound -Protoc
 - `http://` の LAN 内アドレスでは、ブラウザの制限で Service Worker が動きません。オフライン表示とホーム画面への追加は、ローカル表示では使えません(PC で `localhost` を開いた場合は動きます)。
 - 表示されるのは、最後に `scripts.live_loop`(または export)を実行した時点のデータです。画面の「データ更新」の時刻を確認してください。
 
+## 自動実行(GitHub Actions)
+
+`.github/workflows/daily.yml` が、PC を起動していなくても 収集(Open API)→ 予想 → export → 公開(Cloudflare Workers の `br-yoso`)を行います。`docs/data` のコミットは朝と前日分の確定の1日2回だけです(リポジトリの肥大化を抑えるため。日中の更新は Cloudflare への公開だけ)。**Actions からは公式サイト(boatrace.jp)にアクセスしません**(締切前オッズは取らない。オッズはこれまでどおり手元とスマホの中継 Worker で)。
+
+| ジョブ | JST | cron(UTC) | 内容 |
+|---|---|---|---|
+| 朝 | 7:41 | `41 22 * * *` | `live_loop --prepare-only --no-odds`(出走表 → 特徴量 → pre 予想 → export) |
+| 日中 | 8:04〜23:34 の30分ごと | `4,34 23 * * *` と `4,34 0-14 * * *` | openapi → build_interim → 当日の pre・preview の特徴量 → 直前版の予想(`--per-race-lock`。直前情報が揃った締切前のレースだけ1回確定)→ export。pre 予想が無ければ準備から |
+| 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす) |
+
+- 各ジョブは「R2 から状態を取得 → 処理 → 公開 →(朝と確定のみ)`docs/data` をコミット・push(github-actions[bot])→ R2 に状態を保存」。途中で失敗したら状態は保存しません。
+- 同時には1つしか動きません(concurrency)。1回30分で打ち切ります。GitHub の都合で起動が数分〜数十分遅れることがあります。
+
+### 1. 必要な secrets
+
+GitHub のリポジトリの Settings → Secrets and variables → Actions に登録します。
+
+| 名前 | 内容 |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare の API トークン。権限は「Workers Scripts: Edit」と「Workers R2 Storage: Edit」(アカウント単位) |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare のアカウント ID(ダッシュボードの右側に表示) |
+
+Settings → Actions → General の「Workflow permissions」が「Read and write」でなくても、ワークフロー側で `contents: write` を指定しています(組織の設定で禁止されている場合は変更が必要)。
+
+### 2. R2 バケットを作る(初回のみ、手元で)
+
+```bash
+nvm use 22 && npx wrangler login
+npx wrangler r2 bucket create br-yoso-data     # 非公開(公開アクセスや独自ドメインは設定しない)
+```
+
+### 3. 初回の状態のアップロード(手元から)
+
+Actions は、手元の `data/raw`・`data/interim`・`data/predictions`・`models` を元に動きます(`data/raw/official_odds/` は上げません)。`data/features` は上げず、ジョブ内で当日分だけ `build_features --date` で作り直します。
+
+```bash
+source .venv/bin/activate
+python -m scripts.ci_state push --dry-run    # tar.gz を作ってサイズを確認するだけ(R2 に触らない)
+python -m scripts.ci_state push              # R2 の state/<種類>.tar.gz に上げる(合計 約110MB)
+python -m scripts.ci_state push --only models   # モデルを学習し直したときは、これだけ上げる
+```
+
+手元でモデルを学習し直したり過去分を取り込んだりしたら、Actions が動いていない時間帯(例: 2:00〜7:00)に上げてください。逆に Actions の最新の状態を手元に持ってくるときは `python -m scripts.ci_state pull`(手元の該当ディレクトリは置き換わります)。
+
+### 4. 手動実行
+
+GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / daytime / finalize)・対象日・公開するかを選んで実行します。または `gh workflow run daily -f mode=daytime`。
+
+### 5. 止め方
+
+- 一時的に止める: Actions タブ → daily → 「…」→ Disable workflow(または `gh workflow disable daily`)。再開は Enable。
+- 実行中のものを止める: その実行を開いて Cancel(状態は保存されません)。
+- 60日間リポジトリに動きが無いと、GitHub が定期実行を自動で止めます(朝と確定の bot のコミットで通常は続きます)。
+
+### 6. 費用(無料枠の範囲)
+
+- GitHub Actions: 公開リポジトリの標準の runner は無料。1日 約33回 × 数分。
+- Cloudflare R2: 無料枠は保存 10GB/月、書き込み(Class A)100万回/月、読み出し(Class B)1000万回/月、転送は無料。使うのは保存 約0.1〜0.3GB、書き込み 約5000回/月、読み出し 約5000回/月。
+- Cloudflare Workers の静的アセット: 無料プランで足ります(デプロイは1日 約33回)。
+- 注意: `docs/data` のコミットは1日2回(約1.5MB/日、年に約0.5GB)。古い days の整理は spec/06 の U5・E-6。
+
 ## ディレクトリ
 
 | パス | 内容 |

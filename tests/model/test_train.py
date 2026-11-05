@@ -148,3 +148,37 @@ def test_predict_cli_skips_when_locked(tmp_path, monkeypatch, capsys):
     predict.main()
     assert "確定済み" in capsys.readouterr().out
     assert (tmp_path / "20260531_pre.parquet").read_bytes() == b"locked"
+
+
+def test_per_race_lock(synthetic_features, trained):
+    """--per-race-lock: 既存行は変わらない、締切後は追加しない、直前情報が欠けたレースは追加しない。"""
+    from src.model.predict import per_race_update
+
+    booster, meta = trained
+    today = synthetic_features[synthetic_features["date"] == synthetic_features["date"].max()].copy()
+    rids = sorted(today["race_id"].unique())[:4]
+    today = today[today["race_id"].isin(rids)].copy()
+    base = pd.Timestamp("2026-05-31 10:00", tz="Asia/Tokyo")
+    # レース0: 10:30締切、1: 11:00、2: 11:30(直前情報が1艇欠け)、3: 9:50(既に締切)
+    closed = pd.Series([base + pd.Timedelta(minutes=m) for m in (30, 60, 90, -10)], index=rids)
+    today.loc[(today["race_id"] == rids[2]) & (today["entry_number"] == 3), "pv_exhibition_time"] = np.nan
+
+    out1, c1, n1 = per_race_update(today, closed, base, booster, meta, None, None)
+    assert n1 == {"added": 2, "locked": 0, "waiting": 1, "closed": 1}
+    assert set(out1["race_id"]) == {rids[0], rids[1]}
+    assert (out1["locked_at"] == base).all()
+    assert set(c1["race_id"]) == {rids[0], rids[1]}
+
+    # 2回目: 10:40。レース0は締切後だが確定済みなので行はそのまま。レース2は直前情報がそろった
+    today.loc[today["race_id"] == rids[2], "pv_exhibition_time"] = 6.8
+    later = base + pd.Timedelta(minutes=40)
+    out2, c2, n2 = per_race_update(today, closed, later, booster, meta, out1, c1)
+    assert n2 == {"added": 1, "locked": 2, "waiting": 0, "closed": 1}
+    pd.testing.assert_frame_equal(out2[out2["race_id"].isin(rids[:2])].reset_index(drop=True), out1)
+    pd.testing.assert_frame_equal(c2[c2["race_id"].isin(rids[:2])].reset_index(drop=True), c1)
+    assert (out2.loc[out2["race_id"] == rids[2], "locked_at"] == later).all()
+    assert rids[3] not in set(out2["race_id"])  # 締切後のレースは追加しない
+
+    # 3回目: 追加0件なら何も変わらない
+    out3, c3, n3 = per_race_update(today, closed, later, booster, meta, out2, c2)
+    assert n3["added"] == 0 and out3 is out2 and c3 is c2

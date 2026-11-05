@@ -1,0 +1,123 @@
+# 当日の 収集(Open API)→ 予想 → export → 公開(Cloudflare Workers)。
+# docs/data のコミットは朝(確定した予想の記録)と前日分の確定(最終結果)の1日2回だけ。日中は公開と状態の保存だけ。
+# 公式サイト(boatrace.jp)へはアクセスしない(締切前オッズは取らない)。
+# git 管理外の状態(data/raw・interim・predictions・models。features はジョブ内で作り直す)は R2 の非公開バケット br-yoso-data に置き、最初に取得・最後に保存する。
+# cron は UTC。JST = UTC + 9 時間。毎時0分を避けて数分ずらしている(実際の起動は数分〜数十分遅れることがある)。
+name: daily
+
+on:
+  schedule:
+    - cron: "41 22 * * *"      # 朝:     JST 7:41
+    - cron: "4,34 23 * * *"    # 日中:   JST 8:04, 8:34
+    - cron: "4,34 0-14 * * *"  # 日中:   JST 9:04 〜 23:34(30分ごと)
+    - cron: "12 16 * * *"      # 前日分の確定: JST 1:12
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "morning / daytime / finalize"
+        required: true
+        default: daytime
+        type: choice
+        options: [morning, daytime, finalize]
+      date:
+        description: "対象日 YYYY-MM-DD(空なら JST の今日。finalize は昨日)"
+        required: false
+        default: ""
+      deploy:
+        description: "Cloudflare に公開する"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+# 同時に1つだけ。実行中のジョブは止めず、後から来たものを待たせる
+concurrency:
+  group: daily-state
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TZ: Asia/Tokyo
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: モードの決定
+        id: mode
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+          IN_MODE: ${{ inputs.mode }}
+          IN_DATE: ${{ inputs.date }}
+          IN_DEPLOY: ${{ inputs.deploy }}
+        run: |
+          case "$SCHEDULE" in
+            "41 22 * * *") mode=morning ;;
+            "12 16 * * *") mode=finalize ;;
+            "") mode="$IN_MODE" ;;
+            *) mode=daytime ;;
+          esac
+          if [ -n "$IN_DATE" ] && ! [[ "$IN_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "date は YYYY-MM-DD で指定してください" >&2; exit 2
+          fi
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "date=$IN_DATE" >> "$GITHUB_OUTPUT"
+          echo "deploy=${IN_DEPLOY:-true}" >> "$GITHUB_OUTPUT"
+          echo "mode=$mode date=${IN_DATE:-(既定)}"
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: ライブラリの導入
+        run: |
+          # LightGBM が使う OpenMP(ubuntu の runner には通常入っている。無ければ入れる)
+          if ! ldconfig -p | grep -q 'libgomp.so.1'; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq libgomp1
+          fi
+          python -m pip install -q -r requirements.txt
+          python -c "import lightgbm; print('lightgbm', lightgbm.__version__)"
+
+      - name: 状態の取得(R2)
+        run: python -m scripts.ci_state pull
+
+      - name: 収集・予想・export
+        run: bash scripts/ci_run.sh "${{ steps.mode.outputs.mode }}" ${{ steps.mode.outputs.date }}
+
+      - name: 公開(Cloudflare Workers)
+        if: steps.mode.outputs.deploy != 'false'
+        run: bash scripts/deploy_pages.sh
+
+      - name: docs/data のコミット(朝と前日分の確定だけ)
+        if: steps.mode.outputs.mode != 'daytime'
+        env:
+          MODE: ${{ steps.mode.outputs.mode }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- docs/data
+          if git diff --cached --quiet; then
+            echo "docs/data に変更はありません"
+            exit 0
+          fi
+          git commit -q -m "データ更新 $(date +%F) ${MODE}($(date +%H:%M) JST)"
+          for i in 1 2 3; do
+            if git push -q origin HEAD:${{ github.ref_name }}; then exit 0; fi
+            git pull -q --rebase origin ${{ github.ref_name }}
+          done
+          echo "push に失敗しました" >&2; exit 1
+
+      # ここまでのどこかで失敗したら保存しない(壊れた状態で上書きしない)
+      - name: 状態の保存(R2)
+        if: success()
+        run: python -m scripts.ci_state push
