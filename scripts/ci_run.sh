@@ -56,6 +56,20 @@ ensure_state() {
   run "$PY" -m src.features.history_state advance --state "$latest" --days "$days"
 }
 
+# 展開予想(決まり手の確率)と選手カード。
+# 選手カードは D−1 までの結果だけで決まるが、data/features は R2 に保存しないので、
+# 日中も export(E-14)が読めるように毎回作り直す(数秒)。
+tenkai_and_cards() {
+  local v="$1"
+  run "$PY" -m src.features.build_tenkai --variant "$v" --date "$D" --state "$(state_file "$D")"
+  if [ "$v" = "pre" ]; then
+    run "$PY" -m src.model.predict_tenkai --date "$D" --variant pre
+  else
+    run "$PY" -m src.model.predict_tenkai --date "$D" --variant preview --per-race-lock
+  fi
+  run "$PY" -m src.features.racer_cards --date "$D" --state "$(state_file "$D")"
+}
+
 morning() {
   # live_loop --prepare-only と同じ流れだが、特徴量は状態から作る(--state)。
   # predict は確定済みなら書かない(既存の仕様)ので、再実行しても予想は変わらない。
@@ -64,6 +78,7 @@ morning() {
   ensure_state "$D"
   run "$PY" -m src.features.build_features --variant pre --date "$D" --state "$(state_file "$D")"
   run "$PY" -m src.model.predict --date "$D" --variant pre
+  tenkai_and_cards pre
   run "$PY" -m src.export.export_day --date "$D"
   run "$PY" -m src.export.export_index
 }
@@ -88,6 +103,7 @@ case "$MODE" in
     run "$PY" -m src.features.build_features --variant pre --date "$D" --state "$(state_file "$D")"
     run "$PY" -m src.features.build_features --variant preview --date "$D" --state "$(state_file "$D")"
     run "$PY" -m src.model.predict --date "$D" --variant preview --per-race-lock
+    tenkai_and_cards preview
     run "$PY" -m src.export.export_day --date "$D"
     run "$PY" -m src.export.export_index
     ;;

@@ -5,15 +5,18 @@
 | キー                               | 中身                                                         | 毎日のジョブ |
 |------------------------------------|--------------------------------------------------------------|--------------|
 | state/history.tar.gz               | 履歴の集計の状態 data/history/state_*.parquet(新しい3つ)    | 取得・保存   |
-| state/recent.tar.gz                | 当月・前月の raw(openapi・turnmark)と interim、取得ログ     | 取得・保存   |
+| state/recent.tar.gz                | 当月・前月の raw(openapi・turnmark)と odds の interim、     | 取得・保存   |
+|                                    | 直近400日分の月の interim(races・entries・payouts)、取得ログ |              |
 | state/predictions.tar.gz           | 確定済みの予想 data/predictions/ の全部(記録なので消さない) | 取得・保存   |
-| state/models.tar.gz                | 採用中のモデル(latest が指すもの)と、その eval・backtest の要約 | 取得・保存 |
+| state/models.tar.gz                | 採用中のモデル(latest が指すもの。展開予想 models/tenkai/ も)と、その eval・backtest の要約 | 取得・保存 |
 | archive/raw/YYYY-MM.tar.gz         | 月ごとの raw(openapi・turnmark)                             | 前日確定ジョブがその月を保存 |
 | archive/interim/YYYY-MM.tar.gz     | 月ごとの interim                                             | 前日確定ジョブがその月を保存 |
 
 archive/ は月1の作り直し(CI-3)と、手元の復元に使う。毎日のジョブでは取得しない。
 interim は月単位で作り直される(build_interim はその月の raw を全部読む)ので、
 毎日のジョブには当月と前月の raw が必要(前月は、月初の前日確定のため)。
+選手カード(racer_cards)は直近10走のために D−400日〜D−1 の interim を読むので、
+races・entries・payouts は直近400日にかかる月を持つ(odds は使わないので当月・前月だけ)。
 
 R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キーは使わない)。
 認証は環境変数 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID(wrangler が読む。表示しない)。
@@ -53,6 +56,8 @@ KINDS = ("history", "recent", "predictions", "models")
 RAW_SOURCES = ("openapi", "turnmark")
 INTERIM_TABLES = ("races", "entries", "payouts", "odds")
 HISTORY_KEEP = 3
+INTERIM_LOOKBACK_DAYS = 400  # src/features/racer_cards.py の RESULT_LOOKBACK_DAYS と合わせる
+HISTORY_TABLES = ("races", "entries", "payouts")
 # 種類ごとに、tar の中に入ってよいパスの先頭
 ALLOWED_PREFIXES: dict[str, tuple[str, ...]] = {
     "history": ("data/history/",),
@@ -95,6 +100,15 @@ def recent_months(ref: date) -> list[str]:
     """毎日のジョブで持つ月(前月・当月)。"""
     cur = month_key(ref)
     return [prev_month(cur), cur]
+
+
+def lookback_months(ref: date, days: int = INTERIM_LOOKBACK_DAYS) -> list[str]:
+    """ref − days 〜 ref にかかる月(古い順)。"""
+    first, keys, k = month_key(ref - timedelta(days=days)), [], month_key(ref)
+    while k >= first:
+        keys.append(k)
+        k = prev_month(k)
+    return sorted(keys)
 
 
 def month_range_keys(spec: str) -> list[str]:
@@ -152,8 +166,8 @@ def raw_files_for_month(key: str, root: Path = ROOT) -> list[str]:
     return _rel(files, root)
 
 
-def interim_files_for_month(key: str, root: Path = ROOT) -> list[str]:
-    files = [root / "data/interim" / t / f"{key}.parquet" for t in INTERIM_TABLES]
+def interim_files_for_month(key: str, root: Path = ROOT, tables=INTERIM_TABLES) -> list[str]:
+    files = [root / "data/interim" / t / f"{key}.parquet" for t in tables]
     files.append(root / "data/interim/_quality" / f"{key}.json")
     return _rel(files, root)
 
@@ -165,8 +179,12 @@ def history_files(root: Path = ROOT) -> list[str]:
 
 def recent_files(ref: date, root: Path = ROOT) -> list[str]:
     files: list[str] = []
-    for key in recent_months(ref):
+    recent = recent_months(ref)
+    for key in recent:
         files += raw_files_for_month(key, root) + interim_files_for_month(key, root)
+    for key in lookback_months(ref):
+        if key not in recent:
+            files += interim_files_for_month(key, root, HISTORY_TABLES)
     log = root / "data/raw/_fetch_log.jsonl"
     if log.is_file():
         files.append("data/raw/_fetch_log.jsonl")
@@ -199,6 +217,11 @@ def models_files(root: Path = ROOT) -> list[str]:
         files += (root / "models" / variant_of(mid) / mid).rglob("*")
         files += (root / "reports/eval" / mid).rglob("*")
         files += (root / "reports/backtest" / mid).glob("*/summary.json")
+    # 展開予想: models/tenkai/<variant>/latest が指す models/tenkai/<variant>/<id>/(src/model/tenkai.py)
+    for p in sorted((root / "models/tenkai").glob("*/latest")):
+        mid = p.read_text(encoding="utf-8").strip()
+        if mid:
+            files += [p, *(p.parent / mid).rglob("*")]
     return _rel(files, root)
 
 

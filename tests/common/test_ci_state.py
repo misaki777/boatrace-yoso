@@ -27,6 +27,8 @@ def tree(tmp_path):
         "data/raw/turnmark/2026/20261104.json.gz", "data/raw/openapi/2026/20261105.json.gz",
         "data/raw/official_odds/2026/20261105/x.json", "data/raw/_fetch_log.jsonl",
         "data/interim/races/2026-09.parquet", "data/interim/races/2026-10.parquet",
+        "data/interim/odds/2026-09.parquet", "data/interim/entries/2025-09.parquet",
+        "data/interim/entries/2025-10.parquet",
         "data/interim/entries/2026-11.parquet", "data/interim/_quality/2026-11.json",
         "data/history/state_20261103.parquet", "data/history/state_20261104.parquet",
         "data/history/state_20261105.parquet", "data/history/state_20261106.parquet",
@@ -36,10 +38,13 @@ def tree(tmp_path):
         "models/preview/preview_20261104_0b0e/meta.json",
         "reports/backtest/pre_20261104_db90/top_k_test/summary.json",
         "reports/backtest/pre_20261104_db90/top_k_test/bets.parquet",
+        "models/tenkai/pre/tenkai_pre_20261105_c283/model.txt",
+        "models/tenkai/pre/tenkai_pre_20261101_aaaa/model.txt",
     ]:
         _touch(r, rel)
     _touch(r, "models/latest", "pre_20261104_db90\n")
     _touch(r, "models/preview/latest", "preview_20261104_0b0e\n")
+    _touch(r, "models/tenkai/pre/latest", "tenkai_pre_20261105_c283\n")
     return r
 
 
@@ -49,7 +54,12 @@ def test_recent_is_current_and_previous_month(tree):
     assert "data/raw/turnmark/2026/20261104.json.gz" in files
     assert "data/interim/races/2026-10.parquet" in files
     assert "data/raw/_fetch_log.jsonl" in files
-    assert not any("2026-09" in f or "202609" in f or "official_odds" in f for f in files)
+    assert not any("202609" in f or "official_odds" in f for f in files)
+    # races・entries・payouts は直近400日の月(2025-10〜)、odds は当月・前月だけ
+    assert "data/interim/races/2026-09.parquet" in files
+    assert "data/interim/entries/2025-10.parquet" in files
+    assert "data/interim/entries/2025-09.parquet" not in files
+    assert "data/interim/odds/2026-09.parquet" not in files
 
 
 def test_recent_months_year_boundary():
@@ -66,7 +76,14 @@ def test_models_only_latest(tree):
     assert "models/pre/pre_20261104_db90/model.txt" in files
     assert "models/preview/preview_20261104_0b0e/meta.json" in files
     assert "reports/backtest/pre_20261104_db90/top_k_test/summary.json" in files
-    assert not any("9c45" in f or "bets.parquet" in f for f in files)
+    assert "models/tenkai/pre/latest" in files
+    assert "models/tenkai/pre/tenkai_pre_20261105_c283/model.txt" in files
+    assert not any("9c45" in f or "bets.parquet" in f or "aaaa" in f for f in files)
+
+
+def test_lookback_months():
+    assert ci_state.lookback_months(date(2026, 11, 5)) == [f"2025-{m:02d}" for m in (10, 11, 12)] + [
+        f"2026-{m:02d}" for m in range(1, 12)]
 
 
 def test_roundtrip_overlay(tree, tmp_path):
@@ -127,8 +144,20 @@ def test_ci_run_daytime_order():
     if mods[3] == "src.model.predict":  # 手元に pre 予想が無い場合は準備から
         pytest.skip("pre 予想が無い環境")
     assert mods == ["src.collect.fetch", "src.features.build_interim", "src.features.build_features",
-                    "src.features.build_features", "src.model.predict", "src.export.export_day",
+                    "src.features.build_features", "src.model.predict", "src.features.build_tenkai",
+                    "src.model.predict_tenkai", "src.features.racer_cards", "src.export.export_day",
                     "src.export.export_index"]
+    assert any("predict_tenkai --date 2026-11-05 --variant preview --per-race-lock" in c
+               for c in _dry("daytime", "2026-11-05"))
+
+
+def test_ci_run_morning_tenkai_and_cards():
+    cmds = _dry("morning", "2026-11-05")
+    mods = [c.split()[2] for c in cmds if c.startswith("python")]
+    assert mods.index("src.model.predict") < mods.index("src.features.build_tenkai") \
+        < mods.index("src.model.predict_tenkai") < mods.index("src.features.racer_cards") < mods.index("src.export.export_day")
+    assert any("build_tenkai --variant pre --date 2026-11-05 --state data/history/state_20261105.parquet" in c for c in cmds)
+    assert any("racer_cards --date 2026-11-05 --state data/history/state_20261105.parquet" in c for c in cmds)
 
 
 def test_ci_run_finalize_advances_state():
