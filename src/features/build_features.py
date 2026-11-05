@@ -151,8 +151,12 @@ RACE_COLS_FOR_ENTRIES = [
 
 def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
                        hist_entries: pd.DataFrame, hist_races: pd.DataFrame,
-                       variant: str = "pre", with_target: bool = True) -> pd.DataFrame:
+                       variant: str = "pre", with_target: bool = True,
+                       state=None) -> pd.DataFrame:
     """特徴量テーブルを作る(学習用・当日用の共通の入口)。
+
+    state(history_state.HistoryState)を渡すと、hist_* の代わりに履歴の状態から H・style を作る
+    (毎日のジョブ用。F-8)。その場合 hist_entries / hist_races は None でよい。
 
     target_*: 特徴量を作る対象(interim と同じ列)。
     hist_*: H 特徴量の材料になる過去の interim。対象日以降の行が混じっていても、
@@ -165,6 +169,8 @@ def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
     df = df.sort_values(["date", "stadium_number", "race_number", "entry_number"]).reset_index(drop=True)
 
     # 節は対象と過去をまとめて判定する(当日のレースも前日までと同じ節につなげるため)
+    if state is not None:
+        hist_races = state.races
     all_races = pd.concat([hist_races[["stadium_number", "date", "title"]],
                            target_races[["stadium_number", "date", "title"]]], ignore_index=True)
     series_map = assign_series(all_races)
@@ -172,7 +178,8 @@ def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
 
     p = compute_p_features(df)
     r = compute_r_features(df)
-    h = compute_h_features(df, hist_entries, series_map)
+    h = compute_h_features(df, hist_entries, series_map,
+                           starts=state.h_starts if state is not None else None)
     parts = [p, r, h]
     if variant.startswith("preview"):
         parts.append(compute_v_features(df))
@@ -181,7 +188,8 @@ def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
         planned = df["entry_number"].astype("Float64")
         if variant.startswith("preview"):
             planned = df["pv_course_number"].astype("Float64").fillna(planned)
-        sh = compute_style_h(df, planned, hist_entries, hist_races)
+        sh = compute_style_h(df, planned, hist_entries, hist_races,
+                             starts=state.style_starts if state is not None else None)
         parts += [sh, compute_style_r(df, planned, sh)]
     f = pd.concat(parts, axis=1)
 
@@ -258,18 +266,31 @@ def build_training(variant: str, d_from: date, d_to: date, interim_dir: Path = I
 
 
 def build_today(variant: str, target: date, interim_dir: Path = INTERIM_DIR,
-                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None) -> pd.DataFrame:
-    """当日用: 当日の出走表(生JSON)と、前日までの interim から特徴量を作る。目的変数は null。"""
+                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None,
+                state=None) -> pd.DataFrame:
+    """当日用: 当日の出走表(生JSON)と、前日までの interim から特徴量を作る。目的変数は null。
+
+    state(HistoryState、または状態ファイルのパス)を渡すと、interim の代わりに履歴の状態を使う(F-8)。
+    """
     loaded = load_day(target, load_raw or make_loader(), sources=("openapi", "turnmark"))
     if loaded is None:
         raise FileNotFoundError(f"{target} の生データがありません")
     source, raw = loaded
     t = parse.parse_day(raw, source, target)
-    # 過去は前日まで(当日分が interim にあっても使わない)
-    prev = target - timedelta(days=1)
-    entries = read_interim("entries", None, prev, interim_dir)
-    races = read_interim("races", None, prev, interim_dir)
-    df = make_feature_frame(t["entries"], t["races"], entries, races, variant, with_target=False)
+    if state is not None:
+        from src.features.history_state import load_state
+        if not hasattr(state, "h_starts"):
+            state = load_state(Path(state))
+        if state.as_of != target:
+            raise ValueError(f"状態の日付 {state.as_of} が対象日 {target} と違います")
+        df = make_feature_frame(t["entries"], t["races"], None, None, variant,
+                                with_target=False, state=state)
+    else:
+        # 過去は前日まで(当日分が interim にあっても使わない)
+        prev = target - timedelta(days=1)
+        entries = read_interim("entries", None, prev, interim_dir)
+        races = read_interim("races", None, prev, interim_dir)
+        df = make_feature_frame(t["entries"], t["races"], entries, races, variant, with_target=False)
     _write_parquet(df, out_dir / "today" / f"{target.strftime('%Y%m%d')}_{variant}.parquet")
     return df
 
@@ -280,6 +301,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--from", dest="d_from")
     p.add_argument("--to", dest="d_to")
     p.add_argument("--date", help="当日用。YYYY-MM-DD")
+    p.add_argument("--state", help="当日用で、interim の代わりに使う履歴の状態ファイル(history_state)")
     args = p.parse_args(argv)
     try:
         if args.date:
@@ -287,7 +309,7 @@ def main(argv: list[str] | None = None) -> int:
                 print("--date と --from/--to は同時に指定できません", file=sys.stderr)
                 return 2
             target = date.fromisoformat(args.date)
-            df = build_today(args.variant, target)
+            df = build_today(args.variant, target, state=args.state)
             print(f"{target}: {df['race_id'].nunique()} レース / {len(df)} 艇")
             return 0
         if not (args.d_from and args.d_to):

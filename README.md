@@ -136,9 +136,9 @@ New-NetFirewallRule -DisplayName "boatrace-yoso 8000" -Direction Inbound -Protoc
 
 | ジョブ | JST | cron(UTC) | 内容 |
 |---|---|---|---|
-| 朝 | 7:41 | `41 22 * * *` | `live_loop --prepare-only --no-odds`(出走表 → 特徴量 → pre 予想 → export) |
+| 朝 | 7:41 | `41 22 * * *` | openapi → build_interim → 状態から pre の特徴量 → pre 予想 → export(`live_loop --prepare-only` と同じ流れで、特徴量だけ `--state` を使う) |
 | 日中 | 8:04〜23:34 の30分ごと | `4,34 23 * * *` と `4,34 0-14 * * *` | openapi → build_interim → 当日の pre・preview の特徴量 → 直前版の予想(`--per-race-lock`。直前情報が揃った締切前のレースだけ1回確定)→ export。pre 予想が無ければ準備から |
-| 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす) |
+| 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす)→ 履歴の集計の状態を1日進める(`history_state advance`)→ その月の raw・interim を R2 の archive/ に保存 |
 
 - 各ジョブは「R2 から状態を取得 → 処理 → 公開 →(朝と確定のみ)`docs/data` をコミット・push(github-actions[bot])→ R2 に状態を保存」。途中で失敗したら状態は保存しません。
 - 同時には1つしか動きません(concurrency)。1回30分で打ち切ります。GitHub の都合で起動が数分〜数十分遅れることがあります。
@@ -161,18 +161,45 @@ nvm use 22 && npx wrangler login
 npx wrangler r2 bucket create br-yoso-data     # 非公開(公開アクセスや独自ドメインは設定しない)
 ```
 
-### 3. 初回の状態のアップロード(手元から)
+### 3. R2 の置き場所と、初回の状態のアップロード(手元から)
 
-Actions は、手元の `data/raw`・`data/interim`・`data/predictions`・`models` を元に動きます(`data/raw/official_odds/` は上げません)。`data/features` は上げず、ジョブ内で当日分だけ `build_features --date` で作り直します。
+毎日のジョブは生データの全履歴を落としません。当日の特徴量は「履歴の集計の状態(`data/history/state_YYYYMMDD.parquet`。その日の前日までの履歴)+ 当日の出走表」から作ります。
+
+| R2 のキー | 中身 | 毎日のジョブ |
+|---|---|---|
+| `state/history.tar.gz` | 履歴の集計の状態(新しい3日分) | 取得・保存 |
+| `state/recent.tar.gz` | 当月・前月の raw(openapi・turnmark)と interim、取得ログ(interim は月単位で作り直すので、その月の raw が全部要る) | 取得・保存 |
+| `state/predictions.tar.gz` | 確定済みの予想(全部。記録なので消さない) | 取得・保存 |
+| `state/models.tar.gz` | 採用中のモデル(`latest` が指すもの)と、その eval・backtest の要約 | 取得・保存 |
+| `archive/raw/YYYY-MM.tar.gz`、`archive/interim/YYYY-MM.tar.gz` | 月ごとの raw と interim(全期間) | 前日確定ジョブがその月を保存。取得はしない(月1の作り直しと手元の復元用) |
+
+`data/features`(学習用)・`data/raw/official_odds/`・`data/raw/legacy/` は上げません。
+
+初回(手元で):
 
 ```bash
 source .venv/bin/activate
-python -m scripts.ci_state push --dry-run    # tar.gz を作ってサイズを確認するだけ(R2 に触らない)
-python -m scripts.ci_state push              # R2 の state/<種類>.tar.gz に上げる(合計 約110MB)
-python -m scripts.ci_state push --only models   # モデルを学習し直したときは、これだけ上げる
+# 1. 今日の特徴量用の状態を作る(interim の全履歴から。数秒)
+python -m src.features.history_state build --as-of $(TZ=Asia/Tokyo date +%F)
+# 2. 確認(tar.gz を作ってサイズを表示するだけ。R2 に触らない)
+python -m scripts.ci_state push --dry-run                 # state/ 合計 約17MB
+python -m scripts.ci_state archive-push --months all --dry-run   # archive/ 合計 約100MB
+# 3. 上げる
+python -m scripts.ci_state archive-push --months all
+python -m scripts.ci_state push
 ```
 
-手元でモデルを学習し直したり過去分を取り込んだりしたら、Actions が動いていない時間帯(例: 2:00〜7:00)に上げてください。逆に Actions の最新の状態を手元に持ってくるときは `python -m scripts.ci_state pull`(手元の該当ディレクトリは置き換わります)。
+- 状態の作成は Actions が動いていない時間帯(2:00〜7:00)に。朝のジョブは当日の状態が無ければ、それより前の一番新しい状態から必要な日数だけ進めます(進める日の interim が当月・前月にあること)。
+- モデルを学習し直したら `python -m scripts.ci_state push --only models`。
+- Actions の最新の状態を手元に持ってくる: `python -m scripts.ci_state pull`(上書きのみで、手元のファイルは消しません)。過去の月は `python -m scripts.ci_state archive-pull --months 2026-01..2026-11`。
+
+**以前の置き場所からの移行**(`state/raw.tar.gz`・`state/interim.tar.gz` などを上げていた場合): 上の初回の手順で新しい置き場所に上げ、手動実行(morning)が成功したことを確かめてから、古いオブジェクトを消します。
+
+```bash
+for k in raw interim features; do npx wrangler r2 object delete br-yoso-data/state/$k.tar.gz --remote; done
+```
+
+(`state/predictions.tar.gz`・`state/models.tar.gz` は同じ名前のまま使います)
 
 ### 4. 手動実行
 
@@ -194,7 +221,7 @@ GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / dayt
 ### 7. 費用(無料枠の範囲)
 
 - GitHub Actions: 公開リポジトリの標準の runner は無料。1日 約33回 × 数分。
-- Cloudflare R2: 無料枠は保存 10GB/月、書き込み(Class A)100万回/月、読み出し(Class B)1000万回/月、転送は無料。使うのは保存 約0.1〜0.3GB、書き込み 約5000回/月、読み出し 約5000回/月。
+- Cloudflare R2: 無料枠は保存 10GB/月、書き込み(Class A)100万回/月、読み出し(Class B)1000万回/月、転送は無料。使うのは保存 約0.15GB(年に約0.1GB 増)、書き込み 約4000回/月、読み出し 約4000回/月。1ジョブの転送は取得・保存とも 約17MB。
 - Cloudflare Workers の静的アセット: 無料プランで足ります(デプロイは1日 約33回)。
 - 注意: `docs/data` のコミットは1日2回(約1.5MB/日、年に約0.5GB)。古い days の整理は spec/06 の U5・E-6。
 

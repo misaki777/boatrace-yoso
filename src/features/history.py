@@ -47,7 +47,10 @@ def assign_series(races: pd.DataFrame) -> pd.DataFrame:
         | (days["title"] != days["title"].shift())
         | ((dn - dn.shift()) > SERIES_MAX_GAP_DAYS)
     )
-    days["series_id"] = new_series.cumsum().astype("int64")
+    # ID は「場 × 節の初日」で決める。読み込む履歴の長さによって番号が変わらないようにするため
+    # (状態=スナップショットから作った当日の特徴量と、全履歴から作ったものを一致させる。F-8)
+    first_dn = dn.where(new_series).ffill().astype("int64")
+    days["series_id"] = (days["stadium_number"].astype("int64") * 1_000_000 + first_dn).astype("int64")
     return days[["stadium_number", "date", "series_id"]]
 
 
@@ -168,14 +171,16 @@ def _rate(num: pd.Series, den: pd.Series) -> pd.Series:
 # ---------------------------------------------------------------------------
 
 
-def compute_h_features(targets: pd.DataFrame, hist_entries: pd.DataFrame,
-                       series_map: pd.DataFrame) -> pd.DataFrame:
+def compute_h_features(targets: pd.DataFrame, hist_entries: pd.DataFrame | None,
+                       series_map: pd.DataFrame, starts: pd.DataFrame | None = None) -> pd.DataFrame:
     """targets(1行=1艇。date, racer_number, stadium_number, entry_number, motor_number, series_id)
     に対する H 特徴量を返す(targets と同じ index)。
 
     hist_entries は interim の entries。D 以降の行が含まれていても、D より前しか使わない。
+    starts を渡したとき(履歴の状態から計算するとき)は hist_entries を使わない。
     """
-    starts = make_starts(hist_entries, series_map)
+    if starts is None:
+        starts = make_starts(hist_entries, series_map)
     q = pd.DataFrame({
         "dn": day_ordinal(targets["date"]),
         "racer_number": targets["racer_number"].astype("Float64").values,

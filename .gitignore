@@ -248,3 +248,6 @@ wrangler.jsonc
 # デザインのスクリーンショット(手元の確認用。リポジトリには入れない)
 design/screens/shots/
 design/visual/shots/
+
+# 履歴の状態(日次ジョブ用。R2 に置く)
+data/history/

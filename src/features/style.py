@@ -108,9 +108,11 @@ def _rate(num: pd.Series, den: pd.Series) -> pd.Series:
 
 
 def compute_style_h(targets: pd.DataFrame, planned_course: pd.Series,
-                    hist_entries: pd.DataFrame, hist_races: pd.DataFrame) -> pd.DataFrame:
+                    hist_entries: pd.DataFrame | None, hist_races: pd.DataFrame | None,
+                    starts: pd.DataFrame | None = None) -> pd.DataFrame:
     """targets(date, racer_number)と予定コースから、レース運びの H 特徴量を作る。"""
-    starts = make_style_starts(hist_entries, hist_races)
+    if starts is None:
+        starts = make_style_starts(hist_entries, hist_races)
     q = pd.DataFrame({
         "dn": day_ordinal(targets["date"]),
         "racer_number": targets["racer_number"].astype("Float64").values,

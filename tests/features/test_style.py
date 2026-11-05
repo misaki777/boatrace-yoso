@@ -5,7 +5,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from conftest import DAY1, DAY2, load_fixture, write_raw
+from features_testlib import DAY1, DAY2, load_fixture, write_raw
 from src.features import feature_sets as fs
 from src.features.build_features import build_today, build_training
 from src.features.build_interim import build_interim, read_interim

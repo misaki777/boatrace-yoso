@@ -174,3 +174,58 @@ def categorical_features(variant: str) -> list[str]:
     """variant に含まれるカテゴリ列だけを返す。"""
     cols = set(features_for(variant))
     return [c for c in CATEGORICAL_FEATURES if c in cols]
+
+
+# ---------------------------------------------------------------------------
+# 展開予想(決まり手の確率)の特徴量。1行=1レース(F-9。spec/10 3.1節)
+# 予定コース順に並べ直した各艇の値は c1_〜c6_ の接頭辞付き(c1 = 予定1コースの艇)
+# ---------------------------------------------------------------------------
+
+TENKAI_VARIANTS: tuple[str, ...] = ("pre", "preview")
+TENKAI_KEY_COLUMNS: list[str] = ["race_id", "date", "stadium_number", "race_number"]
+# 目的変数 technique_number(1 逃げ 2 差し 3 まくり 4 まくり差し 5 抜き 6 恵まれ)。当日用は null
+TENKAI_TARGET_COLUMNS: list[str] = ["technique_number", "is_valid_result"]
+
+_TENKAI_BOAT_PRE: list[str] = [
+    "entry_number", "national_win_rate", "rank_number", "average_start_timing",
+    "motor_top_2_percent",
+    "h_cs_n_all", "h_cs_nige_all", "h_cs_sashi_all", "h_cs_makuri_all", "h_cs_makurisashi_all",
+    "h_cs_st_mean_all", "h_racer_f_rate_all", "h_racer_maeduke_rate_all",
+    "r_sty_st_diff_inner",
+]
+_TENKAI_BOAT_PREVIEW_EXTRA: list[str] = ["pv_exhibition_time", "r_pv_exhibition_rank", "pv_start_timing"]
+_TENKAI_RACE_PRE: list[str] = [
+    "stadium_number", "grade_number", "race_kind",
+    "r_sty_in_nige", "r_sty_nige_minus_sashi2", "r_sty_nige_minus_makuri34",
+]
+_TENKAI_RACE_PREVIEW_EXTRA: list[str] = ["pv_wind_class", "pv_wind_speed", "pv_wave_height"]
+
+
+def tenkai_boat_columns(variant: str) -> list[str]:
+    """艇ごとの列(c1_〜c6_ を付ける前の名前)。"""
+    if variant == "pre":
+        return list(_TENKAI_BOAT_PRE)
+    if variant == "preview":
+        return _TENKAI_BOAT_PRE + _TENKAI_BOAT_PREVIEW_EXTRA
+    raise ValueError(f"未知の variant です: {variant}")
+
+
+def tenkai_race_columns(variant: str) -> list[str]:
+    if variant == "pre":
+        return list(_TENKAI_RACE_PRE)
+    if variant == "preview":
+        return _TENKAI_RACE_PRE + _TENKAI_RACE_PREVIEW_EXTRA
+    raise ValueError(f"未知の variant です: {variant}")
+
+
+def tenkai_features_for(variant: str) -> list[str]:
+    """展開予想モデルの特徴量の列リスト。"""
+    boat = [f"c{c}_{name}" for name in tenkai_boat_columns(variant) for c in range(1, 7)]
+    return tenkai_race_columns(variant) + boat
+
+
+def tenkai_categorical_features(variant: str) -> list[str]:
+    cats = ["stadium_number", "grade_number", "race_kind"]
+    if variant == "preview":
+        cats.append("pv_wind_class")
+    return cats

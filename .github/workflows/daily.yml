@@ -1,7 +1,8 @@
 # 当日の 収集(Open API)→ 予想 → export → 公開(Cloudflare Workers)。
 # docs/data のコミットは朝(確定した予想の記録)と前日分の確定(最終結果)の1日2回だけ。日中は公開と状態の保存だけ。
 # 公式サイト(boatrace.jp)へはアクセスしない(締切前オッズは取らない)。
-# git 管理外の状態(data/raw・interim・predictions・models。features はジョブ内で作り直す)は R2 の非公開バケット br-yoso-data に置き、最初に取得・最後に保存する。
+# git 管理外の状態は R2 の state/(履歴の集計の状態・当月と前月の raw と interim・予想・採用中のモデル)。
+# 生データの全履歴は落とさない。features はジョブ内で状態から作り直す。前日確定ジョブはその月を archive/ にも保存するは R2 の非公開バケット br-yoso-data に置き、最初に取得・最後に保存する。
 # cron は UTC。JST = UTC + 9 時間。毎時0分を避けて数分ずらしている(実際の起動は数分〜数十分遅れることがある)。
 name: daily
 
@@ -125,3 +126,10 @@ jobs:
       - name: 状態の保存(R2)
         if: success()
         run: python -m scripts.ci_state push
+
+      # 前日確定のときは、その月の raw と interim を archive/ にも保存する(月1の作り直し・復元用)
+      - name: 月の保存(R2 archive)
+        if: success() && steps.mode.outputs.mode == 'finalize'
+        env:
+          IN_DATE: ${{ steps.mode.outputs.date }}
+        run: python -m scripts.ci_state archive-push --months "$(date -d "${IN_DATE:-yesterday}" +%Y-%m)"

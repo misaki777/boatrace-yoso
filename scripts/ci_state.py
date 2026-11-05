@@ -1,48 +1,67 @@
-"""GitHub Actions 用: git 管理外の状態(生データ・中間データ・予想・モデル)を
-Cloudflare R2 の非公開バケットから取得・保存する。
+"""GitHub Actions 用: git 管理外の状態を Cloudflare R2 の非公開バケットから取得・保存する(CI-2。spec/10 2.4)。
 
-種類ごとに tar.gz を1つ作り、R2 の state/<種類>.tar.gz に置く。
-R2 の操作は `npx wrangler r2 object get/put --remote` だけを使う(S3 互換キーは使わない)。
-認証は環境変数 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID(wrangler が読む。このスクリプトは表示しない)。
+毎日のジョブは生データの全履歴を落とさない。R2 の置き場所:
+
+| キー                               | 中身                                                         | 毎日のジョブ |
+|------------------------------------|--------------------------------------------------------------|--------------|
+| state/history.tar.gz               | 履歴の集計の状態 data/history/state_*.parquet(新しい3つ)    | 取得・保存   |
+| state/recent.tar.gz                | 当月・前月の raw(openapi・turnmark)と interim、取得ログ     | 取得・保存   |
+| state/predictions.tar.gz           | 確定済みの予想 data/predictions/ の全部(記録なので消さない) | 取得・保存   |
+| state/models.tar.gz                | 採用中のモデル(latest が指すもの)と、その eval・backtest の要約 | 取得・保存 |
+| archive/raw/YYYY-MM.tar.gz         | 月ごとの raw(openapi・turnmark)                             | 前日確定ジョブがその月を保存 |
+| archive/interim/YYYY-MM.tar.gz     | 月ごとの interim                                             | 前日確定ジョブがその月を保存 |
+
+archive/ は月1の作り直し(CI-3)と、手元の復元に使う。毎日のジョブでは取得しない。
+interim は月単位で作り直される(build_interim はその月の raw を全部読む)ので、
+毎日のジョブには当月と前月の raw が必要(前月は、月初の前日確定のため)。
+
+R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キーは使わない)。
+認証は環境変数 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID(wrangler が読む。表示しない)。
 
 使い方:
-    python -m scripts.ci_state pull                # R2 → 手元に展開
-    python -m scripts.ci_state push                # 手元 → R2(初回のアップロードにも使う)
-    python -m scripts.ci_state push --dry-run      # tar.gz を作ってサイズを表示するだけ(R2 に触らない)
-    python -m scripts.ci_state pull --dry-run      # 実行するコマンドを表示するだけ
-    python -m scripts.ci_state push --only models  # 種類を絞る
+    python -m scripts.ci_state pull                      # state/* を取得して上書き展開(手元のファイルは消さない)
+    python -m scripts.ci_state push                      # state/* を保存
+    python -m scripts.ci_state push --only models        # 種類を絞る(history,recent,predictions,models)
+    python -m scripts.ci_state archive-push --months all            # 手元にある全部の月を archive/ に
+    python -m scripts.ci_state archive-push --months 2026-11        # 1か月分
+    python -m scripts.ci_state archive-pull --months 2026-01..2026-11
+    --dry-run を付けると R2 に触らない(push 系は tar.gz を作ってサイズを表示するまで)
 
 安全のため:
-- push の前に、各ディレクトリが存在して空でないこと、作った tar.gz が読み直せることを確かめる。
-  1つでも失敗したら、どれも上げない(壊れた状態で上書きしない)。
-- data/features/ は対象外。当日分は raw と interim から build_features --date で作り直せる
-  (ジョブ内で必要な変種だけ作る。学習用の features_*.parquet は Actions では使わない)。
-- 公式サイトの締切前オッズ(data/raw/official_odds/)は対象外(Actions では使わない・広げない)。
+- push の前に全部の tar.gz を作って読み直して確かめる。1つでも失敗・空なら、どれも上げない。
+- pull は全部を取得・検証してから展開する。展開は上書きのみで、手元のファイルを消さない。
+- 公式サイトの締切前オッズ(data/raw/official_odds/)と旧API(data/raw/legacy/)は対象外。
+- data/features/ は対象外(当日分は状態から build_features --date --state で作り直す)。
 """
 
 from __future__ import annotations
 
 import argparse
-import shutil
+import re
 import subprocess
 import sys
 import tarfile
 import tempfile
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BUCKET = "br-yoso-data"
-PREFIX = "state"
+JST = timezone(timedelta(hours=9))
 
-# 種類名 → リポジトリ直下からの相対パス
-KINDS: dict[str, str] = {
-    "raw": "data/raw",
-    "interim": "data/interim",
-    "predictions": "data/predictions",
-    "models": "models",
+KINDS = ("history", "recent", "predictions", "models")
+RAW_SOURCES = ("openapi", "turnmark")
+INTERIM_TABLES = ("races", "entries", "payouts", "odds")
+HISTORY_KEEP = 3
+# 種類ごとに、tar の中に入ってよいパスの先頭
+ALLOWED_PREFIXES: dict[str, tuple[str, ...]] = {
+    "history": ("data/history/",),
+    "recent": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/_fetch_log.jsonl", "data/interim/"),
+    "predictions": ("data/predictions/",),
+    "models": ("models/", "reports/eval/", "reports/backtest/"),
+    "archive-raw": ("data/raw/openapi/", "data/raw/turnmark/"),
+    "archive-interim": ("data/interim/",),
 }
-# tar に入れないもの(リポジトリ直下からの相対パスの先頭)
-EXCLUDES = ("data/raw/official_odds",)
 
 
 def human(n: int) -> str:
@@ -54,49 +73,178 @@ def human(n: int) -> str:
     return f"{n}B"
 
 
-def object_key(kind: str) -> str:
-    return f"{BUCKET}/{PREFIX}/{kind}.tar.gz"
+def today_jst() -> date:
+    return datetime.now(JST).date()
 
 
-def wrangler_cmd(action: str, kind: str, file: Path) -> list[str]:
-    """wrangler のコマンド(get / put)。"""
-    return ["npx", "--yes", "wrangler", "r2", "object", action, object_key(kind), "--file", str(file), "--remote"]
+# ---------------------------------------------------------------------------
+# 月の扱い
+# ---------------------------------------------------------------------------
 
 
-def is_excluded(rel: str) -> bool:
-    return any(rel == e or rel.startswith(e + "/") for e in EXCLUDES)
+def month_key(d: date) -> str:
+    return f"{d.year:04d}-{d.month:02d}"
 
 
-def make_tar(kind: str, out: Path, root: Path = ROOT) -> int:
-    """root/KINDS[kind] を tar.gz にする。入れたファイル数を返す。"""
-    base = root / KINDS[kind]
-    if not base.is_dir():
-        raise FileNotFoundError(f"{KINDS[kind]} がありません")
-    count = 0
+def prev_month(key: str) -> str:
+    y, m = map(int, key.split("-"))
+    return f"{y - 1:04d}-12" if m == 1 else f"{y:04d}-{m - 1:02d}"
+
+
+def recent_months(ref: date) -> list[str]:
+    """毎日のジョブで持つ月(前月・当月)。"""
+    cur = month_key(ref)
+    return [prev_month(cur), cur]
+
+
+def month_range_keys(spec: str) -> list[str]:
+    """'2026-11'、'2026-01,2026-03'、'2026-01..2026-11' を月のリストにする。"""
+    out: list[str] = []
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if ".." in part:
+            a, b = part.split("..", 1)
+            for k in (a, b):
+                if not re.fullmatch(r"\d{4}-\d{2}", k):
+                    raise ValueError(f"月の指定が不正です: {k}")
+            keys, k = [], b
+            while k >= a:
+                keys.append(k)
+                k = prev_month(k)
+            out += sorted(keys)
+        else:
+            if not re.fullmatch(r"\d{4}-\d{2}", part):
+                raise ValueError(f"月の指定が不正です: {part}")
+            out.append(part)
+    return sorted(set(out))
+
+
+def local_months(root: Path = ROOT) -> list[str]:
+    """手元にある raw・interim の月。"""
+    keys = set()
+    for src in RAW_SOURCES:
+        for p in (root / "data/raw" / src).glob("*/*.json.gz"):
+            m = re.match(r"(\d{4})(\d{2})\d{2}\.json\.gz$", p.name)
+            if m:
+                keys.add(f"{m[1]}-{m[2]}")
+    for t in INTERIM_TABLES:
+        for p in (root / "data/interim" / t).glob("*.parquet"):
+            keys.add(p.stem)
+    return sorted(keys)
+
+
+# ---------------------------------------------------------------------------
+# 種類ごとのファイルの選び方(リポジトリ直下からの相対パス)
+# ---------------------------------------------------------------------------
+
+
+def _rel(paths, root: Path) -> list[str]:
+    return sorted(p.relative_to(root).as_posix() for p in paths if p.is_file())
+
+
+def raw_files_for_month(key: str, root: Path = ROOT) -> list[str]:
+    y, m = key.split("-")
+    files = []
+    for src in RAW_SOURCES:
+        files += (root / "data/raw" / src / y).glob(f"{y}{m}[0-9][0-9].json.gz")
+    return _rel(files, root)
+
+
+def interim_files_for_month(key: str, root: Path = ROOT) -> list[str]:
+    files = [root / "data/interim" / t / f"{key}.parquet" for t in INTERIM_TABLES]
+    files.append(root / "data/interim/_quality" / f"{key}.json")
+    return _rel(files, root)
+
+
+def history_files(root: Path = ROOT) -> list[str]:
+    states = sorted((root / "data/history").glob("state_[0-9]*.parquet"))
+    return _rel(states[-HISTORY_KEEP:], root)
+
+
+def recent_files(ref: date, root: Path = ROOT) -> list[str]:
+    files: list[str] = []
+    for key in recent_months(ref):
+        files += raw_files_for_month(key, root) + interim_files_for_month(key, root)
+    log = root / "data/raw/_fetch_log.jsonl"
+    if log.is_file():
+        files.append("data/raw/_fetch_log.jsonl")
+    return files
+
+
+def predictions_files(root: Path = ROOT) -> list[str]:
+    return _rel((root / "data/predictions").rglob("*"), root)
+
+
+def model_ids(root: Path = ROOT) -> list[str]:
+    """latest が指すモデルID(pre は models/latest、他は models/<variant>/latest。src/model/lgbm.py と同じ)。"""
+    ids = []
+    for p in [root / "models/latest", *sorted((root / "models").glob("*/latest"))]:
+        if p.is_file():
+            mid = p.read_text(encoding="utf-8").strip()
+            if mid and mid not in ids:
+                ids.append(mid)
+    return ids
+
+
+def variant_of(model_id: str) -> str:
+    """'preview_v2_20261105_053e' → 'preview_v2'(末尾の日付とハッシュを外す)。"""
+    return re.sub(r"_\d{8}_[0-9a-f]+$", "", model_id)
+
+
+def models_files(root: Path = ROOT) -> list[str]:
+    files = [root / "models/latest", *(root / "models").glob("*/latest")]
+    for mid in model_ids(root):
+        files += (root / "models" / variant_of(mid) / mid).rglob("*")
+        files += (root / "reports/eval" / mid).rglob("*")
+        files += (root / "reports/backtest" / mid).glob("*/summary.json")
+    return _rel(files, root)
+
+
+def files_for(kind: str, ref: date, root: Path = ROOT) -> list[str]:
+    if kind == "history":
+        return history_files(root)
+    if kind == "recent":
+        return recent_files(ref, root)
+    if kind == "predictions":
+        return predictions_files(root)
+    if kind == "models":
+        return models_files(root)
+    raise ValueError(kind)
+
+
+# ---------------------------------------------------------------------------
+# tar.gz
+# ---------------------------------------------------------------------------
+
+
+def is_allowed(name: str, kind: str) -> bool:
+    if name.startswith("/") or ".." in Path(name).parts:
+        return False
+    if name.startswith(("data/raw/official_odds", "data/raw/legacy")):
+        return False
+    return any(name == p or name.startswith(p) for p in ALLOWED_PREFIXES[kind])
+
+
+def make_tar(files: list[str], out: Path, kind: str, root: Path = ROOT) -> int:
+    if not files:
+        raise ValueError(f"{kind}: 対象のファイルがありません")
     with tarfile.open(out, "w:gz", compresslevel=6) as tar:
-        for path in sorted(base.rglob("*")):
-            rel = path.relative_to(root).as_posix()
-            if is_excluded(rel) or "__pycache__" in path.parts:
-                continue
-            if path.is_file() or path.is_symlink():
-                tar.add(path, arcname=rel, recursive=False)
-                count += 1
-            elif path.is_dir():
-                tar.add(path, arcname=rel, recursive=False)
-    if count == 0:
-        raise ValueError(f"{KINDS[kind]} にファイルがありません")
-    return count
+        for rel in files:
+            if not is_allowed(rel, kind):
+                raise ValueError(f"{kind}: 対象外のパスです: {rel}")
+            tar.add(root / rel, arcname=rel, recursive=False)
+    return len(files)
 
 
 def verify_tar(path: Path, kind: str) -> int:
-    """tar.gz を最後まで読み、パスが想定のディレクトリの中だけかを確かめる。ファイル数を返す。"""
-    prefix = KINDS[kind]
+    """最後まで読み、パスが許可された場所だけかを確かめる。ファイル数を返す。"""
     n = 0
     with tarfile.open(path, "r:gz") as tar:
         for m in tar:
-            name = m.name
-            if name.startswith("/") or ".." in Path(name).parts or not (name == prefix or name.startswith(prefix + "/")):
-                raise ValueError(f"想定外のパスを含みます: {name}")
+            if not is_allowed(m.name, kind) or not (m.isfile() or m.isdir()):
+                raise ValueError(f"想定外のパスを含みます: {m.name}")
             if m.isfile():
                 f = tar.extractfile(m)
                 if f is not None:
@@ -107,89 +255,139 @@ def verify_tar(path: Path, kind: str) -> int:
 
 
 def extract_tar(path: Path, kind: str, root: Path = ROOT) -> None:
-    """検証済みの tar.gz を、既存のディレクトリを置き換える形で展開する。"""
+    """検証済みの tar.gz を上書きで展開する(手元のファイルは消さない)。"""
     verify_tar(path, kind)
-    target = root / KINDS[kind]
-    staging = Path(tempfile.mkdtemp(dir=root, prefix=".ci_state_"))
-    try:
-        with tarfile.open(path, "r:gz") as tar:
-            tar.extractall(staging, filter="data")
-        if target.exists():
-            shutil.rmtree(target)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        (staging / KINDS[kind]).rename(target)
-    finally:
-        shutil.rmtree(staging, ignore_errors=True)
+    with tarfile.open(path, "r:gz") as tar:
+        tar.extractall(root, filter="data")
+
+
+# ---------------------------------------------------------------------------
+# R2
+# ---------------------------------------------------------------------------
+
+
+def state_key(kind: str) -> str:
+    return f"{BUCKET}/state/{kind}.tar.gz"
+
+
+def archive_key(part: str, month: str) -> str:
+    return f"{BUCKET}/archive/{part}/{month}.tar.gz"
+
+
+def wrangler_cmd(action: str, key: str, file: Path) -> list[str]:
+    return ["npx", "--yes", "wrangler", "r2", "object", action, key, "--file", str(file), "--remote"]
 
 
 def run(cmd: list[str], dry_run: bool) -> None:
     print("  $ " + " ".join(cmd), flush=True)
-    if dry_run:
-        return
-    # 出力はそのまま流す(wrangler はトークンを表示しない)
-    subprocess.run(cmd, check=True, cwd=tempfile.gettempdir())
+    if not dry_run:
+        subprocess.run(cmd, check=True, cwd=tempfile.gettempdir())
 
 
-def pull(kinds: list[str], dry_run: bool) -> int:
+def build_all(items: list[tuple[str, str, list[str]]], tmp: Path) -> list[tuple[str, Path]]:
+    """(R2 のキー, tar の種類, ファイル) から tar.gz を全部作って検証する。1つでも失敗したら例外。"""
+    out, total = [], 0
+    for key, kind, files in items:
+        f = tmp / (key.replace("/", "_"))
+        n = make_tar(files, f, kind)
+        if verify_tar(f, kind) != n:
+            raise ValueError(f"{key}: 作った tar.gz のファイル数が一致しません")
+        size = f.stat().st_size
+        total += size
+        print(f"[push] {key}: {human(size)}({n} ファイル)", flush=True)
+        out.append((key, f))
+    print(f"[push] 合計 {human(total)}", flush=True)
+    return out
+
+
+def push(kinds: list[str], ref: date, dry_run: bool) -> int:
     with tempfile.TemporaryDirectory(prefix="ci_state_") as tmp:
-        files = {}
-        # まず全部取得して検証してから展開する(途中で失敗したら手元は変えない)
-        for kind in kinds:
-            f = Path(tmp) / f"{kind}.tar.gz"
-            print(f"[pull] {kind}", flush=True)
-            run(wrangler_cmd("get", kind, f), dry_run)
-            if dry_run:
-                continue
-            n = verify_tar(f, kind)
-            print(f"  {kind}: {human(f.stat().st_size)}({n} ファイル)", flush=True)
-            files[kind] = f
-        for kind, f in files.items():
-            extract_tar(f, kind)
-    print("[pull] 完了" + ("(dry-run: 何も変えていません)" if dry_run else ""))
-    return 0
-
-
-def push(kinds: list[str], dry_run: bool) -> int:
-    with tempfile.TemporaryDirectory(prefix="ci_state_") as tmp:
-        files = {}
-        total = 0
-        # まず全部作って検証する。1つでも失敗したら何も上げない
-        for kind in kinds:
-            f = Path(tmp) / f"{kind}.tar.gz"
-            n = make_tar(kind, f)
-            if verify_tar(f, kind) != n:
-                raise ValueError(f"{kind}: 作った tar.gz のファイル数が一致しません")
-            size = f.stat().st_size
-            total += size
-            print(f"[push] {kind}: {human(size)}({n} ファイル)", flush=True)
-            files[kind] = f
-        print(f"[push] 合計 {human(total)}", flush=True)
-        for kind, f in files.items():
-            run(wrangler_cmd("put", kind, f), dry_run)
+        items = [(state_key(k), k, files_for(k, ref)) for k in kinds]
+        for key, f in build_all(items, Path(tmp)):
+            run(wrangler_cmd("put", key, f), dry_run)
     print("[push] 完了" + ("(dry-run: R2 には触っていません)" if dry_run else ""))
     return 0
 
 
+def archive_push(months: list[str], dry_run: bool) -> int:
+    with tempfile.TemporaryDirectory(prefix="ci_state_") as tmp:
+        items = []
+        for m in months:
+            items.append((archive_key("raw", m), "archive-raw", raw_files_for_month(m)))
+            items.append((archive_key("interim", m), "archive-interim", interim_files_for_month(m)))
+        for key, f in build_all(items, Path(tmp)):
+            run(wrangler_cmd("put", key, f), dry_run)
+    print("[archive-push] 完了" + ("(dry-run: R2 には触っていません)" if dry_run else ""))
+    return 0
+
+
+def pull_items(items: list[tuple[str, str]], dry_run: bool, label: str) -> int:
+    with tempfile.TemporaryDirectory(prefix="ci_state_") as tmp:
+        got = []
+        # 全部取得・検証してから展開する(途中で失敗したら手元は変えない)
+        for key, kind in items:
+            f = Path(tmp) / key.replace("/", "_")
+            print(f"[{label}] {key}", flush=True)
+            run(wrangler_cmd("get", key, f), dry_run)
+            if dry_run:
+                continue
+            n = verify_tar(f, kind)
+            print(f"  {human(f.stat().st_size)}({n} ファイル)", flush=True)
+            got.append((f, kind))
+        for f, kind in got:
+            extract_tar(f, kind)
+    print(f"[{label}] 完了" + ("(dry-run: 何も変えていません)" if dry_run else ""))
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="R2 との状態の取得・保存")
-    p.add_argument("action", choices=["pull", "push"])
-    p.add_argument("--dry-run", action="store_true", help="R2 に触らない(push は tar.gz の作成とサイズ表示まで)")
-    p.add_argument("--only", help=f"種類を絞る(カンマ区切り。{','.join(KINDS)})")
+    p.add_argument("action", choices=["pull", "push", "archive-pull", "archive-push"])
+    p.add_argument("--dry-run", action="store_true", help="R2 に触らない")
+    p.add_argument("--only", help=f"pull/push の種類を絞る(カンマ区切り。{','.join(KINDS)})")
+    p.add_argument("--ref-date", help="recent の月を決める日(既定: 今日 JST)。YYYY-MM-DD")
+    p.add_argument("--months", help="archive の月: 2026-11 / 2026-01,2026-02 / 2026-01..2026-11 / all(push のみ)")
     a = p.parse_args(argv)
-    kinds = list(KINDS)
+    a.kinds = list(KINDS)
     if a.only:
-        kinds = [k.strip() for k in a.only.split(",") if k.strip()]
-        bad = [k for k in kinds if k not in KINDS]
+        a.kinds = [k.strip() for k in a.only.split(",") if k.strip()]
+        bad = [k for k in a.kinds if k not in KINDS]
         if bad:
             p.error(f"不明な種類: {','.join(bad)}")
-    a.kinds = kinds
+    a.ref = date.fromisoformat(a.ref_date) if a.ref_date else today_jst()
+    if a.action.startswith("archive"):
+        if not a.months:
+            p.error("--months を指定してください")
+        if a.months == "all":
+            if a.action == "archive-pull":
+                p.error("archive-pull では月を指定してください(例: 2026-01..2026-11)")
+            a.month_list = local_months()
+        else:
+            try:
+                a.month_list = month_range_keys(a.months)
+            except ValueError as e:
+                p.error(str(e))
     return a
 
 
 def main(argv: list[str] | None = None) -> int:
     a = parse_args(argv)
     try:
-        return pull(a.kinds, a.dry_run) if a.action == "pull" else push(a.kinds, a.dry_run)
+        if a.action == "push":
+            return push(a.kinds, a.ref, a.dry_run)
+        if a.action == "pull":
+            return pull_items([(state_key(k), k) for k in a.kinds], a.dry_run, "pull")
+        if a.action == "archive-push":
+            return archive_push(a.month_list, a.dry_run)
+        items = []
+        for m in a.month_list:
+            items += [(archive_key("raw", m), "archive-raw"), (archive_key("interim", m), "archive-interim")]
+        return pull_items(items, a.dry_run, "archive-pull")
     except (OSError, ValueError, tarfile.TarError, subprocess.CalledProcessError) as e:
         print(f"[{a.action}] 失敗しました: {type(e).__name__}: {e}", file=sys.stderr)
         return 1
