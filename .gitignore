@@ -244,3 +244,7 @@ workers/odds-proxy/.wrangler/
 # wrangler が作る作業用ファイル
 .wrangler/
 wrangler.jsonc
+
+# デザインのスクリーンショット(手元の確認用。リポジトリには入れない)
+design/screens/shots/
+design/visual/shots/
