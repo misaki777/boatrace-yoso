@@ -9,6 +9,9 @@
 #   scripts/ci_run.sh morning   [YYYY-MM-DD]   # 朝の準備(出走表 → 状態 → 特徴量 → pre 予想 → export)
 #   scripts/ci_run.sh daytime   [YYYY-MM-DD]   # 日中の更新(openapi → interim → 直前版の予想 → export)
 #   scripts/ci_run.sh finalize  [YYYY-MM-DD]   # 前日分の最終取り込みと状態を1日進める(既定: 昨日 JST)
+#   scripts/ci_run.sh weekly    [YYYY-MM-DD]   # 週の分析(キューブ・週のまとめ・シミュレーター)。既定: 昨日 JST(日曜)
+#   分析(spec/11)の全期間の集計(場の傾向・キューブ・週のまとめ)は、ワークフロー側で
+#   archive から recent より前の月の interim を足してから呼ぶ(ci_state archive-pull --months auto)。
 #   DRY_RUN=1 scripts/ci_run.sh daytime        # コマンドを表示するだけ
 set -euo pipefail
 
@@ -18,7 +21,7 @@ cd "$ROOT"
 PY="${PYTHON:-python}"
 HIST="data/history"
 
-if [ "$MODE" = "finalize" ]; then
+if [ "$MODE" = "finalize" ] || [ "$MODE" = "weekly" ]; then
   D="${2:-$(TZ=Asia/Tokyo date -d yesterday +%F)}"
 else
   D="${2:-$(TZ=Asia/Tokyo date +%F)}"
@@ -83,6 +86,9 @@ morning() {
   run "$PY" -m src.export.export_index
   run "$PY" -m src.export.phase3b racers --date "$D"
   run "$PY" -m src.export.phase3b models
+  # 分析: 当日のランキング(D−1 までの結果。状態から)
+  run "$PY" -m src.features.analytics.rankings --date "$D" --state "$(state_file "$D")"
+  run "$PY" -m src.export.analytics --what rankings --date "$D"
 }
 
 case "$MODE" in
@@ -123,6 +129,18 @@ case "$MODE" in
     fi
     run "$PY" -m src.export.export_day --date "$D"
     run "$PY" -m src.export.export_index
+    # 分析: 場の傾向(全期間と直近365日)、モデルの弱点・シミュレーター(実運用の期間 〜 D)
+    run "$PY" -m src.features.analytics.stadiums --to "$D"
+    run "$PY" -m src.export.analytics --what stadiums
+    run "$PY" -m src.export.analytics --what model --to "$D"
+    run "$PY" -m src.export.analytics --what simulator --to "$D"
+    ;;
+  weekly)
+    # 週の分析: キューブ(全期間)、週のまとめ(D の週。月曜に動くので前の週)、シミュレーター
+    run "$PY" -m src.features.analytics.cube --to "$D"
+    run "$PY" -m src.export.analytics --what cube
+    run "$PY" -m src.export.analytics --what weekly --week "$(date -d "$D" +%G-W%V)"
+    run "$PY" -m src.export.analytics --what simulator --to "$D"
     ;;
   *)
     echo "不明なモード: $MODE" >&2

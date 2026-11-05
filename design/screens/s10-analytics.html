@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S10 分析(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S10 分析。DA-7(spec/11、文言 spec/09 8章)。架空データ。 -->
+<!-- ================================================================= -->
+<section class="state" data-state="stadium" data-title="場の傾向(戸田)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="true">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="false">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <nav class="stabs"><a aria-selected="false">桐生</a><a aria-selected="true">戸田</a><a aria-selected="false">江戸川</a><a aria-selected="false">平和島</a><a aria-selected="false">多摩川</a></nav>
+  <p class="disclaimer" style="margin-top:8px">集計期間: 2016-08-01〜2026-11-01(14,820レース)。<span class="seg" style="display:inline-grid;margin:0;vertical-align:middle;width:190px"><button aria-selected="true" style="height:28px">全期間</button><button style="height:28px">直近365日</button></span></p>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">コース別1着率</h2><span class="right">全国との差: 1コース −9.8pt</span></div>
+    <div class="card__body"><div class="cbar"><span class="waku waku--s w1">1</span><span class="bar"><i style="width:44%"></i></span><span class="p">44%</span><span class="n">14,820件</span></div><div class="cbar"><span class="waku waku--s w2">2</span><span class="bar"><i style="width:18%"></i></span><span class="p">18%</span><span class="n">14,820件</span></div><div class="cbar"><span class="waku waku--s w3">3</span><span class="bar"><i style="width:15%"></i></span><span class="p">15%</span><span class="n">14,820件</span></div><div class="cbar"><span class="waku waku--s w4">4</span><span class="bar"><i style="width:12%"></i></span><span class="p">12%</span><span class="n">14,820件</span></div><div class="cbar"><span class="waku waku--s w5">5</span><span class="bar"><i style="width:7%"></i></span><span class="p">7%</span><span class="n">14,820件</span></div><div class="cbar"><span class="waku waku--s w6">6</span><span class="bar"><i style="width:4%"></i></span><span class="p">4%</span><span class="n">14,820件</span></div></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">決まり手</h2><span class="right">1着艇の決まり手</span></div>
+    <div class="card__body"><div class="stack"><i style="width:43%">43</i><i style="width:19%">19</i><i style="width:18%">18</i><i style="width:13%">13</i><i style="width:7%"></i></div><p class="fewnote">左から 逃げ・差し・まくり・まくり差し・抜き/恵まれ(%)</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">荒れやすさ</h2><span class="right"></span></div>
+    <div class="card__body"><div class="kpi" style="border:0"><div><div class="k">万舟率<span class="help">?</span></div><div class="v">21.4%</div></div><div><div class="k">3連単の払戻 中央値</div><div class="v">4,380円</div></div><div><div class="k">1号艇1着率</div><div class="v">44.1%</div></div><div><div class="k">全国との差(万舟率)</div><div class="v">+5.2pt</div></div></div><p class="fewnote">万舟率: 3連単の払戻が10,000円以上だったレースの割合</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">風と季節</h2><span class="right">1コースの1着率 · 本番の記録で分類</span></div>
+    <div class="card__body"><table class="tbl"><thead><tr><th>風</th><th>弱</th><th>中</th><th>強</th></tr></thead><tbody><tr><td>追い風</td><td>47% <span class="ci">2,100</span></td><td>45% <span class="ci">1,240</span></td><td class="few">38%<span class="ref">参考</span><span class="ci">160</span></td></tr><tr><td>向かい風</td><td>43% <span class="ci">2,640</span></td><td>39% <span class="ci">1,380</span></td><td><span class="insuf">件数不足(22件)</span></td></tr><tr><td>横風</td><td>45% <span class="ci">1,900</span></td><td class="few">41%<span class="ref">参考</span><span class="ci">170</span></td><td><span class="insuf">件数不足(9件)</span></td></tr></tbody></table><p class="fewnote">風・天候は、レース本番の記録で分けています。薄い値は件数200未満(参考)、30未満は件数だけ。</p></div>
+  </section>
+  <a class="more" href="#">条件で絞る ›</a>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="cube" data-title="条件で集計(条件を選ぶと表が変わる)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="true">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="false">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">条件で絞る · 戸田</h2><span class="right">コースは必ず選ぶ</span></div>
+    <div class="card__body">
+      <div class="dimrow"><span>コース</span><div class="chips"><button aria-pressed="false">1</button><button aria-pressed="false">2</button><button aria-pressed="true">3</button><button aria-pressed="false">4</button><button aria-pressed="false">5</button><button aria-pressed="false">6</button></div></div>
+      <div class="dimrow"><span>風</span><div class="chips"><button aria-pressed="false">すべて</button><button aria-pressed="false">追い</button><button aria-pressed="true">向かい</button><button aria-pressed="false">横</button><button aria-pressed="false">無風</button></div></div>
+      <div class="dimrow"><span>級別</span><div class="chips"><button aria-pressed="false">すべて</button><button aria-pressed="true">A1</button><button aria-pressed="false">A2</button><button aria-pressed="false">B1</button><button aria-pressed="false">B2</button></div></div>
+      <div class="dimrow"><span>グレード</span><div class="chips"><button aria-pressed="true">すべて</button><button aria-pressed="false" disabled>上位</button><button aria-pressed="false" disabled>G2/G3</button><button aria-pressed="false" disabled>一般</button></div></div>
+      <div class="dimrow"><span>季節</span><div class="chips"><button aria-pressed="true">すべて</button><button aria-pressed="false" disabled>春</button><button aria-pressed="false" disabled>夏</button><button aria-pressed="false" disabled>秋</button><button aria-pressed="false" disabled>冬</button></div></div>
+      <p class="fewnote">コース×風×級別まで選べます。グレード・季節は、風・級別を「すべて」に戻すと選べます(事前に集計した組合せだけ)。</p>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">3コース · 向かい風 · A1</h2><span class="right">出走 142件 <span class="ref">参考</span></span></div>
+    <div class="card__body"><div class="few"><table class="tbl"><tr><td>1着率</td><td>21%</td><td>2連対率</td><td>39%</td><td>3連対率</td><td>58%</td></tr></table><div class="stack"><i style="width:0%"></i><i style="width:31%">31</i><i style="width:42%">42</i><i style="width:27%">27</i><i style="width:0%"></i></div><p class="fewnote">左から 逃げ・差し・まくり・まくり差し・抜き/恵まれ(%)</p><p class="fewnote">3連単の払戻: 平均 9,120円 / 中央値 5,040円</p></div><p class="fewnote">件数が200未満のため参考程度です。</p></div>
+  </section>
+  <div class="banner banner--muted"><span class="banner__icon">ℹ</span><div class="banner__body">この組合せは事前に集計していません。条件を減らしてください。<br><span class="fewnote">(風×級別×季節などを選ぼうとしたときの表示)</span></div></div>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="players" data-title="今日の選手のランキング">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="true">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="false">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <div class="seg" style="grid-template-columns:repeat(3,1fr)"><button aria-selected="true">逃げ率(1コース)</button><button>平均ST</button><button>差し・まくり</button></div>
+  <div class="chips" style="margin:8px var(--gutter) 0"><button aria-pressed="true">全場</button><button aria-pressed="false">戸田</button><button aria-pressed="false">住之江</button><button aria-pressed="false">大村</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">今日1コースに入る予定の選手</h2><span class="right">上位10 · 11/5</span></div>
+    <div class="rank-li"><span class="no">1</span><span class="waku waku--s w1">1</span><span><b>福田 浩</b> <span class="fewnote">大村 7R</span></span><span class="v">71%<small>1コース 214走</small></span></div>
+    <div class="rank-li"><span class="no">2</span><span class="waku waku--s w1">1</span><span><b>田村 晴美</b> <span class="fewnote">桐生 3R</span></span><span class="v">66%<small>198走</small></span></div>
+    <div class="rank-li"><span class="no">3</span><span class="waku waku--s w1">1</span><span><b>西田 翔</b> <span class="fewnote">住之江 11R</span></span><span class="v">64%<small>240走</small></span></div>
+    <div class="rank-li"><span class="no">4</span><span class="waku waku--s w1">1</span><span><b>青木 勇</b> <span class="fewnote">戸田 9R</span></span><span class="v">61%<small>176走</small></span></div>
+    <div class="rank-li"><span class="no">5</span><span class="waku waku--s w1">1</span><span><b>加藤 順平</b> <span class="fewnote">住之江 2R</span></span><span class="v">58%<small>131走</small></span></div>
+    <p class="card__note" style="padding-top:8px">件数30未満の選手はランキングに出しません。名前をタップで選手カード。率は自前の集計(公式の成績とは計算の仕方が違います)。</p>
+  </section>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="model" data-title="モデルの弱点・週ごとのまとめ">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="true">モデル</a><a role="tab" aria-selected="false">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <p class="disclaimer" style="margin-top:8px">実運用(その日の朝に確定した予想)だけで集計しています。</p>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">本命の推しすぎ</h2><span class="right">本命の予測50%以上のレース</span></div>
+    <div class="card__body"><svg class="chart" viewBox="0 0 320 160" role="img" aria-label="推しすぎの推移"><line class="grid" x1="36" x2="312" y1="130" y2="130"/><text x="30" y="133" text-anchor="end">40%</text><line class="grid" x1="36" x2="312" y1="100" y2="100"/><text x="30" y="103" text-anchor="end">50%</text><line class="grid" x1="36" x2="312" y1="70" y2="70"/><text x="30" y="73" text-anchor="end">60%</text><line class="grid" x1="36" x2="312" y1="40" y2="40"/><text x="30" y="43" text-anchor="end">70%</text><line x1="151" x2="151" y1="10" y2="134" stroke="var(--c-text-2)" stroke-dasharray="3 3"/><text x="155" y="18">モデル切替 12/2</text><polyline class="line" style="stroke:var(--c-text-2);stroke-dasharray:6 3" points="36,40.89999999999999 59,43.29999999999998 82,45.70000000000002 105,52.0 128,54.39999999999999 151,55.60000000000001 174,58.0 197,59.19999999999999 220,60.69999999999999 243,61.60000000000001 266,62.5 289,64.0"/><polyline class="line" points="36,77.80000000000001 59,75.39999999999999 82,69.10000000000001 105,66.39999999999999 128,64.0 151,65.5 174,61.60000000000001 197,64.30000000000001 220,62.80000000000001 243,67.0 266,63.69999999999999 289,64.89999999999999"/><circle class="dot" cx="36" cy="77.80000000000001" r="3" opacity=0.4/><circle class="dot" cx="59" cy="75.39999999999999" r="3" opacity=0.4/><circle class="dot" cx="82" cy="69.10000000000001" r="3" /><circle class="dot" cx="105" cy="66.39999999999999" r="3" /><circle class="dot" cx="128" cy="64.0" r="3" /><circle class="dot" cx="151" cy="65.5" r="3" /><circle class="dot" cx="174" cy="61.60000000000001" r="3" /><circle class="dot" cx="197" cy="64.30000000000001" r="3" /><circle class="dot" cx="220" cy="62.80000000000001" r="3" /><circle class="dot" cx="243" cy="67.0" r="3" /><circle class="dot" cx="266" cy="63.69999999999999" r="3" /><circle class="dot" cx="289" cy="64.89999999999999" r="3" /><text x="36" y="154">11/3週</text><text x="312" y="154" text-anchor="end">1/19週</text></svg><p class="fewnote">点線 = 予測の平均、実線 = 実際の1着率。差が縮まるほど改善。薄い点は件数200未満の週。縦線 = モデルを切り替えた日。</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">較正のずれ(ECE)の推移</h2><span class="right">週ごと · 小さいほど良い</span></div>
+    <div class="card__body"><p class="fewnote">(同じ形の折れ線。切り替え日の縦線つき)</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">外れやすい条件</h2><span class="right">本命の1着率 − 予測の平均</span></div>
+    <div class="card__body"><table class="tbl"><thead><tr><th>条件</th><th>件数</th><th>差</th></tr></thead><tbody><tr><td class="l">確率帯 70〜80%</td><td>412</td><td class="is-minus">−11.2pt</td></tr><tr><td class="l">向かい風・強</td><td class="few">96<span class="ref">参考</span></td><td class="few">−8.5pt</td></tr><tr><td class="l">場: 江戸川</td><td>530</td><td>−6.1pt</td></tr><tr><td class="l">直前版</td><td><span class="insuf">件数不足(0件)</span></td><td></td></tr></tbody></table><p class="fewnote">並びは件数の多い順。</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">週ごとのまとめ</h2><span class="right"><select style="font:inherit;height:32px"><option>2027-W03(1/18〜1/24)</option></select></span></div>
+    <div class="card__body"><table class="tbl"><thead><tr><th>確率帯</th><th>件数</th><th>予測</th><th>実際</th><th>前週差</th></tr></thead><tbody><tr><td>〜35%</td><td>420</td><td>28%</td><td>27%</td><td>+1pt</td></tr><tr><td>35〜50%</td><td>380</td><td>42%</td><td>41%</td><td>−2pt</td></tr><tr class="few"><td>50%〜</td><td>178<span class="ref">参考</span></td><td>62%</td><td>62%</td><td>+1pt</td></tr></tbody></table><p class="fewnote" style="margin-top:6px">券種別の回収率・展開予想の当たり具合・較正も同じ週で表示(既定の戦略と基準「1号艇」を並べる)。</p></div>
+  </section>
+  <a class="more" href="#/performance">成績(実運用の回収率・戦略比較)を見る ›</a>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="sim" data-title="買い方のシミュレーター(検証・後知恵の注意を常に)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="true">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <div class="seg"><button aria-selected="true">検証(過去データ)</button><button aria-selected="false">実運用</button></div>
+  <div class="hindsight" role="note"><b>過去のデータで、条件を見てから比べた成績です。</b>たまたま良かった条件が上に出やすく、これから同じ成績になるとは限りません。</div>
+  <div class="card"><div class="card__body"><div class="dimrow"><span>券種</span><div class="chips"><button aria-pressed="false">単勝</button><button aria-pressed="false">2連単</button><button aria-pressed="true">3連単</button></div></div><div class="dimrow"><span>見送り</span><div class="chips"><button aria-pressed="true">すべて</button><button>なし</button><button>荒</button><button>中以下</button></div></div><div class="dimrow"><span>配分</span><div class="chips"><button aria-pressed="true">均等</button><button>上位厚め</button><button>確率比例</button></div></div></div></div>
+  <div class="sortsel">並び: <select style="font:inherit;height:32px"><option>券種 → 点数(既定)</option><option>件数の多い順</option><option>回収率の高い順</option></select></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">条件ごとの成績</h2><span class="right">27通りのうち5件</span></div>
+    <div class="card__body"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>券種・点数</th><th>見送り</th><th>件数</th><th>回収率<br>95%区間</th><th>的中率</th><th>最大連敗</th><th>最大損失</th></tr></thead><tbody><tr><td class="l">3連単 1点</td><td>なし</td><td>3,010R</td><td><b>62%</b><span class="ci">45〜80%</span></td><td>4%</td><td>118連敗</td><td>−84,000</td></tr><tr><td class="l">3連単 3点</td><td>なし</td><td>3,010R</td><td><b>74%</b><span class="ci">62〜87%</span></td><td>11%</td><td>52連敗</td><td>−61,200</td></tr><tr><td class="l">3連単 5点</td><td>なし</td><td>3,010R</td><td><b>81%</b><span class="ci">70〜93%</span></td><td>17%</td><td>38連敗</td><td>−58,200</td></tr><tr><td class="l">3連単 5点</td><td>荒</td><td>1,960R</td><td><b>86%</b><span class="ci">72〜101%</span></td><td>19%</td><td>31連敗</td><td>−39,500</td></tr><tr><td class="l">3連単 10点</td><td>なし</td><td>3,010R</td><td><b>79%</b><span class="ci">71〜88%</span></td><td>29%</td><td>21連敗</td><td>−52,800</td></tr></tbody></table></div><p class="fewnote" style="padding:6px 0 0">最大損失は、1レースの予算を1,000円と仮定して計算しています。区間が100%をまたぐものは、プラスともマイナスとも言えません。</p></div>
+  </section>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="you" data-title="あなたの収支分析(端末内のみ)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">週1更新 11/2</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="false">買い方</a><a role="tab" aria-selected="true">あなた</a></nav>
+  <div class="banner" role="note"><span class="banner__icon">🔒</span><div class="banner__body">この集計は、この端末の購入記録だけから計算しています。外部には送信しません。</div></div>
+  <div class="seg" style="grid-template-columns:repeat(3,1fr)"><button aria-selected="true">券種</button><button>場</button><button>時間帯</button></div>
+  <div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:6px"><button>期待値ランク</button><button>配分</button><button>印あり/なし</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">券種別</h2><span class="right">10/19〜 · 42件</span></div>
+    <div class="card__body"><table class="tbl"><thead><tr><th>券種</th><th>件数</th><th>購入</th><th>払戻</th><th>回収率</th></tr></thead><tbody><tr><td>3連単</td><td class="few">34<span class="ref">参考</span></td><td>20,400</td><td>17,850</td><td class="few">87.5%<span class="ci">41〜150</span></td></tr><tr><td>2連単</td><td colspan="4"><span class="insuf">件数不足(6件)</span></td></tr><tr><td>単勝</td><td colspan="4"><span class="insuf">件数不足(2件)</span></td></tr></tbody></table><p class="fewnote">この集計を見て、取り返すために賭け金を増やすのは控えましょう。</p></div>
+  </section>
+  <a class="more" href="#/ledger">収支(記録の一覧・予算)へ ›</a>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

@@ -58,7 +58,7 @@
 
 <div class="page">
   <h1>部品カタログ</h1>
-  <p class="note">デザイナーB 案 v0.8 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
+  <p class="note">デザイナーB 案 v1.0 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
 
   <div class="themebar">
     <div class="seg" role="tablist" aria-label="表示モード">
@@ -646,6 +646,68 @@
     <li class="mhist mhist--kept"><span class="mhist__date num">2026-11-04</span><div class="mhist__head"><span class="mhist__tag">切り替えなし</span><span class="mhist__id">pre_20261104_77b0</span></div><div class="mhist__body">基準 c(較正)を満たさなかったため、今のモデルのまま。<span class="mhist__metric">logloss <b>1.309</b>(今 1.305)</span></div></li>
   </ol></div>
   <p class="note">「切り替えた」= 藍の太枠 + ⇄、「切り替えなし」= 灰の枠 + ＝。大きさは同じ。</p>
+
+  <!-- ===== v0.9(DB-7: 分析) ===== -->
+  <h2>29. 分析: タブ・条件の選択</h2>
+  <nav class="subtabs" role="tablist" aria-label="分析"><button role="tab" aria-selected="true">場</button><button role="tab" aria-selected="false">今日の選手</button><button role="tab" aria-selected="false">モデル</button><button role="tab" aria-selected="false">買い方</button><button role="tab" aria-selected="false">自分</button></nav>
+  <div class="card filters" style="margin-top:8px">
+    <div class="filter"><span class="filter__label">期間</span><div class="fchips" role="radiogroup" aria-label="期間"><button class="fchip" role="radio" aria-checked="false">全期間</button><button class="fchip" role="radio" aria-checked="true">直近365日</button></div></div>
+    <div class="filter"><span class="filter__label">季節</span><div class="fchips" role="group" aria-label="季節"><button class="fchip" aria-pressed="true">春</button><button class="fchip" aria-pressed="false">夏</button><button class="fchip" aria-pressed="true">秋</button><button class="fchip" aria-pressed="false">冬</button></div></div>
+    <div class="filter"><span class="filter__label">場</span><select class="select select--sm" aria-label="場"><option>戸田</option><option>平和島</option><option>住之江</option></select></div>
+    <div class="filter"><span class="filter__label">級別</span><div><div class="fchips" role="group" aria-label="級別"><button class="fchip" aria-pressed="true">A1</button><button class="fchip" aria-pressed="false">A2</button><button class="fchip" disabled aria-describedby="why-b2">B2</button></div><div class="fchip-reason" id="why-b2">B2 は「風」と組み合わせた集計がありません</div></div></div>
+    <div class="filter"><span class="filter__label">風</span><div class="fchips" role="radiogroup" aria-label="風"><button class="fchip" role="radio" aria-checked="true">すべて</button><button class="fchip" role="radio" aria-checked="false">追い風</button><button class="fchip" role="radio" aria-checked="false">向かい風</button><button class="fchip" role="radio" aria-checked="false">横風</button><button class="fchip" role="radio" aria-checked="false">無風</button></div></div>
+  </div>
+
+  <h2>30. 集計表(件数・率・区間・全国との差)</h2>
+  <div class="card">
+    <table class="atable"><thead><tr><th>条件</th><th>件数</th><th>1コース1着率</th><th>全国との差</th></tr></thead><tbody>
+      <tr><td>追い風 0〜2m</td><td class="n">1,204</td><td class="rate">58.2%<small>55.4〜61.0</small></td><td><span class="diff diff--up">+3.1pt</span></td></tr>
+      <tr><td>向かい風 3〜5m</td><td class="n">612</td><td class="rate">49.0%<small>45.1〜53.0</small></td><td><span class="diff diff--down">−6.1pt</span></td></tr>
+      <tr class="is-lown"><td>向かい風 6m以上 <span class="lown-tag"></span></td><td class="n">88</td><td class="rate">40.9%<small>31.2〜51.3</small></td><td><span class="diff diff--down">−14.2pt</span></td></tr>
+      <tr><td>横風 6m以上</td><td class="n">21</td><td class="rate"><span class="insuff">件数不足</span></td><td>–</td></tr>
+    </tbody></table>
+    <p class="note" style="margin:8px 0 0">200以上 = 通常、30〜199 = 薄く「参考」、30未満 = 率を出さず「件数不足」(spec/11 1.3)。差は ▲▼ と符号つき。</p>
+  </div>
+
+  <h2>31. グラフ: 推移・横棒・積み上げ・ヒートマップ</h2>
+  <h3>推移の折れ線(週ごと・モデル切替の縦線)</h3>
+  <div class="card"><div id="trend"></div><div class="chart-legend"><span><i class="lg-line"></i>的中率(本命)</span><span><i class="lg-ideal"></i>全国平均</span><span><i class="lg-lown"></i>件数が少ない週</span></div></div>
+  <h3>ECE の推移(小さい値・数値の目盛り)</h3>
+  <div class="card"><div id="ece"></div></div>
+  <h3>推しすぎの推移(実際 = 実線、予測の平均 = 破線)</h3>
+  <div class="card"><div id="overconf"></div><div class="chart-legend"><span><i class="lg-line"></i>実際の1着率</span><span><i class="lg-ideal"></i>予測の平均</span></div></div>
+  <h3>横棒の比較(コース別。全国平均の縦線)</h3>
+  <div class="card"><div id="hbars"></div></div>
+  <h3>区間つきの点(場の比較)</h3>
+  <div class="card"><div id="hdots"></div></div>
+  <h3>積み上げ横棒(決まり手の割合)</h3>
+  <div class="card"><div id="stacked"></div></div>
+  <h3>ヒートマップ(場 × コースの1着率)</h3>
+  <div class="card"><div id="heat"></div></div>
+
+  <h2>32. ランキング・シミュレーター・後知恵の注意</h2>
+  <h3>ランキングの行</h3>
+  <div class="card"><ol class="ranks">
+    <li class="rank"><span class="rank__no">1</span><span class="boat boat--sm boat-1">1</span><span class="rank__who"><button class="racer-link" style="text-align:left">高山 弘斗</button><small>戸田 1R · A1 · コース1</small></span><span class="rank__val">72.4%<small>156走</small></span></li>
+    <li class="rank"><span class="rank__no">2</span><span class="boat boat--sm boat-1">1</span><span class="rank__who"><button class="racer-link" style="text-align:left">青木 翔太</button><small>住之江 7R · A1 · コース1</small></span><span class="rank__val">70.1%<small>402走</small></span></li>
+    <li class="rank is-lown"><span class="rank__no">3</span><span class="boat boat--sm boat-1">1</span><span class="rank__who"><button class="racer-link" style="text-align:left">山本 陸</button><small>大村 2R · B1 · コース1 <span class="lown-tag"></span></small></span><span class="rank__val">68.0%<small>50走</small></span></li>
+  </ol></div>
+  <h3>後知恵の注意(検証の画面に常に)</h3>
+  <div class="hindsight" role="note"><svg><use href="#i-alert"/></svg><div><b>検証の成績は後知恵を含みます</b>過去の結果を見てから条件を選ぶと、たまたま良かった買い方を選びやすくなります。実運用の成績と見比べてください。</div></div>
+  <h3>シミュレーターの比較表</h3>
+  <div class="row" style="margin-bottom:6px"><span class="periodtag periodtag--bt">検証</span><span class="periodtag periodtag--live">実運用</span><span class="u-muted" style="font-size:11px">← 表の見出しに付ける</span></div>
+  <div class="simwrap"><table class="simtable"><thead><tr><th>買い方</th><th>レース</th><th>回収率(95%区間)</th><th>的中率</th><th>最大連敗</th><th>最大損失</th></tr></thead><tbody>
+    <tr class="is-current"><td>3連単 上位5点・均等</td><td>8,420</td><td>81.0%<span class="sim-ci">70〜93</span></td><td>16.9%</td><td>34</td><td>−58,200円</td></tr>
+    <tr><td>3連単 上位3点・荒なら見送り</td><td>6,110</td><td>84.2%<span class="sim-ci">71〜98</span></td><td>12.1%</td><td>41</td><td>−49,700円</td></tr>
+    <tr><td>単勝 1点<span class="basetag">基準</span></td><td>8,420</td><td>76.2%<span class="sim-ci">72〜80</span></td><td>50.4%</td><td>9</td><td>−21,300円</td></tr>
+    <tr class="is-lown"><td>2連単 上位1点・中以下見送り <span class="lown-tag"></span></td><td>142</td><td>97.5%<span class="sim-ci">61〜140</span></td><td>21.8%</td><td>12</td><td>−8,900円</td></tr>
+  </tbody></table></div>
+  <p class="sortnote">並び: 券種 → 点数の順(回収率の高い順にはしない)。最大損失は1レース1,000円の予算と仮定。</p>
+
+  <h3>下部タブ(5つ)</h3>
+  <nav class="tabbar tabbar--5" style="border:1px solid var(--c-border);border-radius:var(--radius-md)">
+    <a href="#"><svg><use href="#i-race"/></svg>レース</a><a href="#"><svg><use href="#i-chart"/></svg>成績</a><a href="#" aria-current="page"><svg><use href="#i-list"/></svg>分析</a><a href="#"><svg><use href="#i-wallet"/></svg>収支</a><a href="#"><svg><use href="#i-more"/></svg>その他</a>
+  </nav>
 </div>
 
 <script src="charts.js"></script>
@@ -878,6 +940,24 @@ document.getElementById('fetcherrors').innerHTML = fetchStates.map(e => `
     </div>`).join('');
   document.getElementById('help1').addEventListener('click', e => { const b = e.currentTarget, open = b.getAttribute('aria-expanded') !== 'true';
     b.setAttribute('aria-expanded', String(open)); document.getElementById('hp1').hidden = !open; });
+})();
+// ---- v0.9: 分析のグラフ(サンプル) ----
+(function () {
+  const C = window.BRCharts;
+  const weeks = ['10/6','10/13','10/20','10/27','11/3','11/10','11/17','11/24'];
+  document.getElementById('trend').innerHTML = C.trend([{name:'本命の1着率', values:[.52,.55,.49,.51,.47,.53,.56,.54], n:[620,640,590,610,150,600,630,640]}], weeks, {marks:[{at:5,label:'モデル切替 11/10'}], ref:.55, refLabel:'全国平均 55%', label:'週ごとの本命の1着率'});
+  document.getElementById('ece').innerHTML = C.trend([{name:'ECE', values:[.052,.048,.061,.055,.043,.031,.028,.030], n:[620,640,590,610,150,600,630,640]}], weeks, {format:'num', digits:2, min:0, max:.08, step:.02, marks:[{at:5,label:'モデル切替 11/10'}], label:'ECE(較正の誤差)の推移'});
+  document.getElementById('overconf').innerHTML = C.trend([{name:'実際', values:[.57,.55,.52,.54,.50,.58,.57,.56], n:[620,640,590,610,150,600,630,640]},{name:'予測', values:[.69,.70,.68,.70,.69,.62,.60,.60], n:[620,640,590,610,150,600,630,640]}], weeks, {marks:[{at:5,label:'切替'}], label:'予測50%以上のレースの、予測の平均と実際の1着率'});
+  document.getElementById('hbars').innerHTML = C.hbars([
+    {label:'1コース', value:.58, n:4210, lo:.565, hi:.595},{label:'2コース', value:.14, n:4180, lo:.13, hi:.15},{label:'3コース', value:.12, n:4150},
+    {label:'4コース', value:.10, n:4100},{label:'5コース', value:.05, n:150},{label:'6コース', value:.02, n:22}], {ref:.55, refLabel:'全国平均(1コース)', highlight:'1コース', max:.7});
+  document.getElementById('hdots').innerHTML = C.hbars([
+    {label:'戸田', value:.47, n:2100, lo:.45, hi:.49},{label:'大村', value:.64, n:2300, lo:.62, hi:.66},{label:'平和島', value:.45, n:180, lo:.38, hi:.52},{label:'江戸川', value:.48, n:25}], {mode:'dot', ref:.55, refLabel:'全国平均(1コース1着率)', max:.8, diff:true});
+  const P = (a,b,c,d,e) => [{key:'tk-nige',name:'逃げ',p:a},{key:'tk-sashi',name:'差し',p:b},{key:'tk-makuri',name:'まくり',p:c},{key:'tk-makurizashi',name:'まくり差し',p:d},{key:'tk-other',name:'その他',p:e}];
+  document.getElementById('stacked').innerHTML = C.stacked([{label:'全国', n:55000, parts:P(.55,.15,.13,.10,.07)},{label:'戸田', n:2100, parts:P(.46,.17,.19,.11,.07)},{label:'平和島', n:180, parts:P(.44,.18,.16,.14,.08)},{label:'江戸川', n:25, parts:[]}]);
+  const v = [[.47,.16,.14,.12,.07,.03],[.64,.13,.09,.08,.04,.02],[.45,.17,.15,.13,.07,.03],[.48,.15,.14,.12,.08,.03]];
+  const n = [[2100,2100,2100,2100,2100,180],[2300,2300,2300,150,2300,2300],[180,180,180,180,180,25],[25,25,25,25,25,25]];
+  document.getElementById('heat').innerHTML = C.heatmap(['戸田','大村','平和島','江戸川'], ['1','2','3','4','5','6'], v.map((r,i) => r.map((x,j) => ({v:x, n:n[i][j]}))), {corner:'場＼コース', label:'場とコースごとの1着率'});
 })();
 </script>
 </body>

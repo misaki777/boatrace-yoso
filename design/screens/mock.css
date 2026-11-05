@@ -849,3 +849,36 @@ html.mock-all .toast { position: absolute; }
 .mh { padding: 10px var(--sp-3); border-top: 1px solid var(--c-border); font-size: var(--fs-s); }
 .mh .t { display: flex; gap: 6px; align-items: center; font-size: var(--fs-m); font-weight: 700; }
 .mh .k { color: var(--c-text-2); }
+
+/* ===== DA-7 分析(S10)。Bの DB-7 部品が出来たら置き換える(README 18章) ===== */
+.tabbar--5 { grid-template-columns: repeat(5, 1fr); }
+.tabbar--5 a { font-size: 10px; letter-spacing: -.02em; }
+.tabbar--5 a svg { width: 22px; height: 22px; }
+.subtabs { display: flex; position: sticky; top: var(--h-appbar); z-index: 9; background: var(--c-surface); border-bottom: 1px solid var(--c-border); overflow-x: auto; }
+.subtabs a { flex: 1 0 auto; min-width: 64px; height: 44px; display: grid; place-items: center; padding: 0 10px; font-size: var(--fs-m); color: var(--c-text-2); border-bottom: 3px solid transparent; }
+.subtabs a[aria-selected="true"] { color: var(--c-text); font-weight: 700; border-bottom-color: var(--c-accent); }
+.stack { display: flex; height: 22px; border-radius: 4px; overflow: hidden; margin: 4px 0; }
+.stack i { display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 700; color: #fff; }
+.stack i:nth-child(1) { background: var(--c-bar-fill-top); }
+.stack i:nth-child(2) { background: var(--c-bar-fill); }
+.stack i:nth-child(3) { background: var(--c-text-2); }
+.stack i:nth-child(4) { background: var(--c-text-3); }
+.stack i:nth-child(5) { background: var(--c-border-strong); color: var(--c-text); }
+.cbar { display: grid; grid-template-columns: 22px 1fr 52px 54px; gap: 6px; align-items: center; font-size: var(--fs-s); font-variant-numeric: tabular-nums; padding: 3px 0; }
+.cbar .p { text-align: right; font-weight: 700; }
+.cbar .n { text-align: right; color: var(--c-text-3); font-size: var(--fs-xs); }
+.insuf { font-size: var(--fs-xs); color: var(--c-text-3); border: 1px dashed var(--c-border-strong); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.ref { font-size: 10px; color: var(--c-text-3); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 3px; margin-left: 3px; white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { height: 32px; padding: 0 10px; border-radius: var(--r-full); border: 1px solid var(--c-border); background: var(--c-surface); font-size: var(--fs-s); color: var(--c-text); }
+.chips button[aria-pressed="true"] { background: var(--c-accent-weak); border-color: var(--c-accent); color: var(--c-accent-text); font-weight: 700; }
+.chips button[disabled] { opacity: .4; }
+.dimrow { display: grid; grid-template-columns: 48px 1fr; gap: 8px; align-items: start; padding: 6px 0; font-size: var(--fs-s); }
+.dimrow > span { padding-top: 7px; color: var(--c-text-2); font-weight: 700; }
+.rank-li { display: grid; grid-template-columns: 20px 24px 1fr auto; gap: 8px; align-items: center; min-height: 44px; padding: 4px var(--sp-3); border-top: 1px solid var(--c-border); font-variant-numeric: tabular-nums; font-size: var(--fs-m); }
+.rank-li .no { color: var(--c-text-3); font-size: var(--fs-xs); text-align: right; }
+.rank-li .v { text-align: right; font-weight: 700; }
+.rank-li .v small { display: block; font-weight: 400; font-size: var(--fs-xs); color: var(--c-text-3); }
+.hindsight { margin: var(--sp-2) var(--gutter) 0; padding: 10px 12px; border-radius: var(--r-m); border: 1.5px dashed var(--c-warn); background: var(--c-warn-weak); font-size: var(--fs-s); }
+.sortsel { display: flex; gap: 6px; align-items: center; font-size: var(--fs-s); color: var(--c-text-2); margin: var(--sp-2) var(--gutter) 0; }
+.subtabs a { flex: 1 1 0; min-width: 0; padding: 0 2px; font-size: var(--fs-s); white-space: nowrap; }

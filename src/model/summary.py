@@ -215,8 +215,8 @@ def _select(rule: str, bet_type: str, probs: np.ndarray, pw: np.ndarray, odds, p
         mask = np.zeros_like(probs, dtype=bool)
         mask[:, 0] = True
         return mask
-    if rule == "baseline_tri1_top5":
-        # 1号艇1着の組合せの中で、モデルの確率の上位 k 点
+    if rule in ("baseline_tri1_top5", "baseline_first1_topk"):
+        # 1号艇1着の組合せの中で、モデルの確率の上位 k 点(2連単・3連単)
         first1 = np.array([lab.startswith("1-") for lab in labels])
         masked = np.where(first1[None, :], probs, -1.0)
         k = int(params.get("k", 5))

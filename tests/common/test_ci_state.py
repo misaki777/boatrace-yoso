@@ -164,3 +164,32 @@ def test_ci_run_finalize_advances_state():
     cmds = _dry("finalize", "2026-11-04")
     assert any("history_state advance --state data/history/state_20261104.parquet" in c for c in cmds)
     assert not any("--state" in c and "build_features" in c for c in cmds)
+
+
+def test_months_before_recent():
+    # 直近400日(2025-10〜)で足りる間は、archive から取る月は無い
+    assert ci_state.months_before_recent(date(2026, 11, 5), "2026-01") == []
+    assert ci_state.months_before_recent(date(2027, 6, 1), "2026-01") == ["2026-01", "2026-02", "2026-03"]
+    assert ci_state.months_before_recent(date(2026, 11, 5), "2016-08")[0] == "2016-08"
+    assert ci_state.months_before_recent(date(2026, 11, 5), "2016-08")[-1] == "2025-09"
+
+
+def test_archive_pull_auto_dry_run(capsys):
+    assert ci_state.main(["archive-pull", "--months", "auto", "--part", "interim", "--dry-run",
+                          "--ref-date", "2027-06-01", "--from-month", "2026-01"]) == 0
+    out = capsys.readouterr().out
+    assert "archive/interim/2026-01.tar.gz" in out and "archive/raw/" not in out
+
+
+def test_ci_run_analytics():
+    fin = _dry("finalize", "2026-11-08")
+    assert any("analytics.stadiums --to 2026-11-08" in c for c in fin)
+    assert any("analytics --what simulator --to 2026-11-08" in c for c in fin)
+    wk = _dry("weekly", "2026-11-08")  # 日曜 → その週
+    assert any("analytics --what weekly --week 2026-W45" in c for c in wk)
+    assert any("analytics.cube --to 2026-11-08" in c for c in wk)
+    mo = _dry("morning", "2026-11-09")
+    assert any("analytics --what rankings --date 2026-11-09" in c for c in mo)
+    day = _dry("daytime", "2026-11-05")
+    if not any("pre 予想が無い" in c for c in day) and any("--per-race-lock" in c for c in day):
+        assert not any("analytics" in c for c in day)  # 日中には何も足さない

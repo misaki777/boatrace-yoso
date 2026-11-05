@@ -132,15 +132,17 @@ New-NetFirewallRule -DisplayName "boatrace-yoso 8000" -Direction Inbound -Protoc
 
 ## 自動実行(GitHub Actions)
 
-`.github/workflows/daily.yml` が、PC を起動していなくても 収集(Open API)→ 予想 → export → 公開(Cloudflare Workers の `br-yoso`)を行います。`docs/data` のコミットは朝と前日分の確定の1日2回だけです(リポジトリの肥大化を抑えるため。日中の更新は Cloudflare への公開だけ)。**Actions からは公式サイト(boatrace.jp)にアクセスしません**(締切前オッズは取らない。オッズはこれまでどおり手元とスマホの中継 Worker で)。
+`.github/workflows/daily.yml` が、PC を起動していなくても 収集(Open API)→ 予想 → export → 公開(Cloudflare Workers の `br-yoso`)を行います。`docs/data` のコミットは朝と前日分の確定の1日2回(と週次)だけです(リポジトリの肥大化を抑えるため。日中の更新は Cloudflare への公開だけ)。**Actions からは公式サイト(boatrace.jp)にアクセスしません**(締切前オッズは取らない。オッズはこれまでどおり手元とスマホの中継 Worker で)。
 
 | ジョブ | JST | cron(UTC) | 内容 |
 |---|---|---|---|
 | 朝 | 7:41 | `41 22 * * *` | openapi → build_interim → 状態から pre の特徴量 → pre 予想 → 展開予想(pre)→ 選手カード → export(`live_loop --prepare-only` と同じ流れで、特徴量だけ `--state` を使う) |
 | 日中 | 8:04〜23:34 の30分ごと | `4,34 23 * * *` と `4,34 0-14 * * *` | openapi → build_interim → 当日の pre・preview の特徴量 → 直前版の予想と展開予想(`--per-race-lock`。直前情報が揃った締切前のレースだけ1回確定)→ 選手カード(作り直し)→ export。pre 予想が無ければ準備から |
-| 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす)→ 履歴の集計の状態を1日進める(`history_state advance`)→ その月の raw・interim を R2 の archive/ に保存 |
+| 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす)→ 履歴の集計の状態を1日進める(`history_state advance`)→ 分析: 場の傾向・モデルの弱点・シミュレーター(実運用分)→ その月の raw・interim を R2 の archive/ に保存 |
+| 週次の分析 | 月曜 3:00 | `0 18 * * 0` | 分析: 条件で集計(キューブ)・週のまとめ(前の週。`docs/data/analytics/weekly/` は残し続ける)・シミュレーター。コミットだけで公開しない(朝 7:41 の公開に含まれる)。R2 の状態は保存しない |
 
-- 各ジョブは「R2 から状態を取得 → 処理 → 公開 →(朝と確定のみ)`docs/data` をコミット・push(github-actions[bot])→ R2 に状態を保存」。途中で失敗したら状態は保存しません。
+- 朝ジョブは当日のランキング(分析)も作ります。日中ジョブには分析は入りません。
+- 各ジョブは「R2 から状態を取得 → 処理 → 公開 →(朝・確定・週次のみ)`docs/data` をコミット・push(github-actions[bot])→ R2 に状態を保存」。途中で失敗したら状態は保存しません。
 - 同時には1つしか動きません(concurrency)。1回30分で打ち切ります。GitHub の都合で起動が数分〜数十分遅れることがあります。
 
 ### 1. 必要な secrets
@@ -201,9 +203,11 @@ for k in raw interim features; do npx wrangler r2 object delete br-yoso-data/sta
 
 (`state/predictions.tar.gz`・`state/models.tar.gz` は同じ名前のまま使います)
 
+**分析(spec/11)の全期間の集計に要る interim**: 場の傾向・キューブ・週のまとめの展開予想の集計は全期間の interim を読みます。毎日の `state/recent` には直近400日にかかる月しか無いので、前日確定と週次のジョブは、それより前の月を `archive/interim/` から足します(`ci_state archive-pull --months auto --part interim`。対象はワークフローの環境変数 `DATA_FROM_MONTH`(今は `2026-01`)〜 recent の前の月)。今は全部が直近400日に入っているので、取得は0件です。旧API(2016年〜)を interim に入れたら、その月を `archive-push` してから `DATA_FROM_MONTH` を `2016-08` にしてください(10年分で約170MB、取得 約1分)。
+
 ### 4. 手動実行
 
-GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / daytime / finalize)・対象日・公開するかを選んで実行します。または `gh workflow run daily -f mode=daytime`。
+GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / daytime / finalize / weekly)・対象日・公開するかを選んで実行します。または `gh workflow run daily -f mode=daytime`。
 
 ### 5. 止め方
 

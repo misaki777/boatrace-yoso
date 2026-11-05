@@ -1,9 +1,18 @@
 # design/visual(デザイナーB: ビジュアル・トークン・部品・アイコン)
 
-版: v0.8(2026-11-05)/ 状態: PMレビュー待ち(DB-1〜DB-6)
+版: v1.0(2026-11-05)/ 状態: PMレビュー待ち(DB-1〜DB-6)
 
 ### 変更履歴
 
+- v1.0: デザイナーAの DA-7(`design/screens/README.md` 18章)に対応。**追加のみ**。
+  - 無効なチップ `.fchip:disabled`(破線 + 斜線 + ⊘)と理由の1行 `.fchip-reason`
+  - `BRCharts.trend()` に `format:'num'` `digits` `step`(ECE などの小さい値)と、2本の線の名前が重ならない配置
+  - A の名前で使える `.chips`(選択・無効)`.insuf` `.ref` `.cbar`(`.cbar__bar`)`.stack.tkbar`、`.subtabs--sticky` `.subtabs--fill`
+  - 統括判断: **下部タブは5つ(レース / 成績 / 分析 / 収支 / その他)で確定** → `.tabbar--5`
+- v0.9: DB-7(`spec/11` 分析)。**追加のみ**(色トークンの追加なし。検査を3組追加)。
+  - `charts.js` に `trend()`(推移の折れ線・縦線の注記・基準線)、`hbars()`(横棒 / 区間つきの点・全国平均の縦線)、`stacked()`(積み上げ横棒)、`heatmap()`(表のヒートマップ)、`nClass()` `RULES`(件数の区分)
+  - 小タブ `.subtabs`、条件の選択 `.filters .filter .fchips .fchip` `.select--sm`、集計表 `.atable` と差 `.diff--up/down/flat`、件数不足 `.insuff`
+  - ランキング `.ranks > .rank`、シミュレーター `.simwrap > .simtable`(`tr.is-current` `.basetag` `.sortnote`)、後知恵の帯 `.hindsight`、検証/実運用の印 `.periodtag--bt/live`、下部タブ5つ `.tabbar--5`
 - v0.8: デザイナーAの DA-6(`design/screens/README.md` 17章)に対応。**追加のみ**。A の名前で使える `.stalebar`(黄)`.mini`(`.p1/.p2/.p3/.pf`)`.tbl tr.is-plan`、アプリバーの更新時刻 `.updated-at.is-stale`、選手名のリンク `.racer-link`、カードが無い日の `.emptybox`
 - v0.7: DB-6(`spec/10` Phase 3b)。**追加のみ**(色トークンの追加なし。検査を5組追加)。
   - 更新停止の帯 `.stale`(`--sticky`)
@@ -205,6 +214,27 @@ python3 design/visual/tools/contrast.py       # NG が 0 件であること
 | 着順の並び | `ol.fins > li.fin.fin--N` | **1着 = 濃い塗り、2・3着 = 太い枠、4〜6着 = 細い枠・薄い文字、F・L・欠 = 赤の破線 + 文字**。数字が情報なので色だけに頼らない。今節は `.fins--detail` で日付・Rを小さく添える |
 | モデルの履歴 | `ol.mhists > li.mhist.mhist--adopted/kept` | 日付 / タグ(「⇄ 切り替えた」= 藍の太枠、「＝ 切り替えなし」= 灰の枠。大きさは同じ)/ モデルID(等幅)/ 理由と logloss の比較 |
 
+### v0.9 の部品(DB-7: 分析画面)
+
+件数の扱いは spec/11 1.3 に合わせて部品とグラフで共通: **200以上 = 通常 / 30〜199 = 薄く「参考」/ 30未満 = 率を出さず「件数不足」(`.insuff`)**。`BRCharts.nClass(n)` が `'ok' | 'few' | 'none'` を返す(しきい値は `BRCharts.RULES`。`src/common/analytics_rules.py` と同じ値にそろえる)。
+
+| 部品 | クラス・関数 | 要点 |
+|---|---|---|
+| 小タブ | `nav.subtabs > [role=tab][aria-selected]` | 分析の中の5つ(場・今日の選手・モデル・買い方・自分)。下線 + 太字。横スクロール可 |
+| 条件の選択 | `.filter` > `.filter__label` + `.fchips > .fchip`(単一は `role=radio aria-checked`、複数は `aria-pressed`)/ 多い選択肢は `.select.select--sm` | 選ぶと塗り + ✓。高さ36px(見た目)・タップ領域44px。横スクロール |
+| 集計表 | `table.atable`(`.n` `.rate small` = 区間)+ `.diff--up/down/flat` | 列: 条件 / 件数 / 率(下に区間)/ 全国との差(▲▼＝ + 符号つき pt)。`tr.is-lown` + `.lown-tag`、30未満は `.insuff` |
+| 推移の折れ線 | `BRCharts.trend(series, labels, {marks, ref, refLabel})` | 週・月の推移。**縦の破線 + 注記でモデルの切り替え日**(`marks`)。基準線(全国平均など)。件数が少ない点は白抜き、30未満の点は描かず線を切る。2本目は破線 |
+| 横棒の比較 | `BRCharts.hbars(items, {ref, refLabel, highlight, max, mode, diff})` | 行ごとに 名前 / 棒 / 値 + 件数。`ref` で全国平均の縦の破線、`mode:'dot'` で区間つきの点。差(pt)は `diff:true` のときだけ(同じ基準と比べるときだけ。コース別のように行ごとに基準が違うときは出さない)。少ないものは斜線の棒 + 「参考」 |
+| 積み上げ横棒 | `BRCharts.stacked(rows)` | 決まり手の割合。v0.7 の模様(逃げ = 塗り、差し・まくり・まくり差し = 斜線の向き、その他 = 破線)を流用。15%以上の区間は中に数字、凡例を下に |
+| ヒートマップ | `BRCharts.heatmap(rowLabels, colLabels, cells, {corner})` → `table.heat` | 場 × コースなど。**色の濃さ(アクセント 0〜50%)+ 各マスに必ず数字**(色だけに頼らない)。濃さの上限 50% は、最も濃いマスでも本文の文字が 4.5:1 以上になるため(ライト 7.27 / ダーク 5.27)。参考 = 斜線の地 + 点線の下線、件数不足 = 「–」 |
+| ランキング | `ol.ranks > li.rank`(`__no` `__who` `__val`) | 順位 / 枠番 / 選手名(`.racer-link` で選手カードへ)+ 場・R・級別 / 値 + 件数。1〜3位も色を変えない |
+| シミュレーター | `.simwrap > table.simtable` | 1列目を固定して横スクロール。今の設定 = `tr.is-current`(淡い藍 + 左の帯 + 「今の設定」)、基準 = `.basetag`、少ない = `tr.is-lown`。**既定の並びは回収率順にしない**(`.sortnote` に並びの規則を書く) |
+| 後知恵の注意 | `.hindsight`(`role=note`) | 検証の画面の上に常に出す(閉じられない)。黄の地 + 黄土の**破線**の枠 + ⚠。予算の警告(実線の帯)と形で区別 |
+| 検証 / 実運用 | `.periodtag--bt`(黄土の破線「検証」)/ `--live`(実線「実運用」) | 表やグラフの見出しに付ける |
+| 下部タブ5つ | `.tabbar.tabbar--5` | **確定(統括判断)**: レース / 成績 / 分析 / 収支 / その他。文字10px・アイコン22px。360px で1つ72px |
+| 無効なチップ | `.fchip:disabled`(または `aria-disabled`)+ `.fchip-reason`(`aria-describedby` で結ぶ) | 事前集計の無い組合せ。破線の枠 + 斜線の地 + ⊘ + 薄い文字。理由を直後に1行(「B2 は『風』と組み合わせた集計がありません」) |
+| ECE などの推移 | `BRCharts.trend(..., {format:'num', digits:2, min:0, max:.08, step:.02})` | 目盛りを % ではなく小数で。推しすぎの推移は `series` を [実際, 予測の平均] の順に渡すと、実際 = 実線、予測 = 破線になる |
+
 #### 状態ごとの文言案(`components.html` 15節に同じものがある)
 
 | 場面(API) | 帯 | 見出し | 説明 | ボタン |
@@ -274,7 +304,7 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 
 ## 6. コントラスト比(`tools/contrast.py --md` の出力)
 
-基準: 文字は WCAG 2.x AA の 4.5:1(小さい文字を含むため、大きい文字の 3:1 は使わない)。枠線・バー・アイコンなど文字でないものは WCAG 2.1 の 1.4.11 に従い 3:1。**全86組、ライト・ダークとも基準を満たす(NG 0件)。**
+基準: 文字は WCAG 2.x AA の 4.5:1(小さい文字を含むため、大きい文字の 3:1 は使わない)。枠線・バー・アイコンなど文字でないものは WCAG 2.1 の 1.4.11 に従い 3:1。**全89組、ライト・ダークとも基準を満たす(NG 0件)。**
 
 | 組み合わせ | 基準 | ライト | ダーク |
 |---|---|---|---|
@@ -364,6 +394,9 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 | 展開予想の帯・斜線(非テキスト) / カード (`bar-fill` / `surface`) | 3.0:1 | 3.86 | 4.22 |
 | 着順チップ(1着)文字 / 塗り (`surface` / `text`) | 4.5:1 | 17.78 | 14.58 |
 | 更新停止の帯 文字 / 地 (`text` / `warn-weak`) | 4.5:1 | 16.22 | 12.36 |
+| 後知恵の帯の枠・検証の印 / 地 (`warn` / `warn-weak`) | 4.5:1 | 5.78 | 8.72 |
+| 条件チップ(選択中)文字 / 塗り (`text-on-accent` / `accent`) | 4.5:1 | 7.55 | 7.95 |
+| ヒートマップ 件数不足「–」 / 地 (`text-3` / `surface-2`) | 4.5:1 | 5.00 | 5.69 |
 
 補足:
 - 確率バーの薄い層(2着内・3着内)は `color-mix()` で作る補助の表現で、数値を必ず併記するため、コントラスト基準の対象外とした。
@@ -390,6 +423,17 @@ manifest の記述案(フロント担当が `docs/manifest.webmanifest` に書�
 | `.choice` `.choice--fill` `.radio-row` `.radio` `.flow` `.toast` `.stepper.is-off` | 同名 |
 | `.set-label .changed`(「変更」) | `.changed-tag.changed-tag--end`(「● 既定から変更」) |
 | `.set-summary` | `.setsummary` |
+| **DA-7(18章)** | |
+| `.stack`(色の塗り分け + 白文字) | `BRCharts.stacked()` / `.stack.tkbar` + `tk-*`。**差: 塗りの色だけで分けず、模様(逃げ = 塗り、差し・まくり・まくり差し = 向きの違う斜線、その他 = 破線)で分ける**。区間の中の数字は白地の小札にして、どの模様の上でも 4.5:1 を保つ(A案の白文字は灰の区間の上で足りない) |
+| `.cbar`(`.p` `.n`) | `BRCharts.hbars()`(全国平均の縦線・区間・件数の区分つき)。同名の `.cbar` + `.cbar__bar` も用意 |
+| 推移の折れ線 + 縦線の注記(`.chart` の拡張) | `BRCharts.trend()`(`marks` で縦の破線 + 注記、`ref` で基準線)。件数200未満の週は白抜きの点、30未満は線を切る |
+| 区間付きの点 | `BRCharts.hbars(items, {mode:'dot'})` |
+| `.chips`(`[aria-pressed]`、`[disabled]`) | `.fchips > .fchip`(横スクロール)または同名の `.chips`(折り返し)。**差: 選択は淡い地ではなく塗り + ✓、無効は透明度ではなく破線 + 斜線 + ⊘**(色や薄さだけに頼らない)。理由は `.fchip-reason` |
+| `.insuf` / `.ref` | `.insuff` / `.lown-tag`(同名の `.insuf` `.ref` も用意) |
+| `.few` | 既存(文字色を下げる方式) |
+| `.hindsight` | 同名(破線の枠 + ⚠。閉じられない) |
+| `.subtabs`(アプリバー直下に固定・5等分) | `.subtabs` + `.subtabs--sticky`(`--appbar-h` で位置)+ `.subtabs--fill`(5等分・12px) |
+| `.tabbar--5` | 同名(確定) |
 | **DA-6(17章)** | |
 | `.stalebar`(赤系の地 + 左帯) | `.stale`(または同名の `.stalebar`)。**差: 色は黄(`--c-warn-weak` の地 + 黄土の線 + ⚠)**。統括判断: 停止は故障ではなく注意なので黄、赤はエラー専用 |
 | アプリバーの「更新 08:10」を赤字 | `.updated-at.is-stale`。**差: 赤ではなく黄土の文字 + ⚠**(同じ理由) |

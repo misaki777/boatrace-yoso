@@ -28,6 +28,7 @@ R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キー
     python -m scripts.ci_state archive-push --months all            # 手元にある全部の月を archive/ に
     python -m scripts.ci_state archive-push --months 2026-11        # 1か月分
     python -m scripts.ci_state archive-pull --months 2026-01..2026-11
+    python -m scripts.ci_state archive-pull --months auto --part interim   # 分析用: recent に無い古い月の interim
     --dry-run を付けると R2 に触らない(push 系は tar.gz を作ってサイズを表示するまで)
 
 安全のため:
@@ -58,6 +59,9 @@ INTERIM_TABLES = ("races", "entries", "payouts", "odds")
 HISTORY_KEEP = 3
 INTERIM_LOOKBACK_DAYS = 400  # src/features/racer_cards.py の RESULT_LOOKBACK_DAYS と合わせる
 HISTORY_TABLES = ("races", "entries", "payouts")
+# データの最初の月(openapi v1 は 2026-01 から。spec/06 U8)。旧API(spec/10 2章)を interim に入れたら
+# ワークフローの環境変数 DATA_FROM_MONTH(または --from-month)を 2016-08 にする
+DATA_FROM_MONTH = "2026-01"
 # 種類ごとに、tar の中に入ってよいパスの先頭
 ALLOWED_PREFIXES: dict[str, tuple[str, ...]] = {
     "history": ("data/history/",),
@@ -109,6 +113,14 @@ def lookback_months(ref: date, days: int = INTERIM_LOOKBACK_DAYS) -> list[str]:
         keys.append(k)
         k = prev_month(k)
     return sorted(keys)
+
+
+def months_before_recent(ref: date, from_month: str = DATA_FROM_MONTH) -> list[str]:
+    """from_month 〜 recent(直近400日の interim)より前の月。分析(全期間の集計)で archive から足す月。"""
+    last = prev_month(lookback_months(ref)[0])
+    if from_month > last:
+        return []
+    return month_range_keys(f"{from_month}..{last}")
 
 
 def month_range_keys(spec: str) -> list[str]:
@@ -332,12 +344,14 @@ def push(kinds: list[str], ref: date, dry_run: bool) -> int:
     return 0
 
 
-def archive_push(months: list[str], dry_run: bool) -> int:
+def archive_push(months: list[str], dry_run: bool, part: str = "both") -> int:
     with tempfile.TemporaryDirectory(prefix="ci_state_") as tmp:
         items = []
         for m in months:
-            items.append((archive_key("raw", m), "archive-raw", raw_files_for_month(m)))
-            items.append((archive_key("interim", m), "archive-interim", interim_files_for_month(m)))
+            if part in ("raw", "both"):
+                items.append((archive_key("raw", m), "archive-raw", raw_files_for_month(m)))
+            if part in ("interim", "both"):
+                items.append((archive_key("interim", m), "archive-interim", interim_files_for_month(m)))
         for key, f in build_all(items, Path(tmp)):
             run(wrangler_cmd("put", key, f), dry_run)
     print("[archive-push] 完了" + ("(dry-run: R2 には触っていません)" if dry_run else ""))
@@ -374,7 +388,10 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p.add_argument("--dry-run", action="store_true", help="R2 に触らない")
     p.add_argument("--only", help=f"pull/push の種類を絞る(カンマ区切り。{','.join(KINDS)})")
     p.add_argument("--ref-date", help="recent の月を決める日(既定: 今日 JST)。YYYY-MM-DD")
-    p.add_argument("--months", help="archive の月: 2026-11 / 2026-01,2026-02 / 2026-01..2026-11 / all(push のみ)")
+    p.add_argument("--months", help="archive の月: 2026-11 / 2026-01,2026-02 / 2026-01..2026-11 / "
+                   "all(push のみ)/ auto(pull のみ。recent より前の月)")
+    p.add_argument("--part", choices=["raw", "interim", "both"], default="both", help="archive の対象")
+    p.add_argument("--from-month", default=None, help=f"auto の開始月(既定: 環境変数 DATA_FROM_MONTH か {DATA_FROM_MONTH})")
     a = p.parse_args(argv)
     a.kinds = list(KINDS)
     if a.only:
@@ -386,7 +403,12 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     if a.action.startswith("archive"):
         if not a.months:
             p.error("--months を指定してください")
-        if a.months == "all":
+        if a.months == "auto":
+            if a.action != "archive-pull":
+                p.error("auto は archive-pull だけで使えます")
+            import os
+            a.month_list = months_before_recent(a.ref, a.from_month or os.environ.get("DATA_FROM_MONTH") or DATA_FROM_MONTH)
+        elif a.months == "all":
             if a.action == "archive-pull":
                 p.error("archive-pull では月を指定してください(例: 2026-01..2026-11)")
             a.month_list = local_months()
@@ -406,10 +428,16 @@ def main(argv: list[str] | None = None) -> int:
         if a.action == "pull":
             return pull_items([(state_key(k), k) for k in a.kinds], a.dry_run, "pull")
         if a.action == "archive-push":
-            return archive_push(a.month_list, a.dry_run)
+            return archive_push(a.month_list, a.dry_run, a.part)
+        if not a.month_list:
+            print("[archive-pull] 取得する月はありません(recent で足りています)")
+            return 0
         items = []
         for m in a.month_list:
-            items += [(archive_key("raw", m), "archive-raw"), (archive_key("interim", m), "archive-interim")]
+            if a.part in ("raw", "both"):
+                items.append((archive_key("raw", m), "archive-raw"))
+            if a.part in ("interim", "both"):
+                items.append((archive_key("interim", m), "archive-interim"))
         return pull_items(items, a.dry_run, "archive-pull")
     except (OSError, ValueError, tarfile.TarError, subprocess.CalledProcessError) as e:
         print(f"[{a.action}] 失敗しました: {type(e).__name__}: {e}", file=sys.stderr)

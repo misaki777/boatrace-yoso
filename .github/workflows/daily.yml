@@ -12,16 +12,17 @@ on:
     - cron: "4,34 23 * * *"    # 日中:   JST 8:04, 8:34
     - cron: "4,34 0-14 * * *"  # 日中:   JST 9:04 〜 23:34(30分ごと)
     - cron: "12 16 * * *"      # 前日分の確定: JST 1:12
+    - cron: "0 18 * * 0"       # 週の分析: 月曜 JST 3:00(利用者の決定)
   workflow_dispatch:
     inputs:
       mode:
-        description: "morning / daytime / finalize"
+        description: "morning / daytime / finalize / weekly"
         required: true
         default: daytime
         type: choice
-        options: [morning, daytime, finalize]
+        options: [morning, daytime, finalize, weekly]
       date:
-        description: "対象日 YYYY-MM-DD(空なら JST の今日。finalize は昨日)"
+        description: "対象日 YYYY-MM-DD(空なら JST の今日。finalize・weekly は昨日)"
         required: false
         default: ""
       deploy:
@@ -42,6 +43,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
+      # データの最初の月(分析の全期間の集計で archive から足す月の始まり)。旧APIを interim に入れたら 2016-08 に
+      DATA_FROM_MONTH: "2026-01"
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       TZ: Asia/Tokyo
@@ -58,6 +61,7 @@ jobs:
           case "$SCHEDULE" in
             "41 22 * * *") mode=morning ;;
             "12 16 * * *") mode=finalize ;;
+            "0 18 * * 0") mode=weekly ;;
             "") mode="$IN_MODE" ;;
             *) mode=daytime ;;
           esac
@@ -92,18 +96,26 @@ jobs:
       - name: 状態の取得(R2)
         run: python -m scripts.ci_state pull
 
+      # 分析(spec/11)の全期間の集計用に、recent(直近400日)より前の月の interim を archive から足す
+      - name: 過去の月の interim(R2 archive。前日確定・週次のみ)
+        if: steps.mode.outputs.mode == 'finalize' || steps.mode.outputs.mode == 'weekly'
+        run: python -m scripts.ci_state archive-pull --months auto --part interim
+
       - name: 収集・予想・export
         run: bash scripts/ci_run.sh "${{ steps.mode.outputs.mode }}" ${{ steps.mode.outputs.date }}
 
       # 成功したときだけ status.json を書いて公開に含める(git にはコミットしない)
+      # 週次は公開しない(status.json の job に weekly が無く、公開すると status.json が消えるため)。
+      # 週次の出力はコミットし、朝のジョブ(7:41)の公開に含まれる
       - name: 状態ファイル(docs/data/status.json)
+        if: steps.mode.outputs.mode != 'weekly'
         run: python -m scripts.ci_status --job "${{ steps.mode.outputs.mode }}"
 
       - name: 公開(Cloudflare Workers)
-        if: steps.mode.outputs.deploy != 'false'
+        if: steps.mode.outputs.deploy != 'false' && steps.mode.outputs.mode != 'weekly'
         run: bash scripts/deploy_pages.sh
 
-      - name: docs/data のコミット(朝と前日分の確定だけ)
+      - name: docs/data のコミット(朝・前日分の確定・週次だけ)
         if: steps.mode.outputs.mode != 'daytime'
         env:
           MODE: ${{ steps.mode.outputs.mode }}
@@ -123,8 +135,9 @@ jobs:
           echo "push に失敗しました" >&2; exit 1
 
       # ここまでのどこかで失敗したら保存しない(壊れた状態で上書きしない)
+      # 週次は状態を変えない(data/features と docs/data だけ)ので保存しない
       - name: 状態の保存(R2)
-        if: success()
+        if: success() && steps.mode.outputs.mode != 'weekly'
         run: python -m scripts.ci_state push
 
       # 前日確定のときは、その月の raw と interim を archive/ にも保存する(月1の作り直し・復元用)
