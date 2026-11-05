@@ -19,6 +19,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.features import parse
+from src.features.legacy import fill_final_day_number
 from src.features.raw_source import LoadRaw, load_day, make_final_checker, make_loader
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -71,7 +72,8 @@ def iter_dates(d_from: date, d_to: date):
 
 
 def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
-                is_final=None) -> tuple[dict[str, pd.DataFrame], dict]:
+                is_final=None, previous_races: pd.DataFrame | None = None
+                ) -> tuple[dict[str, pd.DataFrame], dict]:
     """1か月分の interim と品質レポートを作る(書き込みはしない)。
 
     is_final: (source, date) -> bool。None なら turnmark=確定、openapi=未確定。
@@ -107,6 +109,9 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
         else:
             df = parse.cast_frame(pd.DataFrame(columns=list(TABLE_DTYPES[t])), TABLE_DTYPES[t])
         out[t] = parse.cast_frame(df, TABLE_DTYPES[t])
+    # 旧APIの「最終日」は day_number が無いので、前日の値 + 1 で埋める(F-7)
+    if len(out["races"]):
+        out["races"] = parse.cast_frame(fill_final_day_number(out["races"], previous_races), parse.RACES_DTYPES)
 
     report = quality_report(key, out, day_sources, missing_days, errors)
     return out, report
@@ -216,7 +221,13 @@ def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
     until = max(d_to, datetime.now(JST).date())
     reports = []
     for key in months_between(d_from, d_to):
-        tables, report = build_month(key, load_raw, until=until, is_final=is_final)
+        # 前の月の races(月の初日が最終日の節の day_number を埋めるため)
+        first, _ = month_range(key)
+        prev_key = month_key(first - timedelta(days=1))
+        prev_path = out_dir / "races" / f"{prev_key}.parquet"
+        previous = pd.read_parquet(prev_path) if prev_path.exists() else None
+        tables, report = build_month(key, load_raw, until=until, is_final=is_final,
+                                     previous_races=previous)
         write_month(key, tables, report, out_dir)
         reports.append(report)
         if verbose:

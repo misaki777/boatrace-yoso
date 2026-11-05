@@ -44,7 +44,7 @@ jobs:
     timeout-minutes: 30
     env:
       # データの最初の月(分析の全期間の集計で archive から足す月の始まり)。旧APIを interim に入れたら 2016-08 に
-      DATA_FROM_MONTH: "2026-01"
+      DATA_FROM_MONTH: "2016-08"
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       TZ: Asia/Tokyo

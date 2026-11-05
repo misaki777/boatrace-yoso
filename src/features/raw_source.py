@@ -17,7 +17,8 @@ from src.collect import raw_io
 LoadRaw = Callable[[str, date], "dict | None"]
 
 # 過去日の正本は turnmark。無ければ openapi で代わりにする(02_features.md 1章)
-SOURCE_PRIORITY = ("turnmark", "openapi")
+# 2025年以前は旧API(legacy。F-7)。openapi は当日用なので最後
+SOURCE_PRIORITY = ("turnmark", "legacy", "openapi")
 
 
 def make_loader(raw_dir: Path | None = None) -> LoadRaw:
@@ -25,6 +26,10 @@ def make_loader(raw_dir: Path | None = None) -> LoadRaw:
     base = Path(raw_dir) if raw_dir is not None else raw_io.RAW_DIR
 
     def _load(source: str, target: date) -> dict | None:
+        if source == "legacy":
+            from src.features.legacy import to_v1
+            parts = {k: raw_io.load_legacy(k, target, raw_dir=base) for k in ("programs", "previews", "results")}
+            return to_v1(parts["programs"], parts["previews"], parts["results"])
         data = raw_io.load_raw(source, target, raw_dir=base)
         if data is None and source == "openapi":
             legacy = base / f"{target.strftime('%Y%m%d')}.json"
@@ -61,7 +66,7 @@ def make_final_checker(raw_dir: Path | None = None) -> Callable[[str, date], boo
             latest[(r.get("source"), r.get("date"))] = bool(r.get("final"))
 
     def _is_final(source: str, target: date) -> bool:
-        if source == "turnmark":
+        if source in ("turnmark", "legacy"):
             return True
         return latest.get((source, target.isoformat()), False)
 

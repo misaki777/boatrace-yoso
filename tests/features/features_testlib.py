@@ -54,3 +54,19 @@ def write_days(raw_dir: Path, days, source: str = "turnmark", raw: dict | None =
     raw = raw or load_fixture("turnmark", DAY1)
     for d in days:
         write_raw(raw_dir, source, d, shift_raw(raw, d))
+
+
+LEGACY_DAYS = (date(2025, 12, 30), date(2025, 12, 31))  # 戸田 1R・2R。4日目 → 最終日
+
+
+def load_legacy_fixture(kind: str, d: date) -> dict:
+    path = FIXTURES / "legacy" / kind / f"{d.year}" / f"{d.strftime('%Y%m%d')}.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_legacy(raw_dir: Path, d: date, parts: dict | None = None) -> None:
+    """旧APIの3ファイルを raw_io の保存形式で書く。parts で中身を差し替えられる。"""
+    for kind in ("programs", "previews", "results"):
+        data = (parts or {}).get(kind) or load_legacy_fixture(kind, d)
+        raw_io.write_raw_bytes(f"legacy_{kind}", d, json.dumps(data, ensure_ascii=False).encode("utf-8"),
+                               raw_dir=raw_dir)
