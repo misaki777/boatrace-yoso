@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S9 自分の予想の成績(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S9 自分の予想の成績。DA-5(Phase 3a, spec/08)。架空データ。購入記録・印・メモは端末内(IndexedDB)だけ。 -->
+<!-- ================================================================= -->
+<section class="state" data-state="normal" data-title="通常(46R・200R未満で薄く)">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/performance" aria-label="成績へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">自分の予想の成績</h1>
+  </header>
+  <div class="warnbar" style="border-left-color:var(--c-text-3);background:var(--c-surface-2)"><b>印を付けたのは 46R です。</b>200R未満のため、数字は参考程度です。</div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">◎の成績</h2><span class="right">同じ46Rでモデルと比較</span></div>
+    <div class="card__body" style="padding:8px 0 4px"><table class="tbl few"><thead><tr><th></th><th>自分</th><th>モデル</th></tr></thead><tbody><tr><td>◎の1着率</td><td><b>41%</b><span class="ci">28〜56%</span></td><td><b>48%</b><span class="ci">34〜62%</span></td></tr><tr><td>◎の2着以内</td><td><b>59%</b><span class="ci">44〜72%</span></td><td><b>63%</b><span class="ci">48〜76%</span></td></tr><tr><td>◎-○-▲ 3連単(仮定)</td><td><b>68%</b><span class="ci">12〜170%</span></td><td><b>81%</b><span class="ci">20〜190%</span></td></tr></tbody></table></div>
+    <p class="card__note">区間が重なっているため、どちらが上とも言えません。「仮定」= 印どおりに1点100円で買った場合。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">モデルと違う◎を付けたレース</h2><span class="right">14R</span></div>
+    <p class="card__note" style="padding-top:6px" class="few">自分の◎が1着 5R / モデルの◎が1着 4R / どちらも外れ 5R</p>
+  </section>
+  <p class="disclaimer">印・メモはこの端末の中だけにあります(収支画面からバックアップできます)。</p>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

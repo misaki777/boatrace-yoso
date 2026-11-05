@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ワイヤーフレーム S1〜S3</title>
+<!-- DA-1: 低精度ワイヤーフレーム。色は使わず、優先度(A/B/C)と配置・操作の流れだけを示す。 -->
+<style>
+  body { margin: 0; font: 13px/1.5 system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif; background: #f4f4f4; color: #222; }
+  main { padding: 16px 24px 64px; max-width: 1280px; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin: 32px 0 8px; border-bottom: 2px solid #222; }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .phone { width: 360px; background: #fff; border: 2px solid #222; border-radius: 16px; overflow: hidden; flex: none; }
+  .cap { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .b { border: 1px dashed #888; margin: 6px 8px; padding: 6px 8px; position: relative; background: #fafafa; }
+  .b.solid { border-style: solid; background: #fff; }
+  .b.bar { margin: 0; border: 0; border-bottom: 1px solid #222; background: #eee; display: flex; justify-content: space-between; }
+  .b.bar.bottom { border-top: 1px solid #222; border-bottom: 0; }
+  .p { position: absolute; right: 4px; top: 4px; font-size: 10px; font-weight: 800; padding: 0 4px; border: 1px solid #222; background: #fff; }
+  .p.A { background: #222; color: #fff; }
+  .p.C { color: #888; border-color: #888; }
+  .line { display: flex; gap: 6px; align-items: center; padding: 3px 0; border-top: 1px dotted #bbb; }
+  .line:first-of-type { border-top: 0; }
+  .box { display: inline-block; width: 18px; height: 18px; border: 1.5px solid #222; text-align: center; font-size: 11px; line-height: 15px; font-weight: 700; }
+  .grow { flex: 1; } .r { text-align: right; } .s { font-size: 11px; color: #666; }
+  .gauge { display: inline-block; height: 6px; background: #444; }
+  .track { flex: 1; height: 6px; background: #ddd; }
+  table { border-collapse: collapse; background: #fff; font-size: 12px; }
+  th, td { border: 1px solid #999; padding: 4px 8px; vertical-align: top; text-align: left; }
+  th { background: #eee; }
+  pre { background: #fff; border: 1px solid #999; padding: 12px; font-size: 12px; line-height: 1.45; overflow-x: auto; }
+  .legend span { display: inline-block; margin-right: 12px; }
+</style>
+</head>
+<body>
+<main>
+<h1>ワイヤーフレーム S1〜S3(DA-1)</h1>
+<p class="legend"><span><b class="p A" style="position:static">A</b> 必須・最初の画面内</span><span><b class="p" style="position:static">B</b> 必須・スクロール先でよい</span><span><b class="p C" style="position:static">C</b> 任意・折りたたみ可</span> 幅360px基準。詳細な寸法は <a href="index.html">画面モック</a> と README.md。</p>
+
+<h2>1. 画面の構成と移動</h2>
+<pre>
+ ┌──────────── 下部タブ(常に表示。S2 では前後Rバーに置き換え) ────────────┐
+ │  [レース] S1                    [成績] S3                  [その他] S5(+S6)│
+ └──────────────────────────────────────────────────────────────────────┘
+
+ S1 ホーム  #/  または #/date/2026-11-01
+   ├─ 日付ボタン ─────────→ S4 日付シート(ボトムシート。選ぶと閉じて S1 を差し替え)
+   ├─ [締切順|場ごと] ──→ 同じ画面内で表示切替(選択は localStorage に記憶)
+   ├─ 行/セルをタップ ───→ S2 レース詳細  #/race/20261102-02-05
+   │                          ├─ ‹ 前R / 次R › ボタン・左右スワイプ → 同じ場の前後R(画面を差し替え、履歴は置き換え)
+   │                          ├─ 中央の場名 → S1 場ごと表示の該当場へスクロール
+   │                          └─ ‹ 戻る → S1(スクロール位置を復元)
+   └─ 再読み込み(ボタン/下に引っ張る)
+
+ S3 成績  #/performance        S5 その他  #/about
+</pre>
+
+<h2>2. S1 ホーム</h2>
+<div class="row">
+  <div>
+    <div class="cap">S1 当日・締切順(既定)</div>
+    <div class="phone">
+      <div class="b bar"><b>[11/2(月)▼]</b><span>更新 14:05 [⟳]</span><span class="p A">A</span></div>
+      <div class="b">(オフライン/エラー/過去日の帯。該当時のみ)</div>
+      <div class="b solid">結果 48/156R · 的中 7 · 回収率 84.0%<span class="p">B</span></div>
+      <div class="b solid" style="text-align:center">[ 締切順 | 場ごと ]</div>
+      <div class="b solid"><span class="p A">A</span>
+        <div class="s">締切前 108R</div>
+        <div class="line"><span class="r" style="width:42px"><b>あと2分</b><br><span class="s">14:30</span></span><span class="grow"><b>桐生 6R</b><br><span class="s">予選 · 一般 3日目 (C)</span></span><span class="r"><span class="box">1</span> <b>52%</b><br><span class="s">▮▮▮堅 [5点](B)</span></span></div>
+        <div class="line"><span class="r" style="width:42px"><b>あと4分</b><br><span class="s">14:32</span></span><span class="grow"><b>戸田 5R</b><br><span class="s">予選</span></span><span class="r"><span class="box">3</span> <b>28%</b><br><span class="s">▮▯▯荒 [5点]</span></span></div>
+        <div class="line"><span class="r" style="width:42px"><b>7分</b></span><span class="grow"><b>住之江 4R</b></span><span class="r"><span class="box">2</span> 33%<br><span class="s">[見送り]</span></span></div>
+        <div class="line"><span class="r" style="width:42px"><b>16分</b></span><span class="grow"><b>若松 5R</b></span><span class="r s">[予想なし]</span></div>
+        <div class="s">…</div>
+      </div>
+      <div class="b">締切済み 48R ▼(たたんだ状態)<span class="p">B</span></div>
+      <div class="b">非公式データの注記 → S5</div>
+      <div class="b bar bottom"><span>[レース]</span><span>[成績]</span><span>[その他]</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="cap">S1 締切済みを開いた部分</div>
+    <div class="phone">
+      <div class="b solid"><span class="p">B</span>
+        <div class="s">締切済み 48R(新しい順)</div>
+        <div class="line"><span style="width:42px">済<br><span class="s">14:00</span></span><span class="grow"><b>桐生 5R</b></span><span class="r">[結果待ち]</span></div>
+        <div class="line"><span style="width:42px">済</span><span class="grow"><b>戸田 4R</b></span><span class="r"><span class="box">2</span><span class="box">1</span><span class="box">6</span><br>[✓的中] +2,750円</span></div>
+        <div class="line"><span style="width:42px">済</span><span class="grow"><b>住之江 3R</b></span><span class="r">着順 / [×不的中]</span></div>
+        <div class="line"><span style="width:42px">済</span><span class="grow"><b>平和島 5R</b></span><span class="r">着順 / [見送り]</span></div>
+        <div class="line"><span style="width:42px">—</span><span class="grow"><b>若松 4R</b>(行全体を薄く)</span><span class="r">[中止]</span></div>
+      </div>
+    </div>
+    <div class="cap" style="margin-top:16px">S1 場ごと</div>
+    <div class="phone">
+      <div class="b solid"><span class="p">B</span><b>桐生</b> [一般] 3日目 <span class="s">… 次 6R 14:30</span><br><span class="s">タイトル(C)</span>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px;margin-top:4px;font-size:10px;text-align:center">
+          <div style="border:1px solid #999">1R<br>□<br>✓</div><div style="border:1px solid #999">2R<br>□<br>×</div><div style="border:1px solid #999">3R<br>□<br>見送</div><div style="border:1px solid #999">4R<br>□<br>×</div><div style="border:1px solid #999">5R<br>□<br>待ち</div><div style="border:2px solid #222">6R<br>■<br>2分</div>
+          <div style="border:1px solid #999">7R</div><div style="border:1px solid #999">8R</div><div style="border:1px solid #999">9R</div><div style="border:1px solid #999">10R</div><div style="border:1px solid #999">11R</div><div style="border:1px solid #999">12R</div>
+        </div>
+      </div>
+      <div class="b">次の場…</div>
+    </div>
+  </div>
+</div>
+
+<h2>3. S2 レース詳細(締切前の並び)</h2>
+<div class="row">
+  <div>
+    <div class="cap">S2 締切前・推奨あり</div>
+    <div class="phone">
+      <div class="b bar"><b>‹ 戸田 5R</b><span>更新 14:05</span><span class="p A">A</span></div>
+      <div class="b solid">締切 14:32 <b style="float:right">あと4分</b><br><span class="s">予選 · 一般3日目 · [前日予想 07:30] · ▮▯▯荒れ気味</span><span class="p A">A</span></div>
+      <div class="b solid" style="border-width:2px"><span class="p A">A</span><b>推奨買い目</b> <span class="s">3連単 確率上位5点</span>
+        <div class="s">投票アプリのオッズが必要オッズ以上なら買い</div>
+        <div class="line"><span class="grow"><span class="box">3</span>-<span class="box">1</span>-<span class="box">4</span></span><span class="s">3.1%</span><span>[≧<b>32.3</b>倍]</span></div>
+        <div class="line"><span class="grow"><span class="box">3</span>-<span class="box">4</span>-<span class="box">1</span></span><span class="s">2.8%</span><span>[≧<b>35.8</b>倍]</span></div>
+        <div class="line s">… 5点 · 500円 · どれか的中 13.3%</div>
+      </div>
+      <div class="b solid"><span class="p A">A</span><b>各艇の確率</b>
+        <div class="line"><span class="box">1</span><span class="grow">○ 選手名 B1·支部<br><span style="display:flex;gap:4px;align-items:center"><span class="gauge" style="width:19%"></span><span class="track"></span><span class="s">2着内 37 3着内 53</span></span></span><b>19%</b></div>
+        <div class="line"><span class="box">3</span><span class="grow">◎ 選手名 A1 [F1]<br><span style="display:flex;gap:4px;align-items:center"><span class="gauge" style="width:28%"></span><span class="track"></span><span class="s">2着内 47 3着内 62</span></span></span><b>28%</b></div>
+        <div class="line s">… 6艇(枠番順で固定。並べ替えない)</div>
+      </div>
+      <div class="b solid"><span class="p">B</span><b>確率上位</b> [単勝|2連単|<u>3連単</u>]<br><span class="s">順位 · 組合せ(推奨は印) · 確率 · 必要オッズ / 10件+「11〜20位」</span></div>
+      <div class="b"><span class="p">B</span>選手データ ＋(折りたたみ: 支部・全国・当地・モーター・ST・F)</div>
+      <div class="b"><span class="p">B</span>(直前予想のとき)各艇の行に 展示タイム★最速 / 進入(枠と違えば強調)</div>
+      <div class="b bar bottom"><span>[‹ 4R 結果]</span><span>戸田</span><span>[15:02 6R ›]</span><span class="p C">C</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="cap">S2 結果あり(答え合わせの並び)</div>
+    <div class="phone">
+      <div class="b bar"><b>‹ 戸田 4R</b><span>更新 21:05</span></div>
+      <div class="b solid">締切 14:02 [結果確定]</div>
+      <div class="b solid" style="border-width:2px"><span class="p A">A</span><b>結果</b> <span class="box">2</span><span class="box">1</span><span class="box">6</span> 差し
+        <div class="b solid" style="margin:4px 0">[✓的中] 3連単 2-1-6 <b style="float:right">2,750円</b><br><span class="s">投資500円 → 払戻2,750円 · 収支 +2,250円</span></div></div>
+      <div class="b solid"><span class="p A">A</span><b>推奨買い目</b>(的中した行を強調、必要オッズの下に「✓的中 27.5倍」)</div>
+      <div class="b solid"><span class="p C">C</span><b>確定オッズでの期待値</b>(翌日以降)組合せ · 確定オッズ / 必要 · 期待値(1以上は▲)</div>
+      <div class="b solid"><span class="p A">A</span><b>各艇の確率</b>(着順バッジ「1着」等を名前の横に)</div>
+      <div class="b">確率上位 / 選手データ</div>
+      <div class="b bar bottom"><span>[‹ 3R]</span><span>戸田</span><span>[5R ›]</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="cap">S2 その他の状態(差分のみ)</div>
+    <div class="phone">
+      <div class="b solid"><b>見送り</b>: 推奨ブロックを破線の箱「見送り推奨」に置き換え。下の確率は通常どおり</div>
+      <div class="b solid"><b>締切後・結果待ち</b>: 残り時間 → [締切済み · 結果待ち]。帯「結果は次の更新で反映」</div>
+      <div class="b solid"><b>中止</b>: 推奨・確率をたたみ、「中止・全額返還・成績から除外」の箱。予想は「中止前の予想を見る」で開ける</div>
+      <div class="b solid"><b>予想なし</b>: ヘッダと前後Rだけ。「予想はありません(出走表の欠け)」</div>
+      <div class="b solid"><b>欠場あり</b>: 黄色の帯「N号艇が欠場・返還」。欠場艇の行は薄く+取り消し線。欠場艇を含む買い目に「返還」</div>
+      <div class="b solid"><b>読み込み中</b>: URLからわかる場名・R番号は先に出し、各ブロックはスケルトン</div>
+      <div class="b solid"><b>オフライン</b>: S1と同じ帯を上部に。残り時間は端末の時計で更新を続ける</div>
+    </div>
+  </div>
+</div>
+
+<h2>4. S3 成績</h2>
+<div class="row">
+  <div class="phone">
+    <div class="b bar"><b>成績</b><span>更新 21:05</span></div>
+    <div class="b solid"><span class="p A">A</span><b>実運用の回収率</b> <span class="s">期間 · 戦略</span><br><b style="font-size:28px">92.7%</b> ▼100%まであと7.3pt
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:11px"><div>的中率</div><div>R数/点数</div><div>投資</div><div>払戻</div><div>収支</div></div></div>
+    <div class="b solid"><span class="p A">A</span><b>累積回収率の推移</b>(折れ線+100%の点線。3日未満は「たまると表示」)<div style="height:80px;border-bottom:1px dashed #222;margin:6px 0"></div></div>
+    <div class="b solid"><span class="p">B</span><b>月別</b>(月 · R数 · 投資 · 払戻 · 回収率)</div>
+    <div class="b solid"><span class="p">B</span><b>バックテスト</b>(戦略ごとに 回収率 + 95%区間の横棒、100%の点線。leak_free=false は[参考値(後知恵)]+破線)</div>
+    <div class="b"><span class="p C">C</span>モデルの情報 ＋</div>
+    <div class="b">注意書き(常に表示)</div>
+    <div class="b bar bottom"><span>[レース]</span><span><b>[成績]</b></span><span>[その他]</span></div>
+  </div>
+</div>
+
+<h2>5. 状態 × 画面の表示(まとめ)</h2>
+<table>
+  <tr><th>状態</th><th>判定(JSON / 端末)</th><th>S1 行</th><th>S2</th></tr>
+  <tr><td>締切前</td><td>closed_at &gt; 現在時刻(JST)</td><td>残り時間・本命・堅さ・点数</td><td>推奨 → 各艇 → 確率上位 → 選手</td></tr>
+  <tr><td>締切5分以内</td><td>0 &lt; 残り ≤ 5分</td><td>残り時間をオレンジ+左帯</td><td>残り時間をオレンジ</td></tr>
+  <tr><td>締切後・結果待ち</td><td>closed_at ≤ 現在 かつ result=null かつ state≠canceled</td><td>締切済みへ移動、[結果待ち]</td><td>[締切済み · 結果待ち]+帯</td></tr>
+  <tr><td>結果あり</td><td>result≠null</td><td>着順+[✓的中 +払戻] / [×不的中] / [見送り]</td><td>結果 → 推奨(的中強調) → 期待値(C) → 各艇</td></tr>
+  <tr><td>中止</td><td>state=canceled</td><td>行を薄く、[中止]</td><td>中止の箱、予想はたたむ</td></tr>
+  <tr><td>予想なし</td><td>prediction=null(state=no_prediction)</td><td>[予想なし]</td><td>予想なしの箱のみ</td></tr>
+  <tr><td>見送り</td><td>prediction.recommended が空</td><td>[見送り](破線)</td><td>見送りの箱</td></tr>
+  <tr><td>欠場あり</td><td>result.absent_entries が空でない</td><td>「欠場あり」の小さな注記</td><td>帯+欠場艇を薄く+返還表示</td></tr>
+  <tr><td>読み込み中</td><td>fetch 中でキャッシュなし</td><td colspan="2">スケルトン(キャッシュがあれば先に表示し、裏で取り直す)</td></tr>
+  <tr><td>オフライン</td><td>fetch 失敗・キャッシュあり</td><td colspan="2">上部に黄色の帯「オフライン表示中(HH:MM時点)」</td></tr>
+  <tr><td>エラー</td><td>fetch 失敗・キャッシュなし / schema_version 不一致</td><td colspan="2">エラーの箱+再読み込みボタン</td></tr>
+</table>
+</main>
+</body>
+</html>

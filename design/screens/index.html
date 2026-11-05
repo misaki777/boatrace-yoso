@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>画面モック一覧</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; font: 14px/1.6 system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif; background: #e9ebef; color: #15181e; }
+  header { padding: 16px 24px; background: #15181e; color: #fff; position: sticky; top: 0; z-index: 2; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 18px; margin: 0; }
+  header a { color: #cfd6ff; }
+  header label { font-size: 13px; }
+  main { padding: 16px 24px 64px; }
+  h2 { font-size: 18px; margin: 32px 0 4px; border-bottom: 2px solid #15181e; }
+  .note { margin: 0 0 8px; color: #454c5a; font-size: 13px; }
+  .row { display: flex; gap: 24px; overflow-x: auto; padding: 8px 0 16px; align-items: flex-start; }
+  figure { margin: 0; flex: none; }
+  figcaption { font-size: 12px; color: #454c5a; margin-bottom: 4px; }
+  figcaption b { color: #15181e; }
+  iframe { display: block; border: 1px solid #b7bdc7; background: #fff; border-radius: 12px; }
+  .pair { display: flex; gap: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>画面モック(デザイナーA)</h1>
+  <a href="wireframes.html">ワイヤーフレーム</a>
+  <a href="README.md">画面仕様 README.md</a>
+  <label><input type="checkbox" id="dark"> ダーク</label>
+  <label><input type="checkbox" id="w430" checked> 430pxも並べる</label>
+</header>
+<main id="main"></main>
+<script>
+  // 画面ごとの状態一覧(各HTMLの data-state と一致させる)
+  const SCREENS = [
+    { file: 's1-home.html', name: 'S1 ホーム', states: [
+      ['today', '当日・締切順(既定)'], ['today-closed', '締切済みを展開'], ['by-stadium', '場ごと'],
+      ['past', '過去日'], ['loading', '読み込み中'], ['offline', 'オフライン'], ['error', 'エラー'], ['no-today', '今日のデータなし'],
+      ['local-custom', 'ローカル・設定変更中(DA-3)'], ['local-error', 'ローカルでPCにつながらない(DA-3)'], ['stadium-focus', '場で絞る12R(DA-5)'], ['gentle', '依存対策の表示(DA-5)'] ] },
+    { file: 's2-race.html', name: 'S2 レース詳細', states: [
+      ['before', '締切前・推奨あり'], ['players', '選手データ展開'], ['skip', '見送り'], ['preview', '直前予想(Phase 2)'],
+      ['closed-wait', '締切後・結果待ち'], ['result-hit', '結果・的中'], ['result-final', '翌日・確定オッズ(公開: ランクのみ)'], ['result-final-local', '翌日・確定オッズ(ローカル: 数値)'],
+      ['absent', '欠場あり'], ['canceled', '中止'], ['no-prediction', '予想なし'], ['loading', '読み込み中'],
+      ['ev-public', '期待値ランク(公開版)'], ['ev-local', '期待値(ローカル版)'], ['ev-custom', '設定で計算し直した推奨'],
+      ['odds-late', 'オッズ取得遅れ'], ['odds-pending', 'オッズ取得前'], ['ev-custom-noodds', '設定+オッズなし→見送り'],
+      ['fetch-ready', 'Worker取得前(DA-4)'], ['fetch-loading', '取得中(DA-4)'], ['fetch-ok', '取得成功(DA-4)'], ['fetch-cached', 'キャッシュ(DA-4)'],
+      ['fetch-partial', '一部失敗(DA-4)'], ['fetch-nokey', '未設定(DA-4)'], ['fetch-errors', '失敗の一覧(DA-4)'], ['source-manual', '手入力が優先(DA-4)'], ['p3a-before', '版・根拠・印・メモ・合計(DA-5)'], ['p3a-skip-reason', '見送りの理由(DA-5)'] ] },
+    { file: 's3-performance.html', name: 'S3 成績', states: [['normal', '通常'], ['few', 'データが少ない'], ['error', 'エラー'], ['custom', '設定が既定と違う(DA-3)'], ['p3a', '較正・戦略比較・月別(DA-5)']] },
+    { file: 's8-ledger.html', name: 'S8 収支(DA-5)', states: [['normal', '通常'], ['over', '予算超過'], ['empty', '記録なし']] },
+    { file: 's9-marks.html', name: 'S9 自分の予想の成績(DA-5)', states: [['normal', '通常']] },
+    { file: 's4-dates.html', name: 'S4 日付の選択', states: [['sheet', 'ボトムシート']] },
+    { file: 's5-about.html', name: 'S5 その他 / このアプリについて', states: [['about', '通常'], ['about-local', 'ローカル表示(DA-3)']] },
+    { file: 's6-settings.html', name: 'S6 設定(DA-3)', states: [['default', '既定のまま'], ['custom', '既定から変更'], ['reset', '設定が読めず既定に戻した'], ['worker-badkey', 'Worker 合言葉の誤り(DA-4)']] },
+  ];
+  function render() {
+    const theme = document.getElementById('dark').checked ? 'dark' : 'light';
+    const widths = document.getElementById('w430').checked ? [360, 430] : [360];
+    const main = document.getElementById('main');
+    main.innerHTML = '';
+    for (const s of SCREENS) {
+      const h = document.createElement('h2'); h.textContent = s.name; main.appendChild(h);
+      const n = document.createElement('p'); n.className = 'note';
+      n.innerHTML = `<a href="${s.file}">${s.file}</a>(引数なしで開くと全状態を縦に並べて表示)`;
+      main.appendChild(n);
+      const row = document.createElement('div'); row.className = 'row';
+      for (const [id, label] of s.states) {
+        const fig = document.createElement('figure');
+        fig.innerHTML = `<figcaption><b>${label}</b> state=${id}</figcaption>`;
+        const pair = document.createElement('div'); pair.className = 'pair';
+        for (const w of widths) {
+          const f = document.createElement('iframe');
+          f.src = `${s.file}?state=${id}&theme=${theme}`;
+          f.width = w; f.height = 760; f.loading = 'lazy'; f.title = `${s.name} ${label} ${w}px`;
+          pair.appendChild(f);
+        }
+        fig.appendChild(pair); row.appendChild(fig);
+      }
+      main.appendChild(row);
+    }
+  }
+  document.getElementById('dark').addEventListener('change', render);
+  document.getElementById('w430').addEventListener('change', render);
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-02T15:05:00+09:00",
+ "latest_date": "2026-11-02",
+ "sources": [
+  {
+   "name": "Boatrace Open API",
+   "url": "https://github.com/boatraceopenapi/api",
+   "license": "MIT"
+  },
+  {
+   "name": "Turnmark API",
+   "url": "https://github.com/turnmark/api",
+   "license": "MIT"
+  }
+ ],
+ "dates": [
+  {
+   "date": "2026-11-02",
+   "file": "days/20261102.json",
+   "status": "in_progress",
+   "stadium_count": 8,
+   "race_count": 96,
+   "summary": {
+    "races_with_result": 50,
+    "bets": 200,
+    "hits": 15,
+    "stake": 20000,
+    "return": 20460,
+    "roi": 1.023
+   }
+  },
+  {
+   "date": "2026-11-01",
+   "file": "days/20261101.json",
+   "status": "final",
+   "stadium_count": 6,
+   "race_count": 72,
+   "summary": {
+    "races_with_result": 72,
+    "bets": 290,
+    "hits": 25,
+    "stake": 29000,
+    "return": 31600,
+    "roi": 1.09
+   }
+  },
+  {
+   "date": "2026-10-31",
+   "file": "days/20261031.json",
+   "status": "final",
+   "stadium_count": 5,
+   "race_count": 60,
+   "summary": {
+    "races_with_result": 60,
+    "bets": 260,
+    "hits": 15,
+    "stake": 26000,
+    "return": 15370,
+    "roi": 0.591
+   }
+  }
+ ]
+}

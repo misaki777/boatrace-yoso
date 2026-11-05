@@ -1,0 +1,901 @@
+/*
+ * boatrace-yoso UI部品(デザイナーB 案)
+ * - tokens.css を先に読み込むこと。値は必ずトークン(var(--...))から取る。
+ * - 画面のレイアウト・寸法の最終判断は design/screens/(デザイナーA)が正。ここは部品単体の見た目の基準。
+ * - 色だけで情報を伝えない: 的中は「✓+文字」、不的中は「✕+文字」、見送りは破線、中止は斜線、など形と文字を必ず併用する。
+ */
+
+/* ---------- 土台 ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.u-muted { color: var(--c-text-3); }
+
+/* ---------- 枠番バッジ ----------
+   <span class="boat boat--md boat-3" aria-label="3号艇">3</span>
+   1号艇(白)は明るい面では枠線で、2号艇(黒)は暗い面では枠線で輪郭を出す。 */
+.boat {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--badge-md); height: var(--badge-md);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-family-num); font-weight: var(--weight-heavy);
+  font-size: var(--size-md); line-height: 1;
+  font-variant-numeric: tabular-nums;
+  border: 1.5px solid transparent;
+}
+.boat--sm { width: var(--badge-sm); height: var(--badge-sm); font-size: var(--size-xs); border-radius: 3px; border-width: 1px; }
+.boat--bet { width: var(--badge-bet); height: var(--badge-bet); font-size: var(--size-md); }   /* 推奨買い目・確率上位の組合せ用(28px) */
+.boat--lg { width: var(--badge-lg); height: var(--badge-lg); font-size: var(--size-xl); border-radius: var(--radius-sm); border-width: 2px; }
+.boat-1 { background: var(--c-boat-1-bg); color: var(--c-boat-1-fg); border-color: var(--c-boat-1-border); }
+.boat-2 { background: var(--c-boat-2-bg); color: var(--c-boat-2-fg); border-color: var(--c-boat-2-border); }
+.boat-3 { background: var(--c-boat-3-bg); color: var(--c-boat-3-fg); border-color: var(--c-boat-3-border); }
+.boat-4 { background: var(--c-boat-4-bg); color: var(--c-boat-4-fg); border-color: var(--c-boat-4-border); }
+.boat-5 { background: var(--c-boat-5-bg); color: var(--c-boat-5-fg); border-color: var(--c-boat-5-border); }
+.boat-6 { background: var(--c-boat-6-bg); color: var(--c-boat-6-fg); border-color: var(--c-boat-6-border); }
+/* 欠場: 薄くするだけでなく斜線を入れる(色に頼らない) */
+.boat.is-absent { position: relative; opacity: .45; }
+.boat.is-absent::after {
+  content: ""; position: absolute; inset: -2px;
+  background: linear-gradient(to top right, transparent calc(50% - 1px), var(--c-text) calc(50% - 1px), var(--c-text) calc(50% + 1px), transparent calc(50% + 1px));
+}
+
+/* ---------- 組合せ(2-1-3 / 1=2=3) ---------- */
+.combo { display: inline-flex; align-items: center; gap: 2px; }
+.combo__sep { color: var(--c-text-3); font-size: var(--size-xs); font-weight: var(--weight-bold); width: 8px; text-align: center; }
+
+/* ---------- 印(p_rank) ◎○▲△ ----------
+   p_rank 1〜4 に ◎ ○ ▲ △、5以下は無印。◎だけ的中色(新聞の赤印の慣習)。 */
+.mark { display: inline-block; width: 1.2em; text-align: center; font-weight: var(--weight-heavy); font-size: var(--size-lg); color: var(--c-text); line-height: 1; }
+.mark--1 { color: var(--c-hit-text); }
+.mark--none { color: transparent; }
+
+/* ---------- 確率バー ----------
+   <div class="pbar is-top" style="--p:.41"><span class="pbar__fill"></span></div>
+   --p に 0〜1 の確率。--p2 / --p3 を足すと 2着内・3着内 を薄い層で重ねる(pbar--layers)。 */
+.pbar {
+  position: relative; height: var(--bar-height); border-radius: var(--radius-pill);
+  background: var(--c-bar-track); overflow: hidden; min-width: 60px;
+}
+.pbar--lg { height: var(--bar-height-lg); }
+.pbar__fill, .pbar__l2, .pbar__l3 { position: absolute; inset: 0 auto 0 0; border-radius: var(--radius-pill); }
+.pbar__fill { width: calc(var(--p, 0) * 100%); background: var(--c-bar-fill); }
+.pbar.is-top .pbar__fill { background: var(--c-bar-fill-top); }
+.pbar__l3 { width: calc(var(--p3, 0) * 100%); background: color-mix(in srgb, var(--c-bar-fill) 22%, var(--c-bar-track)); }
+.pbar__l2 { width: calc(var(--p2, 0) * 100%); background: color-mix(in srgb, var(--c-bar-fill) 45%, var(--c-bar-track)); }
+
+/* 確率の行(レース詳細の各艇) */
+.prow {
+  display: grid; grid-template-columns: auto auto minmax(0, 1fr) 5.5em; align-items: center;
+  gap: var(--space-3); min-height: var(--tap-min); padding: var(--space-2) 0;
+}
+.prow + .prow { border-top: 1px solid var(--c-border); }
+.prow__who { display: flex; flex-direction: column; min-width: 0; }
+.prow__name { font-size: var(--size-md); font-weight: var(--weight-bold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prow__sub { font-size: var(--size-xs); color: var(--c-text-3); }
+.prow__bars { display: flex; flex-direction: column; gap: var(--space-2); }
+.prow__pct { text-align: right; font-weight: var(--weight-bold); font-size: var(--size-lg); font-variant-numeric: tabular-nums; }
+.prow__pct small { display: block; line-height: 1.35; white-space: nowrap; font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.prow__wrap { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+
+/* 6艇の1着確率をまとめた分布バー(レースカード用)。白(1号艇)は枠線で輪郭を出す */
+.dist { display: flex; gap: 2px; height: 10px; width: 100%; }
+.dist > i { display: block; height: 100%; border-radius: 2px; flex: var(--p) 0 0; min-width: 3px; border: 1px solid transparent; }
+.dist > i:nth-child(1) { background: var(--c-boat-1-bg); border-color: var(--c-boat-1-border); }
+.dist > i:nth-child(2) { background: var(--c-boat-2-bg); border-color: var(--c-boat-2-border); }
+.dist > i:nth-child(3) { background: var(--c-boat-3-bg); }
+.dist > i:nth-child(4) { background: var(--c-boat-4-bg); }
+.dist > i:nth-child(5) { background: var(--c-boat-5-bg); border-color: var(--c-boat-5-border); }
+.dist > i:nth-child(6) { background: var(--c-boat-6-bg); }
+
+/* ---------- 堅さ(confidence) ----------
+   3段の棒+文字(堅/中/荒)。しきい値の既定案: 堅 ≥ 0.50、中 0.35〜0.50、荒 < 0.35(PM確認待ち)。 */
+.conf { display: inline-flex; align-items: center; gap: 4px; font-size: var(--size-xs); font-weight: var(--weight-bold); color: var(--c-text-2); }
+.conf__bars { display: inline-flex; align-items: flex-end; gap: 1px; }
+.conf__bars i { display: block; width: 4px; border-radius: 1px; background: var(--c-bar-track); }
+.conf__bars i:nth-child(1) { height: 6px; }
+.conf__bars i:nth-child(2) { height: 9px; }
+.conf__bars i:nth-child(3) { height: 12px; }
+.conf--3 .conf__bars i,
+.conf--2 .conf__bars i:nth-child(-n+2),
+.conf--1 .conf__bars i:nth-child(1) { background: var(--c-text); }
+.conf--3 { color: var(--c-text); }
+
+/* ---------- ステータスチップ ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 var(--space-3);
+  border-radius: var(--radius-pill); font-size: var(--size-xs); font-weight: var(--weight-bold);
+  line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums;
+  background: var(--c-surface-2); color: var(--c-text-2); border: 1px solid transparent;
+}
+.chip svg { width: 12px; height: 12px; flex: none; }
+.chip--open    { background: var(--c-surface-2); color: var(--c-text); }
+.chip--soon    { background: var(--c-soon-weak); color: var(--c-soon-text); border-color: var(--c-soon); }
+.chip--soon .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-soon); animation: pulse 1.6s ease-in-out infinite; }
+.chip--closed  { background: transparent; color: var(--c-text-3); border-color: var(--c-border); }
+.chip--canceled {
+  color: var(--c-canceled); border-color: var(--c-border);
+  background: repeating-linear-gradient(135deg, var(--c-canceled-weak) 0 5px, transparent 5px 9px);
+}
+.chip--skip    { background: transparent; color: var(--c-skip); border: 1.5px dashed var(--c-skip-border); }
+.chip--nopred  { background: transparent; color: var(--c-text-3); border: 1px dotted var(--c-skip-border); }
+.chip--bets    { background: var(--c-accent-weak); color: var(--c-accent-text); }
+.chip--pre     { background: var(--c-surface-2); color: var(--c-text-2); }
+.chip--preview { background: var(--c-accent-weak); color: var(--c-accent-text); }
+.chip--warn    { background: var(--c-warn-weak); color: var(--c-warn); }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .chip--soon .dot { animation: none; } }
+
+/* ---------- 的中 / 不的中 バッジ ---------- */
+.result {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 var(--space-3) 0 var(--space-2);
+  border-radius: var(--radius-sm); font-size: var(--size-sm); font-weight: var(--weight-heavy); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.result svg { width: 16px; height: 16px; flex: none; }
+.result--hit    { background: var(--c-hit); color: var(--c-hit-on); }
+.result--miss   { background: var(--c-miss-weak); color: var(--c-miss); border: 1px solid var(--c-border); }
+.result--refund { background: var(--c-warn-weak); color: var(--c-warn); }
+.result__amount { font-weight: var(--weight-bold); }
+.result--lg { height: 40px; font-size: var(--size-lg); padding: 0 var(--space-5) 0 var(--space-3); }
+.result--lg svg { width: 22px; height: 22px; }
+/* 一覧の行(S1)用の小型。高さ22px */
+.result--sm { height: 22px; padding: 0 var(--space-3) 0 6px; gap: 4px; font-size: var(--size-xs); border-radius: var(--radius-xs); }
+.result--sm svg { width: 13px; height: 13px; }
+
+/* ---------- 必要オッズ ----------
+   「このオッズ以上なら期待値プラス」を、しきい値(≧)の形で見せる。 */
+.req {
+  display: inline-flex; align-items: baseline; justify-content: flex-end; gap: 2px; white-space: nowrap; min-width: 6.2em;
+  padding: 2px var(--space-3); border-radius: var(--radius-sm);
+  border: 1.5px solid var(--c-border-strong); background: var(--c-surface);
+  font-variant-numeric: tabular-nums;
+}
+.req__ge { font-size: var(--size-sm); font-weight: var(--weight-bold); color: var(--c-text-2); margin-right: 2px; }
+.req__val { font-size: var(--size-lg); font-weight: var(--weight-heavy); color: var(--c-text); }
+.req__unit { font-size: var(--size-xs); color: var(--c-text-2); }
+.req-cap { font-size: var(--size-2xs); color: var(--c-text-3); }
+
+/* 推奨買い目の行 */
+.bet {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--space-4);
+  min-height: 52px; padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--c-border); position: relative;
+}
+.bet:first-child { border-top: 0; }
+.bet__prob { font-size: var(--size-sm); color: var(--c-text-2); text-align: right; font-variant-numeric: tabular-nums; min-width: 3.5em; }
+.bet.is-hit { background: var(--c-hit-weak); }
+.bet.is-hit::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c-hit); }
+.bet.is-hit .bet__prob { color: var(--c-hit-text); }
+.bet__combo { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; min-width: 0; }
+.bet__hit { white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; color: var(--c-hit-text); font-size: var(--size-xs); font-weight: var(--weight-heavy); margin-left: var(--space-3); }
+.bet__hit svg { width: 14px; height: 14px; }
+
+/* 見送り(推奨0件) */
+.skipbox {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-5);
+  border: 1.5px dashed var(--c-skip-border); border-radius: var(--radius-md); color: var(--c-skip);
+  font-weight: var(--weight-bold);
+}
+.skipbox small { display: block; font-weight: var(--weight-regular); color: var(--c-text-3); font-size: var(--size-xs); }
+
+/* Phase 2: オッズ入力 → 期待値 */
+.ev { display: grid; grid-template-columns: minmax(0,1fr) 5.5em 7.5em; gap: var(--space-3); align-items: center; }
+.oddsin {
+  width: 100%; height: var(--tap-min); padding: 0 var(--space-3); text-align: right;
+  font: inherit; font-size: var(--size-lg); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums;
+  color: var(--c-text); background: var(--c-surface); border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-sm);
+}
+.oddsin:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 1px; }
+.evtag {
+  display: inline-flex; align-items: center; gap: 4px; min-width: 7.5em; height: 32px; padding: 0 var(--space-3);
+  border-radius: var(--radius-sm); font-size: var(--size-sm); font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums;
+}
+.evtag svg { width: 14px; height: 14px; }
+.evtag--plus  { background: var(--c-ev-plus-weak); color: var(--c-ev-plus-text); border: 1.5px solid var(--c-ev-plus); }
+.evtag--minus { background: var(--c-miss-weak); color: var(--c-miss); border: 1.5px solid transparent; }
+.evtag--empty { color: var(--c-text-3); border: 1px dashed var(--c-border-strong); }
+
+/* ---------- 選手の補足の強調 ---------- */
+.flag-f { display: inline-flex; align-items: center; height: 18px; padding: 0 5px; border-radius: 3px; font-size: var(--size-2xs); font-weight: var(--weight-heavy); background: var(--c-danger); color: var(--c-surface); }
+/* レース内の最高値。太字だけで、文字は付けない(勝率・モーター2連率など何にでも使える) */
+.best-value { font-weight: var(--weight-heavy); color: var(--c-text); }
+/* 展示タイムのレース内最速。「★ 6.70 最速」= ★+黄地+文字(色に頼らない) */
+.best-time { display: inline-flex; align-items: center; gap: 2px; padding: 0 4px; border-radius: 3px; background: var(--c-warn-weak); color: var(--c-text); font-weight: var(--weight-heavy); }
+.best-time::before { content: "★"; color: var(--c-warn); font-size: .85em; }
+.best-time::after { content: "最速"; margin-left: 2px; font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-warn); }
+/* 互換用(v0.1 の名前)。新しく使わない。.best-time を使う */
+.best { font-weight: var(--weight-heavy); color: var(--c-accent-text); }
+.best::after { content: "最速"; margin-left: 3px; font-size: var(--size-2xs); padding: 1px 4px; border-radius: 3px; background: var(--c-accent-weak); }
+.course-changed { font-weight: var(--weight-bold); color: var(--c-warn); background: var(--c-warn-weak); padding: 0 4px; border-radius: 3px; }
+
+/* ---------- レースカード(S1 の1行) ---------- */
+.rcard {
+  display: grid; grid-template-columns: 3.6em minmax(0, 1fr) auto; gap: var(--space-4); align-items: center;
+  min-height: 64px; padding: var(--space-3) var(--space-4);
+  background: var(--c-surface); color: var(--c-text); text-decoration: none;
+  border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--c-border);
+}
+.rcard:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.rcard__time { display: flex; flex-direction: column; align-items: center; font-variant-numeric: tabular-nums; }
+.rcard__left { font-size: var(--size-xl); font-weight: var(--weight-heavy); line-height: 1.1; }
+.rcard__left small { font-size: var(--size-2xs); font-weight: var(--weight-bold); }
+.rcard__clock { font-size: var(--size-2xs); color: var(--c-text-3); }
+.rcard__title { font-size: var(--size-md); font-weight: var(--weight-bold); }
+.rcard__rno { font-variant-numeric: tabular-nums; }
+.rcard__sub { font-size: var(--size-xs); color: var(--c-text-3); margin-top: 2px; }
+.rcard__pred { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.rcard__fav { display: flex; align-items: center; gap: 6px; font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+.rcard__meta { display: flex; gap: 6px; align-items: center; }
+.rcard.is-soon { border-color: var(--c-soon); box-shadow: inset 4px 0 0 var(--c-soon), var(--shadow-sm); }
+.rcard.is-soon .rcard__left { color: var(--c-soon-text); }
+.rcard.is-closed { background: var(--c-row-muted); box-shadow: none; }
+.rcard.is-closed .rcard__left { font-size: var(--size-sm); color: var(--c-text-3); }
+.rcard.is-hit { box-shadow: inset 4px 0 0 var(--c-hit), var(--shadow-sm); }
+
+/* リスト内の行(S1 で1枚のリストに区切り線で並べる)。
+   <div class="rlist"><a class="rcard rcard--row">…</a>…</div>
+   角丸・影・枠なし。状態クラス(is-soon / is-closed / is-hit)はそのまま使える */
+.rlist { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); overflow: hidden; }
+.rcard--row { border: 0; border-radius: 0; box-shadow: none; border-top: 1px solid var(--c-border); padding: 10px var(--space-4); }
+.rcard--row:first-child { border-top: 0; }
+.rcard--row:active { background: var(--c-surface-2); }
+.rcard--row:focus-visible { outline-offset: -3px; }
+.rcard--row.is-soon { border-color: var(--c-border); box-shadow: inset 4px 0 0 var(--c-soon); }
+.rcard--row.is-closed { box-shadow: none; }
+.rcard--row.is-hit { box-shadow: inset 4px 0 0 var(--c-hit); }
+
+/* ---------- 帯(オフライン・エラー) ---------- */
+.banner { display: flex; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); font-size: var(--size-sm); }
+.banner svg { width: 18px; height: 18px; flex: none; }
+.banner--info { background: var(--c-info-weak); color: var(--c-text); }
+/* オフライン表示中など、見落としてほしくない注意(黄) */
+.banner--warn { background: var(--c-warn-weak); color: var(--c-text); border-left: 4px solid var(--c-warn); }
+.banner--warn svg { color: var(--c-warn); }
+.banner--error { background: var(--c-danger-weak); color: var(--c-text); border-left: 4px solid var(--c-danger); }
+
+/* ---------- 操作部品 ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: var(--tap-min); min-width: var(--tap-min); padding: 0 var(--space-5);
+  border-radius: var(--radius-sm); border: 1.5px solid var(--c-border-strong);
+  background: var(--c-surface); color: var(--c-text); font: inherit; font-weight: var(--weight-bold); cursor: pointer;
+}
+.btn--primary { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-text-on-accent); }
+.btn:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.seg { display: flex; padding: 3px; gap: 3px; border-radius: var(--radius-sm); background: var(--c-surface-2); }
+.seg button {
+  flex: 1; min-height: 38px; border: 0; border-radius: 5px; background: transparent;
+  font: inherit; font-size: var(--size-sm); font-weight: var(--weight-bold); color: var(--c-text-2); cursor: pointer;
+}
+.seg button[aria-selected="true"],
+.seg button[aria-checked="true"],
+.seg button[aria-pressed="true"] { background: var(--c-surface); color: var(--c-accent-text); box-shadow: var(--shadow-sm); }
+.seg button:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -1px; }
+.seg button:disabled { color: var(--c-text-3); cursor: default; }
+.seg--sm button { min-height: 32px; font-size: var(--size-xs); }
+
+/* ---------- 推移グラフ(累積回収率) ---------- */
+.chart { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: var(--c-chart-grid); stroke-width: 1; }
+.chart .base { stroke: var(--c-chart-baseline); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.chart .line { fill: none; stroke: var(--c-chart-line); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .end { fill: var(--c-chart-line); stroke: var(--c-surface); stroke-width: 2; }
+.chart text { fill: var(--c-text-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .lbl { fill: var(--c-text); font-weight: 700; font-size: 12px; }
+
+
+/* =====================================================================
+   v0.3 追加(DB-3): 期待値ランク、オッズの時点、ローカル表示、設定画面の部品
+   ===================================================================== */
+
+/* ---------- 期待値ランク A〜D ----------
+   <span class="evrank evrank--a" aria-label="期待値ランクA(1.20以上)">A</span>
+   色だけに頼らず、文字(A〜D)と形で区別する:
+   A = 塗り + 右上の▲ / B = 太い実線の枠 / C = 淡い灰の地(枠なし) / D = 破線の枠・薄い文字 / なし = 点線の枠と「–」 */
+.evrank {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  min-width: 24px; height: 24px; padding: 0 4px; border-radius: var(--radius-xs);
+  font-family: var(--font-family-num); font-size: var(--size-sm); font-weight: var(--weight-heavy); line-height: 1;
+  border: 1.5px solid transparent;
+}
+.evrank--a { background: var(--c-ev-plus); color: var(--c-ev-plus-on); border-color: var(--c-ev-plus); }
+.evrank--a::after { content: ""; position: absolute; top: 2px; right: 2px; border-left: 5px solid transparent; border-top: 5px solid currentColor; }
+.evrank--b { background: var(--c-ev-plus-weak); color: var(--c-ev-plus-text); border: 2px solid var(--c-ev-plus); }
+.evrank--c { background: var(--c-miss-weak); color: var(--c-text-2); }
+.evrank--d { background: transparent; color: var(--c-text-3); border: 1.5px dashed var(--c-skip-border); }
+.evrank--sm { min-width: 20px; height: 20px; font-size: var(--size-xs); border-width: 1px; padding: 0 3px; }
+.evrank--sm.evrank--b { border-width: 1.5px; }
+.evrank--sm.evrank--a::after { top: 1px; right: 1px; border-left-width: 4px; border-top-width: 4px; }
+.evrank--none { background: transparent; color: var(--c-text-3); border: 1.5px dotted var(--c-skip-border); font-weight: var(--weight-bold); }
+/* 文字付き(凡例・S2 の推奨買い目の見出しなど): <span class="evrank-label"><span class="evrank evrank--a">A</span>期待値 大</span> */
+.evrank-label { display: inline-flex; align-items: center; gap: 6px; font-size: var(--size-xs); color: var(--c-text-2); white-space: nowrap; }
+/* 凡例 */
+.evlegend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: var(--size-2xs); color: var(--c-text-3); }
+
+/* ---------- オッズの時点 ----------
+   odds_snapshot.status ごと: ok / partial / late / not_targeted / stopped、と odds_snapshot=null(未取得) */
+.oddstime {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 24px; padding: 2px var(--space-3);
+  border-radius: var(--radius-pill); font-size: var(--size-xs); font-weight: var(--weight-bold); white-space: nowrap;
+  font-variant-numeric: tabular-nums; background: var(--c-surface-2); color: var(--c-text-2); border: 1px solid transparent;
+}
+.oddstime svg { width: 13px; height: 13px; flex: none; }
+.oddstime--ok      { background: var(--c-surface-2); color: var(--c-text); }
+.oddstime--partial { background: var(--c-warn-weak); color: var(--c-warn); }
+.oddstime--late    { background: transparent; color: var(--c-warn); border: 1.5px dashed var(--c-warn); }
+.oddstime--stopped { background: var(--c-danger-weak); color: var(--c-danger); }
+.oddstime--none, .oddstime--not-targeted { background: transparent; color: var(--c-text-3); border: 1px dotted var(--c-skip-border); }
+/* 期待値の近くに置く注記(07 3.4) */
+.oddsnote { display: flex; gap: 6px; font-size: var(--size-2xs); line-height: 1.45; color: var(--c-text-3); }
+.oddsnote svg { width: 12px; height: 12px; flex: none; margin-top: 2px; }
+
+/* ---------- ローカル表示の目印 ----------
+   上部バーに常に出す。家のアイコン + 「ローカル」+ 紫の枠(公開版と取り違えないため、他の状態色と別の色相) */
+.localmark {
+  display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 var(--space-3);
+  border-radius: var(--radius-pill); border: 1.5px solid var(--c-local); background: var(--c-local-weak); color: var(--c-local);
+  font-size: var(--size-xs); font-weight: var(--weight-heavy); white-space: nowrap;
+}
+.localmark svg { width: 13px; height: 13px; }
+
+/* ---------- ローカル版の数値(オッズ・期待値) ----------
+   公開版はランクだけ、ローカル版は数値 + ランク。数値は右寄せ・等幅数字 */
+.oddsval { font-variant-numeric: tabular-nums; font-weight: var(--weight-bold); font-size: var(--size-md); white-space: nowrap; }
+.oddsval small { font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); margin-left: 1px; }
+.evval { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.evval__num { font-weight: var(--weight-heavy); font-size: var(--size-md); color: var(--c-text-2); min-width: 2.6em; text-align: right; }
+.evval.is-plus .evval__num { color: var(--c-ev-plus-text); }
+.evval.is-plus .evval__num::before { content: "↗"; font-size: .8em; margin-right: 2px; }
+.evval--none .evval__num { color: var(--c-text-3); font-weight: var(--weight-bold); }
+/* 期待値の表(ローカル版 S2): 組合せ / 確率 / オッズ / 期待値 */
+.evtable { width: 100%; border-collapse: collapse; font-size: var(--size-sm); }
+.evtable th { font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-3); text-align: right; padding: 0 var(--space-2) var(--space-2); }
+.evtable th:first-child, .evtable td:first-child { text-align: left; padding-left: 0; }
+.evtable td { padding: var(--space-3) var(--space-2); border-top: 1px solid var(--c-border); text-align: right; font-variant-numeric: tabular-nums; vertical-align: middle; }
+.evtable td:last-child, .evtable th:last-child { padding-right: 0; }
+.evtable .u-prob { color: var(--c-text-2); }
+.evtable tr.is-manual .oddsval::after { content: "手入力"; margin-left: 4px; font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-accent-text); }
+
+/* ---------- 設定画面(S6) ---------- */
+.setgroup { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); overflow: hidden; }
+.setgroup__title { margin: var(--space-6) var(--space-4) var(--space-3); font-size: var(--size-xs); font-weight: var(--weight-bold); color: var(--c-text-2); }
+.setting { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-top: 1px solid var(--c-border); }
+.setting:first-child { border-top: 0; }
+.setting--inline { flex-direction: row; align-items: center; justify-content: space-between; min-height: 56px; }
+.setting__head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; min-width: 0; }
+.setting__label { font-size: var(--size-md); font-weight: var(--weight-bold); }
+.setting__desc { font-size: var(--size-xs); color: var(--c-text-3); width: 100%; }
+.setting.is-disabled { opacity: .55; }
+/* 「既定と違う」: 左の帯 + 「● 既定から変更」の文字(色だけにしない) */
+.setting.is-changed { box-shadow: inset 3px 0 0 var(--c-changed); }
+.changed-tag { display: inline-flex; align-items: center; gap: 4px; font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-changed); white-space: nowrap; }
+.changed-tag[hidden] { display: none; }
+.changed-tag--end { margin-left: auto; }
+.changed-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.default-hint { font-size: var(--size-2xs); color: var(--c-text-3); }
+
+/* 複数選択のチップ(券種): <button class="pick-chip" aria-pressed="true">3連単</button> */
+.pick-chips { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.pick-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap-min); padding: 0 var(--space-5) 0 var(--space-4);
+  border-radius: var(--radius-pill); border: 1.5px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text);
+  font: inherit; font-size: var(--size-sm); font-weight: var(--weight-bold); cursor: pointer;
+}
+.pick-chip::before {
+  content: ""; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  border-radius: 4px; border: 1.5px solid var(--c-border-strong); font-size: 13px; font-weight: var(--weight-heavy); line-height: 1;
+}
+.pick-chip[aria-pressed="true"] { background: var(--c-accent-weak); border-color: var(--c-accent); color: var(--c-accent-text); }
+.pick-chip[aria-pressed="true"]::before { content: "✓"; border-color: var(--c-accent); background: var(--c-accent); color: var(--c-text-on-accent); }
+.pick-chip:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+/* ステッパー(点数・金額): − [ 5 点 ] + 。上限・下限でボタンを disabled にする */
+.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-sm); overflow: hidden; background: var(--c-surface); }
+.stepper button {
+  width: var(--tap-min); height: var(--tap-min); border: 0; background: var(--c-surface-2); color: var(--c-text);
+  font: inherit; font-size: var(--size-xl); font-weight: var(--weight-bold); line-height: 1; cursor: pointer;
+}
+.stepper button:disabled { color: var(--c-border-strong); background: var(--c-surface); cursor: default; }
+.stepper button:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -3px; }
+.stepper output { min-width: 4.2em; text-align: center; font-size: var(--size-lg); font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums; }
+.stepper.is-off { opacity: .45; }
+.stepper output small { font-size: var(--size-xs); font-weight: var(--weight-bold); color: var(--c-text-2); margin-left: 2px; }
+.stepper-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.stepper-row__label { font-size: var(--size-sm); font-weight: var(--weight-bold); }
+.stepper-row__range { display: block; font-size: var(--size-2xs); color: var(--c-text-3); font-weight: var(--weight-regular); }
+
+/* 段階の選択(しきい値): 選択肢が5つ以下なら .seg、6つ以上や長い文言なら .select、連続値なら .range */
+.select {
+  appearance: none; -webkit-appearance: none; width: 100%; min-height: var(--tap-min); padding: 0 40px 0 var(--space-4);
+  border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-sm); color: var(--c-text); font: inherit; font-size: var(--size-md);
+  background-color: var(--c-surface);
+  background-image: linear-gradient(45deg, transparent 50%, var(--c-text-2) 50%), linear-gradient(-45deg, transparent 50%, var(--c-text-2) 50%);
+  background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat;
+}
+.select:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 1px; }
+.range { width: 100%; accent-color: var(--c-accent); height: var(--tap-min); margin: 0; }
+.range-ticks { display: flex; justify-content: space-between; font-size: var(--size-2xs); color: var(--c-text-3); font-variant-numeric: tabular-nums; margin-top: -6px; }
+.range-ticks b { color: var(--c-accent-text); }
+
+/* トグル: <button class="switch" role="switch" aria-checked="true"><span class="switch__track"></span><span class="switch__text"></span></button>
+   つまみの位置 + 「オン/オフ」の文字で状態を出す(色だけにしない) */
+.switch { display: inline-flex; align-items: center; gap: var(--space-3); min-height: var(--tap-min); padding: 0; border: 0; background: none; font: inherit; color: var(--c-text-2); cursor: pointer; }
+.switch__track { position: relative; width: 48px; height: 28px; border-radius: var(--radius-pill); background: var(--c-switch-off); transition: background var(--duration-fast); flex: none; }
+.switch__track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--c-switch-knob); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform var(--duration-fast); }
+.switch__text { font-size: var(--size-xs); font-weight: var(--weight-bold); min-width: 2em; }
+.switch__text::before { content: "オフ"; }
+.switch[aria-checked="true"] .switch__track { background: var(--c-accent); }
+.switch[aria-checked="true"] .switch__track::after { transform: translateX(20px); background: var(--c-text-on-accent); }
+.switch[aria-checked="true"] .switch__text { color: var(--c-accent-text); }
+.switch[aria-checked="true"] .switch__text::before { content: "オン"; }
+.switch:focus-visible .switch__track { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .switch__track, .switch__track::after { transition: none; } }
+
+/* リセット: 文字ボタン(取り消しの確認つき)。危険色にはしない(データは消えず既定に戻るだけ) */
+.btn--reset { border-color: var(--c-border-strong); color: var(--c-text); }
+.btn--reset svg { width: 16px; height: 16px; }
+.btn--text { border-color: transparent; background: transparent; color: var(--c-accent-text); padding: 0 var(--space-3); }
+.btn:disabled { opacity: .45; cursor: default; }
+
+/* 設定の要約(S2・S3 に出す「今の設定」1行) */
+.setsummary { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: var(--c-accent-weak); color: var(--c-text); font-size: var(--size-xs); }
+.setsummary b { color: var(--c-accent-text); }
+
+/* ---------- 設定画面の追加部品(デザイナーAの S6 モックに合わせたもの) ---------- */
+/* チェックボックス: <span class="checkbox" role="checkbox" aria-checked="true" tabindex="0"></span>(✓は CSS で出す) */
+.checkbox {
+  display: inline-flex; align-items: center; justify-content: center; flex: none; width: 22px; height: 22px;
+  border-radius: 5px; border: 2px solid var(--c-border-strong); background: var(--c-surface);
+  font-size: 14px; font-weight: var(--weight-heavy); line-height: 1; color: var(--c-text-on-accent); cursor: pointer;
+}
+.checkbox[aria-checked="true"] { background: var(--c-accent); border-color: var(--c-accent); }
+.checkbox[aria-checked="true"]::before { content: "✓"; }
+.checkbox:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+/* 券種+点数の行: [□] 3連単(1〜20点) [− 5点 +]。オフの行は .is-off(名前を薄く・ステッパーを使えなくする) */
+.typerow { display: grid; grid-template-columns: var(--tap-min) minmax(0, 1fr) auto; align-items: center; min-height: 52px; border-top: 1px solid var(--c-border); }
+.typerow:first-of-type { border-top: 0; }
+.typerow__name { font-size: var(--size-md); font-weight: var(--weight-bold); }
+.typerow__name small { display: block; font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.typerow.is-off .typerow__name { color: var(--c-text-3); }
+/* 折り返す選択肢(1つ選ぶ・文言が長いもの): <div class="choice" role="radiogroup"><button role="radio" aria-checked="true">…</button></div> */
+.choice { display: flex; flex-wrap: wrap; gap: 6px; }
+.choice button {
+  display: inline-flex; align-items: center; gap: 4px; min-height: var(--tap-min); padding: 0 var(--space-4);
+  border-radius: var(--radius-sm); border: 1.5px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text);
+  font: inherit; font-size: var(--size-sm); font-weight: var(--weight-bold); cursor: pointer;
+}
+.choice button[aria-checked="true"] { border-color: var(--c-accent); background: var(--c-accent-weak); color: var(--c-accent-text); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.choice button[aria-checked="true"]::before { content: "✓"; }
+.choice button:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.choice--fill button { flex: 1 1 0; justify-content: center; padding: 0 6px; }
+/* 丸いラジオ(説明つきの選択肢を縦に並べるとき) */
+.radio-row { display: flex; align-items: center; gap: var(--space-4); min-height: var(--tap-min); font-size: var(--size-md); cursor: pointer; }
+.radio-row small { display: block; font-size: var(--size-xs); color: var(--c-text-3); }
+.radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--c-border-strong); flex: none; display: inline-grid; place-items: center; }
+.radio-row[aria-checked="true"] .radio, .radio.is-on { border-color: var(--c-accent); }
+.radio-row[aria-checked="true"] .radio::after, .radio.is-on::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--c-accent); }
+/* 適用の順序(07 4.2): 番号つきの手順。右に今の値 */
+.flow { margin: 0; padding: 0; list-style: none; counter-reset: flow; font-size: var(--size-sm); }
+.flow li { counter-increment: flow; display: flex; align-items: center; gap: var(--space-3); padding: 6px 0; border-top: 1px dashed var(--c-border); }
+.flow li:first-child { border-top: 0; }
+.flow li::before { content: counter(flow); display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--c-surface-2); color: var(--c-text-2); font-size: var(--size-2xs); font-weight: var(--weight-heavy); flex: none; }
+.flow li .v { margin-left: auto; color: var(--c-accent-text); font-weight: var(--weight-bold); white-space: nowrap; }
+.flow li.is-off { color: var(--c-text-3); }
+.flow li.is-off .v { color: var(--c-text-3); font-weight: var(--weight-regular); }
+/* 保存などの短い知らせ(2秒で消す。role="status") */
+.toast {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px var(--space-5); border-radius: var(--radius-pill);
+  background: var(--c-text); color: var(--c-surface); font-size: var(--size-sm); font-weight: var(--weight-bold); box-shadow: var(--shadow-md); white-space: nowrap;
+}
+.toast svg { width: 16px; height: 16px; }
+
+/* =====================================================================
+   v0.4 追加(DB-4): 中継 Worker からのオッズ取得(spec/07 9章)
+   ===================================================================== */
+
+/* ---------- 取得ボタン ----------
+   <button class="fetchbtn" data-state="idle|loading|cooldown|disabled">
+     <svg class="fetchbtn__icon">…</svg><span class="fetchbtn__label">オッズを取る</span><span class="fetchbtn__sub">約30秒・3券種</span>
+   </button>
+   状態は data-state で切り替える。loading / cooldown / disabled のときは disabled 属性も付ける。 */
+.fetchbtn {
+  display: inline-flex; align-items: center; gap: var(--space-3); min-height: 48px; padding: 0 var(--space-5) 0 var(--space-4);
+  border-radius: var(--radius-sm); border: 1.5px solid var(--c-accent); background: var(--c-accent); color: var(--c-text-on-accent);
+  font: inherit; font-weight: var(--weight-bold); cursor: pointer; text-align: left;
+}
+.fetchbtn:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.fetchbtn__icon { width: 20px; height: 20px; flex: none; }
+.fetchbtn__label { font-size: var(--size-md); }
+.fetchbtn__sub { display: block; font-size: var(--size-2xs); font-weight: var(--weight-regular); opacity: .9; font-variant-numeric: tabular-nums; }
+.fetchbtn--block { width: 100%; justify-content: center; }
+/* 取得中: 回転する輪 + 「取得中…」。押せない */
+.fetchbtn[data-state="loading"] { background: var(--c-accent-weak); border-color: var(--c-accent); color: var(--c-accent-text); cursor: progress; }
+.fetchbtn[data-state="loading"] .fetchbtn__icon { animation: spin 0.9s linear infinite; }
+/* 更新待ち(60秒): 枠だけ + 残り秒数 */
+.fetchbtn[data-state="cooldown"] { background: var(--c-surface); border-color: var(--c-border-strong); color: var(--c-text-2); cursor: default; }
+/* 押せない(締切後・合言葉未設定など): 破線の枠 + 理由を __sub に書く */
+.fetchbtn[data-state="disabled"] { background: transparent; border: 1.5px dashed var(--c-skip-border); color: var(--c-text-3); cursor: not-allowed; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .fetchbtn[data-state="loading"] .fetchbtn__icon { animation: none; } }
+
+/* 小さい更新ボタン(取得後の時刻の横): アイコン + 「更新」または残り秒数 */
+.refreshbtn {
+  display: inline-flex; align-items: center; gap: 4px; min-height: var(--tap-min); min-width: var(--tap-min); padding: 0 var(--space-3);
+  border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-sm); background: var(--c-surface); color: var(--c-text);
+  font: inherit; font-size: var(--size-xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; cursor: pointer; white-space: nowrap;
+}
+.refreshbtn svg { width: 16px; height: 16px; }
+.refreshbtn:disabled { color: var(--c-text-3); border-color: var(--c-border); cursor: default; }
+.refreshbtn:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+/* ---------- 取得中の進み表示 ----------
+   スマホ側には途中経過が届かないので、経過時間による「目安」のバーにする(30秒で約90%まで進み、届いたら100%)。
+   <div class="fetchprog" style="--t:.4" role="status">…</div>  --t = 0〜1(経過 ÷ 30秒、上限 0.9) */
+.fetchprog { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--c-accent-weak); color: var(--c-text); }
+.fetchprog__head { display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-sm); font-weight: var(--weight-bold); }
+.fetchprog__head svg { width: 18px; height: 18px; color: var(--c-accent-text); animation: spin 0.9s linear infinite; flex: none; }
+.fetchprog__time { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--c-text-2); font-weight: var(--weight-bold); white-space: nowrap; }
+.fetchprog__bar { position: relative; height: 6px; border-radius: var(--radius-pill); background: var(--c-surface); overflow: hidden; }
+.fetchprog__bar::after { content: ""; position: absolute; inset: 0 auto 0 0; width: calc(var(--t, 0) * 100%); border-radius: inherit; background: var(--c-accent); transition: width 1s linear; }
+.fetchprog__note { font-size: var(--size-2xs); color: var(--c-text-2); }
+.fetchprog__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.fetchprog__foot .btn { white-space: nowrap; flex: none; }
+@media (prefers-reduced-motion: reduce) { .fetchprog__head svg { animation: none; } .fetchprog__bar::after { transition: none; } }
+
+/* ---------- 取得時刻・キャッシュ・公式の時点表記 ----------
+   <div class="fetchstamp">
+     <div class="fetchstamp__main"><span class="fetchstamp__time">10:40:12</span> 時点のオッズ <span class="cachetag">25秒前に取得したもの</span></div>
+     <div class="fetchstamp__sub">公式の表記: 10:40現在 · 3連単 ✓ 2連単 ✓ 単勝 ✕</div>
+     <button class="refreshbtn">…</button>
+   </div> */
+.fetchstamp { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px var(--space-3); }
+.fetchstamp__main { font-size: var(--size-sm); color: var(--c-text-2); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.fetchstamp__time { font-size: var(--size-lg); font-weight: var(--weight-heavy); color: var(--c-text); font-variant-numeric: tabular-nums; }
+.fetchstamp__sub { grid-column: 1; font-size: var(--size-2xs); color: var(--c-text-3); display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: center; }
+.fetchstamp .refreshbtn { grid-column: 2; grid-row: 1 / span 2; }
+.cachetag { display: inline-flex; align-items: center; gap: 3px; height: 20px; padding: 0 6px; border-radius: var(--radius-xs); border: 1px dashed var(--c-border-strong); color: var(--c-text-2); font-size: var(--size-2xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* 券種ページごとの状態: ok = ✓、error = ✕ と取り消し線 */
+.pagestat { display: inline-flex; align-items: center; gap: 2px; font-size: var(--size-2xs); white-space: nowrap; }
+.pagestat--ok::before { content: "✓"; color: var(--c-ev-plus-text); font-weight: var(--weight-heavy); }
+.pagestat--error { color: var(--c-danger); }
+.pagestat--error::before { content: "✕"; font-weight: var(--weight-heavy); }
+
+/* ---------- エラー・状態の帯(.banner の拡張) ----------
+   <div class="banner banner--error banner--stack"><svg>…</svg><div class="banner__body"><b class="banner__title">…</b><span class="banner__text">…</span></div><div class="banner__actions"><button class="btn">…</button></div></div> */
+.banner--stack { align-items: flex-start; flex-wrap: wrap; }
+.banner--stack > svg { margin-top: 2px; }
+.banner__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.banner__title { font-size: var(--size-sm); font-weight: var(--weight-bold); }
+.banner__text { font-size: var(--size-xs); color: var(--c-text-2); line-height: 1.5; }
+.banner__actions { display: flex; gap: var(--space-3); width: 100%; justify-content: flex-end; }
+.banner__actions .btn { min-height: 40px; padding: 0 var(--space-4); font-size: var(--size-sm); }
+/* 締切後など、失敗ではない「できない」状態(灰) */
+.banner--muted { background: var(--c-surface-2); color: var(--c-text); border-left: 4px solid var(--c-border-strong); }
+.banner--muted svg { color: var(--c-text-2); }
+.banner--warn .banner__text, .banner--error .banner__text, .banner--info .banner__text { color: var(--c-text-2); }
+
+/* ---------- オッズの出どころ ----------
+   優先順位(07 9.6): 手入力 → 取得(Worker)→ 公開のランク → なし。アイコン + 文字で区別する */
+.oddssrc { display: inline-flex; align-items: center; gap: 3px; height: 20px; padding: 0 6px; border-radius: var(--radius-xs); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; border: 1px solid transparent; }
+.oddssrc svg { width: 11px; height: 11px; flex: none; }
+.oddssrc--manual { background: var(--c-accent-weak); color: var(--c-accent-text); border-color: var(--c-accent); }
+.oddssrc--worker { background: var(--c-accent); color: var(--c-text-on-accent); border-color: var(--c-accent); }
+.oddssrc--cache  { background: transparent; color: var(--c-accent-text); border: 1px dashed var(--c-accent); }
+.oddssrc--rank   { background: transparent; color: var(--c-text-2); border: 1px dashed var(--c-border-strong); }
+.oddssrc--none   { background: transparent; color: var(--c-text-3); border: 1px dotted var(--c-skip-border); }
+
+/* ---------- 設定: URL・合言葉の入力欄 ---------- */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field__label { font-size: var(--size-sm); font-weight: var(--weight-bold); display: flex; align-items: center; gap: var(--space-3); }
+.field__help { font-size: var(--size-2xs); color: var(--c-text-3); line-height: 1.5; }
+.field__msg { font-size: var(--size-xs); font-weight: var(--weight-bold); display: none; align-items: center; gap: 4px; }
+.field__msg svg { width: 14px; height: 14px; }
+.input {
+  width: 100%; min-height: var(--tap-min); padding: 0 var(--space-4); border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-sm);
+  background: var(--c-surface); color: var(--c-text); font: inherit; font-size: 16px; /* 16px 未満だと iOS が拡大する */
+}
+.input::placeholder { color: var(--c-text-3); }
+.input:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 1px; }
+.input--mono { font-family: var(--font-family-mono); font-size: 15px; letter-spacing: .01em; }
+.field.is-invalid .input { border-color: var(--c-danger); border-width: 2px; }
+.field.is-invalid .field__msg { display: flex; color: var(--c-danger); }
+.field.is-ok .field__msg { display: flex; color: var(--c-ev-plus-text); }
+/* 合言葉: 伏せ字 + 表示切替。<div class="secret"><input class="input" type="password"><button class="secret__toggle" aria-pressed="false">表示</button></div> */
+.secret { position: relative; display: flex; }
+.secret .input { padding-right: 76px; }
+.secret__toggle {
+  position: absolute; right: 2px; top: 2px; bottom: 2px; display: inline-flex; align-items: center; gap: 4px; min-width: var(--tap-min); padding: 0 var(--space-3);
+  border: 0; border-left: 1px solid var(--c-border); border-radius: 0 calc(var(--radius-sm) - 2px) calc(var(--radius-sm) - 2px) 0;
+  background: var(--c-surface-2); color: var(--c-text-2); font: inherit; font-size: var(--size-xs); font-weight: var(--weight-bold); cursor: pointer;
+}
+.secret__toggle svg { width: 16px; height: 16px; }
+.secret__toggle:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -3px; }
+.secret__toggle[aria-pressed="true"] { color: var(--c-accent-text); }
+/* 保存済みの合言葉は値を戻さず、この表示にする(07 9.7「表示し直すときは伏せる」) */
+.secret-saved { display: flex; align-items: center; gap: var(--space-3); min-height: var(--tap-min); padding: 0 var(--space-2) 0 var(--space-4); border: 1.5px solid var(--c-border); border-radius: var(--radius-sm); background: var(--c-surface-2); }
+.secret-saved__dots { letter-spacing: .2em; color: var(--c-text-2); font-weight: var(--weight-heavy); }
+.secret-saved__state { font-size: var(--size-xs); color: var(--c-text-2); margin-right: auto; }
+
+/* ---------- デザイナーAの S2 モック(DA-4)の形に合わせた書き方 ----------
+   コンパクトな箱: 左に説明、右にボタン。
+   <div class="fetchbox" role="status"><span class="fetchbox__icon">…</span><div class="fetchbox__text"><b class="fetchbox__title">…</b>…</div><button class="fetchbtn fetchbtn--compact">オッズを取る<small>30秒ほど</small></button></div> */
+.fetchbox { display: flex; align-items: center; gap: var(--space-3); padding: 10px var(--space-4); border-radius: var(--radius-md); background: var(--c-surface-2); }
+.fetchbox__icon { flex: none; align-self: flex-start; width: 18px; text-align: center; font-weight: var(--weight-heavy); line-height: 1.3; }
+.fetchbox__icon svg { width: 16px; height: 16px; }
+.fetchbox__text { flex: 1; min-width: 0; font-size: var(--size-xs); color: var(--c-text-2); line-height: 1.45; }
+.fetchbox__text b { color: var(--c-text); font-size: var(--size-sm); font-variant-numeric: tabular-nums; }
+.fetchbox__title { display: block; font-size: var(--size-sm); font-weight: var(--weight-heavy); color: var(--c-text); }
+.fetchbox--warn { background: var(--c-warn-weak); }
+.fetchbox--warn .fetchbox__icon { color: var(--c-warn); }
+.fetchbox--error { background: var(--c-danger-weak); }
+.fetchbox--error .fetchbox__icon { color: var(--c-danger); }
+/* 2段のボタン(上に動作、下に <small> で補足)。.fetchbtn と同じ data-state が使える */
+.fetchbtn--compact { flex: none; flex-direction: column; justify-content: center; gap: 0; min-width: 104px; min-height: var(--tap-min); padding: 0 var(--space-4); line-height: 1.15; text-align: center; font-size: var(--size-sm); }
+.fetchbtn small { display: block; font-size: var(--size-2xs); font-weight: var(--weight-regular); opacity: .9; }
+/* 副ボタン(取得後の「更新」など): 枠だけ */
+.fetchbtn--sub { background: var(--c-surface); color: var(--c-accent-text); }
+.fetchbtn:disabled:not([data-state]) { background: var(--c-surface); border-color: var(--c-border); color: var(--c-text-3); cursor: default; }
+
+/* =====================================================================
+   v0.5 追加(DB-5): spec/08 Phase 3a の部品
+   ===================================================================== */
+
+/* ---------- グラフ(charts.js が出す SVG) ---------- */
+.chart .axis-title { fill: var(--c-text-2); font-size: 11px; font-weight: 700; }
+.chart .hit { fill: transparent; }
+/* 較正: 対角の破線 = 予測どおり。点 = 実際の1着率、縦線 = Wilson 95%区間 */
+.calib .ideal { stroke: var(--c-chart-ideal); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.calib .ci { stroke: var(--c-chart-ci); stroke-width: 2; stroke-linecap: round; }
+.calib .pt { fill: var(--c-chart-line); stroke: var(--c-surface); stroke-width: 2; }
+/* 件数が少ない帯: 白抜きの点 + 細い区間(色だけでなく形で区別) */
+.calib .is-lown .pt { fill: var(--c-surface); stroke: var(--c-chart-line); stroke-width: 2; }
+.calib .is-lown .ci { stroke-width: 1; stroke-dasharray: 2 2; }
+.calib .bin:hover .pt, .calib .bin:focus-within .pt { r: 6; }
+/* 収支: 累積の線、ピーク(細い点線)、ドローダウンの帯、0円の基準線 */
+.pnl .dd { fill: var(--c-chart-dd); }
+.pnl .peak { fill: none; stroke: var(--c-chart-ideal); stroke-width: 1; stroke-dasharray: 2 3; }
+.pnl .dd-mark { stroke: var(--c-reason-down); stroke-width: 1.5; }
+.pnl .dd-lbl { fill: var(--c-reason-down); font-weight: 700; font-size: 11px; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 4px var(--space-4); font-size: var(--size-2xs); color: var(--c-text-2); margin-top: var(--space-2); }
+.chart-legend i { display: inline-block; vertical-align: middle; margin-right: 4px; }
+.lg-line { width: 16px; height: 0; border-top: 2px solid var(--c-chart-line); }
+.lg-ideal { width: 16px; height: 0; border-top: 1.5px dashed var(--c-chart-ideal); }
+.lg-ci { width: 2px; height: 12px; background: var(--c-chart-ci); }
+.lg-pt { width: 9px; height: 9px; border-radius: 50%; background: var(--c-chart-line); }
+.lg-lown { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--c-chart-line); box-sizing: border-box; }
+.lg-dd { width: 14px; height: 10px; background: var(--c-chart-dd); border-radius: 2px; }
+
+/* ---------- 区間つきの数値 ----------
+   <div class="ci-num"><span class="ci-num__val">92.7%</span><span class="ci-num__ci">95%区間 81〜105%</span>
+     <span class="ci-num__bar" style="--lo:.81;--hi:1.05;--v:.927;--ref:1;--max:1.5"></span><span class="ci-num__n">301R</span></div>
+   バーは 0〜--max の目盛り。--ref(100%)に縦線。区間が --ref をまたぐときは .is-straddle を付け、文言を出す */
+.ci-num { display: inline-flex; flex-direction: column; gap: 2px; min-width: 0; font-variant-numeric: tabular-nums; }
+.ci-num__val { font-size: var(--size-2xl); font-weight: var(--weight-heavy); line-height: 1.1; }
+.ci-num__ci { font-size: var(--size-xs); color: var(--c-text-2); }
+.ci-num__n { font-size: var(--size-2xs); color: var(--c-text-3); }
+.ci-num__bar { position: relative; display: block; height: 14px; margin: 4px 0 2px; }
+.ci-num__bar::before { /* 区間 */
+  content: ""; position: absolute; top: 5px; height: 4px; border-radius: 2px; background: var(--c-chart-ci);
+  left: calc(var(--lo) / var(--max) * 100%); width: calc((min(var(--hi), var(--max)) - var(--lo)) / var(--max) * 100%);
+}
+.ci-num__bar::after { /* 点推定 + 基準線(100%)を1つの背景で描く */
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle, var(--c-chart-line) 4px, transparent 4.5px) no-repeat calc(var(--v) / var(--max) * 100% - 7px) 0 / 14px 14px,
+    linear-gradient(var(--c-chart-ideal), var(--c-chart-ideal)) no-repeat calc(var(--ref) / var(--max) * 100%) 0 / 1.5px 100%,
+    linear-gradient(var(--c-chart-grid), var(--c-chart-grid)) no-repeat 0 50% / 100% 1px;
+}
+.ci-num__verdict { font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-2); }
+.ci-num.is-straddle .ci-num__val { color: var(--c-text); }
+.ci-num--sm .ci-num__val { font-size: var(--size-lg); }
+/* 表の中の1行版: 「92.7% (81〜105)」 */
+.ci-inline { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ci-inline small { color: var(--c-text-3); font-size: var(--size-2xs); margin-left: 3px; }
+
+/* ---------- 件数が少ない(200R未満など)の薄い表示 ----------
+   opacity ではなく文字色を text-3 に落とし(コントラストは 4.5:1 を保つ)、斜体はやめ、「参考」タグを添える */
+.is-lown, .is-lown .ci-num__val, .is-lown .ci-inline { color: var(--c-text-3); }
+.is-lown .ci-num__bar::before { opacity: .5; }
+.lown-tag { display: inline-flex; align-items: center; gap: 3px; height: 18px; padding: 0 6px; border-radius: var(--radius-xs); border: 1px dashed var(--c-border-strong); color: var(--c-text-2); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; }
+.lown-tag::before { content: "参考"; }
+tr.is-lown td { color: var(--c-text-3); }
+
+/* ---------- 自分の印 ◎○▲△ の入力 ----------
+   <div class="markpick" role="radiogroup" aria-label="3号艇の印"><button role="radio" aria-checked="true">◎</button>…<button role="radio" class="markpick__clear">なし</button></div>
+   1つの印は1艇だけ(◎を別の艇に付けたら元の艇から外す)はフロントの規則 */
+.markpick { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-sm); background: var(--c-surface-2); }
+.markpick button {
+  min-width: 34px; height: 40px; border: 0; border-radius: 5px; background: transparent; color: var(--c-text-2);
+  font: inherit; font-size: var(--size-lg); font-weight: var(--weight-heavy); cursor: pointer; line-height: 1;
+}
+.markpick button[aria-checked="true"] { background: var(--c-surface); color: var(--c-text); box-shadow: inset 0 0 0 2px var(--c-accent), var(--shadow-sm); }
+.markpick button[aria-checked="true"]:first-child { color: var(--c-hit-text); }
+.markpick .markpick__clear { font-size: var(--size-2xs); font-weight: var(--weight-bold); min-width: 40px; }
+.markpick button:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -2px; }
+/* 自分の印とモデルの印を並べる: 「自 ◎ / モ ○」。一致は ＝、ずれは ≠ の記号も出す */
+.markvs { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 5.4em; gap: 4px; font-size: var(--size-2xs); color: var(--c-text-3); white-space: nowrap; }
+.markvs b { font-size: var(--size-md); color: var(--c-text); font-weight: var(--weight-heavy); }
+.markvs .eq { color: var(--c-text-2); font-weight: var(--weight-bold); }
+.markvs.is-diff .eq { color: var(--c-warn); }
+
+/* ---------- 確率の根拠(上げる・下げる、強さ1〜3) ----------
+   <li class="reason reason--up" data-strength="2"><span class="reason__dir">上げる</span><span class="reason__label">全国勝率</span><span class="reason__val">6.85</span><span class="reason__str" aria-label="強さ 2/3"><i></i><i></i><i></i></span></li>
+   向きは 矢印 + 文字、強さは3つの棒の数(色だけにしない)。パーセントの数値は出さない(08 5.2) */
+.reasons { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.reason { display: grid; grid-template-columns: 4.6em minmax(0, 1fr) auto 26px; align-items: center; gap: var(--space-3); min-height: 32px; font-size: var(--size-sm); border-top: 1px dashed var(--c-border); }
+.reason:first-child { border-top: 0; }
+.reason__dir { display: inline-flex; align-items: center; gap: 2px; font-size: var(--size-2xs); font-weight: var(--weight-heavy); white-space: nowrap; }
+.reason--up .reason__dir { color: var(--c-reason-up); }
+.reason--up .reason__dir::before { content: "▲"; }
+.reason--down .reason__dir { color: var(--c-reason-down); }
+.reason--down .reason__dir::before { content: "▼"; }
+.reason__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reason__val { font-variant-numeric: tabular-nums; color: var(--c-text-2); }
+.reason__str { display: inline-flex; gap: 2px; align-items: flex-end; }
+.reason__str i { display: block; width: 6px; height: 10px; border-radius: 1px; background: var(--c-bar-track); }
+.reason--up .reason__str i { background: color-mix(in srgb, var(--c-reason-up) 22%, var(--c-bar-track)); }
+.reason--down .reason__str i { background: color-mix(in srgb, var(--c-reason-down) 22%, var(--c-bar-track)); }
+.reason--up[data-strength="1"] .reason__str i:nth-child(-n+1),
+.reason--up[data-strength="2"] .reason__str i:nth-child(-n+2),
+.reason--up[data-strength="3"] .reason__str i { background: var(--c-reason-up); }
+.reason--down[data-strength="1"] .reason__str i:nth-child(-n+1),
+.reason--down[data-strength="2"] .reason__str i:nth-child(-n+2),
+.reason--down[data-strength="3"] .reason__str i { background: var(--c-reason-down); }
+
+/* ---------- 買い目合計のパネル ---------- */
+.betsum { border: 1.5px solid var(--c-border-strong); border-radius: var(--radius-md); background: var(--c-surface); overflow: hidden; }
+.betsum__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+.betsum__cell { padding: var(--space-3) var(--space-4); border-left: 1px solid var(--c-border); display: flex; flex-direction: column; gap: 2px; }
+.betsum__cell:first-child { border-left: 0; }
+.betsum__k { font-size: var(--size-2xs); color: var(--c-text-3); font-weight: var(--weight-bold); }
+.betsum__v { font-size: var(--size-xl); font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.betsum__v small { font-size: var(--size-xs); font-weight: var(--weight-bold); color: var(--c-text-2); margin-left: 1px; }
+.betsum__v.is-none { color: var(--c-text-3); font-size: var(--size-md); }
+.betsum__alloc { width: 100%; border-collapse: collapse; font-size: var(--size-sm); font-variant-numeric: tabular-nums; }
+.betsum__alloc th { font-size: var(--size-2xs); color: var(--c-text-3); font-weight: var(--weight-bold); text-align: right; padding: var(--space-2) var(--space-4); border-top: 1px solid var(--c-border); }
+.betsum__alloc td { text-align: right; padding: 6px var(--space-4); border-top: 1px solid var(--c-border); }
+.betsum__alloc th:first-child, .betsum__alloc td:first-child { text-align: left; }
+.betsum__alloc .is-short td:last-child { color: var(--c-danger); font-weight: var(--weight-bold); }
+.betsum__alloc .is-short td:last-child::before { content: "✕ "; }
+.betsum__foot { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--c-border); background: var(--c-surface-2); font-size: var(--size-xs); color: var(--c-text-2); }
+.betsum__foot .btn { margin-left: auto; min-height: 40px; }
+/* トリガミの判定: OK = ✓ 緑の文字、NG = ⚠ 赤の文字 */
+.trigami { display: inline-flex; align-items: center; gap: 4px; font-size: var(--size-xs); font-weight: var(--weight-bold); }
+.trigami--ok { color: var(--c-ev-plus-text); }
+.trigami--ok::before { content: "✓"; }
+.trigami--ng { color: var(--c-danger); }
+.trigami--ng::before { content: "⚠"; }
+
+/* ---------- 警告の帯(予算・連敗・利用時間) ----------
+   予算・連敗は .banner--warn(80%)/ .banner--error(100%・超過)+ .budgetbar。超えても消さない(08 4章-6)。
+   利用時間・深夜は操作を妨げない小さな帯 .banner--quiet(閉じられる) */
+.budgetbar { position: relative; display: block; height: 8px; border-radius: var(--radius-pill); background: var(--c-bar-track); margin-top: 6px; overflow: visible; }
+.budgetbar::before { content: ""; position: absolute; inset: 0 auto 0 0; width: calc(min(var(--p, 0), 1) * 100%); border-radius: inherit; background: var(--c-warn); }
+.budgetbar.is-over::before { background: var(--c-danger); }
+.budgetbar::after { /* 80% の目印 */ content: ""; position: absolute; left: 80%; top: -3px; bottom: -3px; width: 2px; background: var(--c-text-2); }
+.budget-num { font-variant-numeric: tabular-nums; font-weight: var(--weight-bold); color: var(--c-text); }
+.banner--quiet { background: transparent; border: 1px solid var(--c-border); color: var(--c-text-2); font-size: var(--size-xs); padding: var(--space-2) var(--space-3); }
+.banner--quiet svg { width: 16px; height: 16px; color: var(--c-text-3); }
+.banner__close { margin-left: auto; min-width: var(--tap-min); min-height: 32px; border: 0; background: none; color: var(--c-text-2); font: inherit; font-size: var(--size-xs); cursor: pointer; }
+
+/* ---------- 「?」の説明 ----------
+   <button class="help" aria-expanded="false" aria-controls="h1" aria-label="較正とは">?</button>
+   <div class="helppop" id="h1" role="dialog" aria-label="較正とは" hidden>…</div>
+   見た目は20pxの丸、タップ領域は 44px(::before で広げる) */
+.help {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; width: 20px; height: 20px; padding: 0;
+  border-radius: 50%; border: 1.5px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text-2);
+  font: inherit; font-size: 12px; font-weight: var(--weight-heavy); line-height: 1; cursor: pointer; vertical-align: middle;
+}
+.help::before { content: ""; position: absolute; inset: -12px; }
+.help[aria-expanded="true"] { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-text-on-accent); }
+.help:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.helppop {
+  position: relative; max-width: 320px; padding: var(--space-4) var(--space-5) var(--space-4) var(--space-4); margin-top: 10px;
+  border-radius: var(--radius-md); background: var(--c-surface); border: 1px solid var(--c-border-strong); box-shadow: var(--shadow-lg);
+  font-size: var(--size-sm); line-height: 1.6; color: var(--c-text);
+}
+.helppop[hidden] { display: none; }
+.helppop::before { /* 吹き出しの三角 */ content: ""; position: absolute; top: -7px; left: var(--arrow-x, 16px); width: 12px; height: 12px; background: inherit; border-left: 1px solid var(--c-border-strong); border-top: 1px solid var(--c-border-strong); transform: rotate(45deg); }
+.helppop__title { display: block; font-weight: var(--weight-heavy); margin-bottom: 4px; }
+.helppop__more { display: block; margin-top: 6px; font-size: var(--size-xs); color: var(--c-text-3); }
+.helppop__close { position: absolute; top: 2px; right: 2px; width: var(--tap-min); height: var(--tap-min); border: 0; background: none; color: var(--c-text-2); font-size: 18px; cursor: pointer; }
+
+/* ---------- DA-4 の要望の残り(design/screens/README.md 14章) ---------- */
+/* 取得の段階チップ(目安。券種の順): <ol class="steps"><li class="is-done">3連単</li><li class="is-now">2連単・2連複</li><li>単勝・複勝</li></ol> */
+.steps { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; flex-wrap: wrap; }
+.steps li { display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 8px; border-radius: var(--radius-pill); font-size: var(--size-2xs); font-weight: var(--weight-bold); color: var(--c-text-3); border: 1px dotted var(--c-skip-border); }
+.steps li.is-done { color: var(--c-ev-plus-text); border: 1px solid var(--c-ev-plus); }
+.steps li.is-done::before { content: "✓"; }
+.steps li.is-now { color: var(--c-accent-text); border: 1.5px solid var(--c-accent); background: var(--c-surface); }
+.steps li.is-now::before { content: "…"; }
+.steps li.is-fail { color: var(--c-danger); border: 1px solid var(--c-danger); }
+.steps li.is-fail::before { content: "✕"; }
+/* スイッチのクラス指定版と ✓(aria-checked 版と同じ見た目) */
+.switch.is-on .switch__track { background: var(--c-accent); }
+.switch.is-on .switch__track::after { transform: translateX(20px); background: var(--c-text-on-accent); }
+.switch.is-on .switch__text::before { content: "オン"; }
+.switch[aria-checked="true"] .switch__track::after, .switch.is-on .switch__track::after {
+  content: "✓"; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: var(--c-accent);
+}
+.switch.is-disabled, .switch:disabled { opacity: .45; cursor: default; }
+/* 入力欄のクラス指定版 */
+.input.is-error { border-color: var(--c-danger); border-width: 2px; }
+.input.is-saved { background: var(--c-surface-2); color: var(--c-text-2); }
+
+/* =====================================================================
+   v0.6 追加: デザイナーAの DA-5(design/screens/README.md 16章)に合わせた部品
+   ===================================================================== */
+
+/* ---------- 自分の印・個人データの色(--c-mine: 青緑) ----------
+   紫(--c-local)は「ローカル表示」専用。自分の印・メモ・購入記録など「端末の中だけの自分のデータ」は青緑で示す */
+.markpick--mine button[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--c-mine), var(--shadow-sm); color: var(--c-mine); }
+.markpick--mine button[aria-checked="true"]:first-child { color: var(--c-mine); }
+.markvs b.is-mine { color: var(--c-mine); }
+/* 「自分」の目印: 人のアイコン + 文字。<span class="minetag"><svg>…</svg>自分の印</span> */
+.minetag { display: inline-flex; align-items: center; gap: 3px; height: 20px; padding: 0 6px; border-radius: var(--radius-xs); background: var(--c-mine-weak); color: var(--c-mine); border: 1px solid var(--c-mine); font-size: var(--size-2xs); font-weight: var(--weight-bold); white-space: nowrap; }
+.minetag svg { width: 11px; height: 11px; }
+
+/* ---------- 同じ重さの結果チップ(08 4章-5) ----------
+   的中も不的中も返還も、同じ形・同じ大きさ・同じ枠(塗らない)。違いは記号と文字だけ。
+   <span class="res res--hit">✓ 的中 +2,250</span> <span class="res res--miss">✕ 不的中 −300</span> <span class="res res--refund">返還 −100</span> */
+.res {
+  display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 8px; border-radius: var(--radius-pill);
+  border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text);
+  font-size: var(--size-xs); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.res--hit::before { content: "✓"; }
+.res--miss::before { content: "✕"; }
+.res--refund::before { content: "↩"; }
+.res--pending { color: var(--c-text-3); border-style: dashed; }
+
+/* ---------- 予算メーター ----------
+   <div class="meter is-warn" style="--p:.82" role="meter" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+   80% に目印。80%以上 .is-warn(黄)、100%以上 .is-over(赤) */
+.meter { position: relative; height: 10px; border-radius: 5px; background: var(--c-bar-track); margin-top: 4px; }
+.meter > i { display: block; height: 100%; width: calc(min(var(--p, 0), 1) * 100%); border-radius: inherit; background: var(--c-text-2); }
+.meter.is-warn > i { background: var(--c-warn); }
+.meter.is-over > i { background: var(--c-danger); }
+.meter::after { content: ""; position: absolute; left: 80%; top: -3px; bottom: -3px; width: 2px; background: var(--c-text-2); }
+.meter-row { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--size-xs); color: var(--c-text-2); font-variant-numeric: tabular-nums; }
+.meter-row b { color: var(--c-text); font-size: var(--size-md); }
+
+/* ---------- 警告の帯(A の名前): .warnbar = .banner--warn、.warnbar--over = .banner--error と同じ見た目 ---------- */
+.warnbar { padding: 10px var(--space-4); border-radius: var(--radius-sm); border-left: 4px solid var(--c-warn); background: var(--c-warn-weak); color: var(--c-text); font-size: var(--size-sm); }
+.warnbar b { font-size: var(--size-md); }
+.warnbar--over { border-left-color: var(--c-danger); background: var(--c-danger-weak); }
+/* やさしい注意(深夜・連続利用): 灰色の1行、✕で閉じる。.banner--quiet と同じ役割 */
+.gentle { display: flex; align-items: center; gap: var(--space-3); padding: 6px var(--space-2) 6px var(--space-4); border-radius: var(--radius-sm); background: var(--c-surface-2); color: var(--c-text-2); font-size: var(--size-xs); }
+.gentle svg { width: 16px; height: 16px; color: var(--c-text-3); flex: none; }
+.gentle .x, .gentle__close { margin-left: auto; min-width: var(--tap-min); min-height: 32px; border: 0; background: none; color: var(--c-text-2); font: inherit; cursor: pointer; }
+
+/* ---------- 件数が少ない(A の名前) ----------
+   A は opacity .55 だが、B は文字色を下げる方式(4.5:1 を保つ)。.few は .is-lown と同じ扱い */
+.few, .few .ci-num__val { color: var(--c-text-3); }
+.fewnote { font-size: var(--size-2xs); color: var(--c-text-3); }
+
+/* ---------- 場のタブ(横スクロール) ----------
+   <nav class="stabs" role="tablist"><a role="tab" aria-selected="true">戸田</a>…</nav> */
+.stabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; scroll-snap-type: x proximity; }
+.stabs::-webkit-scrollbar { display: none; }
+.stabs a, .stabs button {
+  flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 14px; border-radius: var(--radius-pill);
+  border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text); text-decoration: none;
+  font: inherit; font-size: var(--size-sm); font-weight: var(--weight-bold); white-space: nowrap; scroll-snap-align: start; cursor: pointer;
+}
+.stabs [aria-selected="true"] { background: var(--c-text); color: var(--c-surface); border-color: var(--c-text); }
+.stabs small { font-size: var(--size-2xs); font-weight: var(--weight-regular); opacity: .85; }
+.stabs a:focus-visible, .stabs button:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+/* ---------- 下部タブ(4つ: レース / 成績 / 収支 / その他) ----------
+   選択中は アイコンの塗り + 文字の太さ + 上の帯 で示す(色だけにしない) */
+.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); min-height: 56px; padding-bottom: env(safe-area-inset-bottom); background: var(--c-surface); border-top: 1px solid var(--c-border); }
+.tabbar--4 { grid-template-columns: repeat(4, 1fr); }
+.tabbar a { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; color: var(--c-text-2); font-size: var(--size-2xs); text-decoration: none; }
+.tabbar a svg { width: 24px; height: 24px; }
+.tabbar a[aria-current="page"] { color: var(--c-accent-text); font-weight: var(--weight-heavy); }
+.tabbar a[aria-current="page"]::before { content: ""; position: absolute; top: 0; left: 25%; right: 25%; height: 3px; border-radius: 0 0 3px 3px; background: var(--c-accent); }
+.tabbar a:focus-visible { outline: 3px solid var(--c-focus); outline-offset: -3px; }
+
+/* ---------- 吹き出し(A の名前): .tip = .helppop の短い版(反転色) ---------- */
+.tip { position: relative; margin-top: 8px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--c-text); color: var(--c-surface); font-size: var(--size-xs); line-height: 1.5; max-width: 320px; }
+.tip::before { content: ""; position: absolute; top: -6px; left: var(--arrow-x, 16px); border: 6px solid transparent; border-top: 0; border-bottom-color: var(--c-text); }

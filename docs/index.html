@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- 公開リポジトリのため検索エンジンに載せない(spec/06 U4) -->
+<meta name="robots" content="noindex, nofollow">
+<title>ボートレース予想</title>
+<meta name="description" content="個人用のボートレース予想(非公式データに基づく参考情報)">
+<!-- パスはすべて相対(GitHub Pages のサブパス /boatrace-yoso/ で動かすため) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BR予想">
+<meta name="theme-color" content="#F3F4F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1015" media="(prefers-color-scheme: dark)">
+<!-- 読み込み順: トークン → 部品 → 画面 -->
+<link rel="stylesheet" href="app/styles/tokens.css">
+<link rel="stylesheet" href="app/styles/components.css">
+<link rel="stylesheet" href="app/styles/app.css">
+</head>
+<body>
+<div id="app" class="app">
+  <noscript><div class="empty"><div class="empty__title">JavaScript を有効にしてください</div></div></noscript>
+</div>
+<div id="overlay"></div>
+<div id="toast-root" class="toast-host" aria-live="polite"></div>
+<script type="module" src="app/main.js"></script>
+</body>
+</html>

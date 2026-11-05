@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>部品カタログ | boatrace-yoso</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* カタログ自体の体裁(部品ではない) */
+  body { margin: 0; background: var(--c-bg); color: var(--c-text); font-family: var(--font-family-base); font-size: var(--size-md); line-height: var(--leading-normal); }
+  .page { max-width: 430px; margin: 0 auto; padding: var(--space-5) 12px var(--space-10); }
+  h1 { font-size: var(--size-xl); margin: 0 0 var(--space-2); }
+  h2 { font-size: var(--size-lg); margin: var(--space-8) 0 var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--c-border); }
+  h3 { font-size: var(--size-sm); color: var(--c-text-2); margin: var(--space-5) 0 var(--space-3); }
+  p.note { font-size: var(--size-xs); color: var(--c-text-3); margin: var(--space-2) 0; }
+  .card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-4); }
+  .card--flush { padding: 0; overflow: hidden; }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+  .stack { display: flex; flex-direction: column; gap: var(--space-3); }
+  .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+  .sw { font-size: var(--size-2xs); color: var(--c-text-2); }
+  .sw i { display: block; height: 32px; border-radius: var(--radius-xs); border: 1px solid var(--c-border); margin-bottom: 2px; }
+  .sw code { display: block; font-family: var(--font-family-mono); color: var(--c-text-3); }
+  .themebar { position: sticky; top: 0; z-index: 2; background: var(--c-bg); padding: var(--space-3) 0; }
+  .kv { font-size: var(--size-xs); color: var(--c-text-2); display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-3); }
+  .rcards { display: flex; flex-direction: column; gap: var(--space-3); }
+  .result-line { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+  .tech { font-size: var(--size-sm); font-weight: 700; color: var(--c-text-2); }
+</style>
+</head>
+<body>
+<!-- 共通のSVGアイコン(currentColor で着色) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.6 8.3l2.2 2.2 4.6-4.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12.5l9-9" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.1 4.5 4.5 0 0 0 7 18z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v5M12 18v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 16 16"><path d="M2.5 7.5L8 3l5.5 4.5V13a.5.5 0 0 1-.5.5H9.5v-3.5h-3v3.5H3a.5.5 0 0 1-.5-.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 16 16"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 2.5v2.8h2.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7.2V11.5M8 4.6v.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-download" viewBox="0 0 20 20"><path d="M10 3v9.5M6 9l4 4 4-4M4 16h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spin" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2.4"/><path d="M10 3a7 7 0 0 1 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 2.5l11 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 16 16"><path d="M10.5 2.5l3 3L6 13H3v-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-key" viewBox="0 0 16 16"><circle cx="5.5" cy="10.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.7 8.3L13.5 2.5M11.5 4.5l1.8 1.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-list" viewBox="0 0 16 16"><path d="M5 4h8M5 8h8M5 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 16 16"><circle cx="8" cy="5.5" r="2.8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.8 14c.6-2.8 2.7-4.2 5.2-4.2s4.6 1.4 5.2 4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-race" viewBox="0 0 24 24"><path d="M3 17c3-3 6 3 9 0s6 3 9 0M7 13V6h10v7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 12.5h2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M6 6l9-3 1 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="12" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M3 11l4-4 3 3 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page">
+  <h1>部品カタログ</h1>
+  <p class="note">デザイナーB 案 v0.6 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
+
+  <div class="themebar">
+    <div class="seg" role="tablist" aria-label="表示モード">
+      <button role="tab" data-theme-set="auto">端末に合わせる</button>
+      <button role="tab" data-theme-set="light">ライト</button>
+      <button role="tab" data-theme-set="dark">ダーク</button>
+    </div>
+  </div>
+
+  <!-- ===== 色 ===== -->
+  <h2>1. 色トークン</h2>
+  <div class="swatches" id="swatches"></div>
+
+  <!-- ===== 枠番 ===== -->
+  <h2>2. 枠番バッジ</h2>
+  <div class="card stack">
+    <div class="row">
+      <span class="boat boat--lg boat-1" aria-label="1号艇">1</span><span class="boat boat--lg boat-2" aria-label="2号艇">2</span><span class="boat boat--lg boat-3" aria-label="3号艇">3</span><span class="boat boat--lg boat-4" aria-label="4号艇">4</span><span class="boat boat--lg boat-5" aria-label="5号艇">5</span><span class="boat boat--lg boat-6" aria-label="6号艇">6</span>
+      <span class="u-muted" style="font-size:12px">lg 36</span>
+    </div>
+    <div class="row">
+      <span class="boat boat-1">1</span><span class="boat boat-2">2</span><span class="boat boat-3">3</span><span class="boat boat-4">4</span><span class="boat boat-5">5</span><span class="boat boat-6">6</span>
+      <span class="u-muted" style="font-size:12px">md 24</span>
+    </div>
+    <div class="row">
+      <span class="boat boat--bet boat-1">1</span><span class="boat boat--bet boat-2">2</span><span class="boat boat--bet boat-3">3</span><span class="boat boat--bet boat-4">4</span><span class="boat boat--bet boat-5">5</span><span class="boat boat--bet boat-6">6</span>
+      <span class="u-muted" style="font-size:12px">bet 28(推奨買い目)</span>
+    </div>
+    <div class="row">
+      <span class="boat boat--sm boat-1">1</span><span class="boat boat--sm boat-2">2</span><span class="boat boat--sm boat-3">3</span><span class="boat boat--sm boat-4">4</span><span class="boat boat--sm boat-5">5</span><span class="boat boat--sm boat-6">6</span>
+      <span class="u-muted" style="font-size:12px">sm 20</span>
+    </div>
+    <h3>欠場(斜線+薄く)</h3>
+    <div class="row"><span class="boat boat-4 is-absent" aria-label="4号艇 欠場">4</span><span class="u-muted" style="font-size:12px">4号艇 欠場</span></div>
+    <h3>組合せ(順序あり / 順不同)</h3>
+    <div class="row">
+      <span class="combo" aria-label="2-1-3"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span></span>
+      <span class="combo" aria-label="1=2=5"><span class="boat boat--sm boat-1">1</span><span class="combo__sep">=</span><span class="boat boat--sm boat-2">2</span><span class="combo__sep">=</span><span class="boat boat--sm boat-5">5</span></span>
+    </div>
+  </div>
+
+  <!-- ===== 印・確率バー ===== -->
+  <h2>3. 印と確率バー(S2 各艇)</h2>
+  <p class="note">印は p_rank 1〜4 に ◎○▲△。バーは1着確率(濃)に、2着内・3着内(薄い2層)を重ねる。数値は右に必ず出す。</p>
+  <div class="card" id="boats"></div>
+
+  <h3>単体</h3>
+  <div class="card stack">
+    <div class="pbar is-top" style="--p:.52"><span class="pbar__fill"></span></div>
+    <div class="pbar" style="--p:.21"><span class="pbar__fill"></span></div>
+    <div class="pbar pbar--lg" style="--p:.41;--p2:.66;--p3:.82"><span class="pbar__l3"></span><span class="pbar__l2"></span><span class="pbar__fill"></span></div>
+  </div>
+
+  <h3>6艇分布バー + 堅さ(S1 用)</h3>
+  <div class="card stack">
+    <div class="row" style="flex-wrap:nowrap"><div class="dist" aria-label="1着確率の分布"><i style="--p:.52"></i><i style="--p:.16"></i><i style="--p:.12"></i><i style="--p:.10"></i><i style="--p:.06"></i><i style="--p:.04"></i></div><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span></div>
+    <div class="row" style="flex-wrap:nowrap"><div class="dist"><i style="--p:.28"></i><i style="--p:.22"></i><i style="--p:.19"></i><i style="--p:.14"></i><i style="--p:.10"></i><i style="--p:.07"></i></div><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span></div>
+    <div class="row"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="u-muted" style="font-size:12px">しきい値案: ≥0.50 / 0.35〜 / &lt;0.35</span></div>
+  </div>
+
+  <!-- ===== チップ ===== -->
+  <h2>4. ステータスチップ</h2>
+  <div class="card stack">
+    <div class="row">
+      <span class="chip chip--open"><svg><use href="#i-clock"/></svg>あと24分</span>
+      <span class="chip chip--soon"><span class="dot"></span>あと3分</span>
+      <span class="chip chip--closed">締切 14:30</span>
+    </div>
+    <div class="row">
+      <span class="chip chip--bets">5点</span>
+      <span class="chip chip--skip">見送り</span>
+      <span class="chip chip--canceled"><svg><use href="#i-ban"/></svg>中止</span>
+      <span class="chip chip--nopred">予想なし</span>
+    </div>
+    <div class="row">
+      <span class="chip chip--pre">前日予想 07:30</span>
+      <span class="chip chip--preview">直前予想 14:12</span>
+      <span class="chip chip--warn">参考値(後知恵)</span>
+    </div>
+  </div>
+
+  <!-- ===== 的中 ===== -->
+  <h2>5. 的中 / 不的中</h2>
+  <div class="card stack">
+    <div class="row">
+      <span class="result result--hit"><svg><use href="#i-check"/></svg>的中<span class="result__amount num">¥2,750</span></span>
+      <span class="result result--miss"><svg><use href="#i-x"/></svg>不的中</span>
+      <span class="result result--refund">返還あり<span class="result__amount num">¥100</span></span>
+    </div>
+    <div class="row">
+      <span class="result result--lg result--hit"><svg><use href="#i-check"/></svg>的中 <span class="result__amount num">+2,250円</span></span>
+    </div>
+    <p class="note">的中は「塗り+✓+文字」、不的中は「淡い地+✕+文字」。色を見なくても形で区別できる。</p>
+  </div>
+
+  <!-- ===== 必要オッズ ===== -->
+  <h2>6. 推奨買い目と必要オッズ</h2>
+  <p class="note">「≧ 19.3倍」= 投票アプリのオッズがこれ以上なら期待値プラス。見出しに一度だけ意味を書き、各行は数字だけにする。</p>
+  <h3>締切前</h3>
+  <div class="card card--flush">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px 4px">
+      <b>推奨買い目 <span class="u-muted" style="font-weight:400;font-size:12px">3連単 5点</span></b>
+      <span class="req-cap">オッズがこれ以上なら買い →</span>
+    </div>
+    <div id="bets-open"></div>
+  </div>
+
+  <h3>結果あり(的中した行を強調)</h3>
+  <div class="card stack" style="margin-bottom:8px">
+    <div class="result-line">
+      <span class="combo" aria-label="着順 2-1-6"><span class="boat boat--lg boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--lg boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--lg boat-6">6</span></span>
+      <span class="tech">差し</span>
+      <span style="flex:1"></span>
+      <span class="result result--hit"><svg><use href="#i-check"/></svg>的中</span>
+    </div>
+    <div class="kv"><span>3連単</span><b class="num">2,750円</b><span>収支</span><b class="num">投資 500 → 払戻 2,750</b></div>
+  </div>
+  <div class="card card--flush"><div id="bets-done"></div></div>
+
+  <h3>見送り(推奨0件)</h3>
+  <div class="skipbox"><span class="chip chip--skip">見送り</span><div>このレースは推奨買い目なし<small>確率上位でも必要オッズが高すぎるため</small></div></div>
+
+  <h3>Phase 2: オッズ入力 → 期待値</h3>
+  <div class="card stack" id="evdemo"></div>
+
+  <!-- ===== 補足 ===== -->
+  <h2>7. 選手補足の強調</h2>
+  <div class="card stack" style="font-size:13px">
+    <div class="row"><span class="boat boat--sm boat-3">3</span>平均ST <span class="num">0.15</span> <span class="flag-f">F1</span><span class="u-muted">← F持ち</span></div>
+    <div class="row"><span class="boat boat--sm boat-1">1</span>展示 <span class="num best-time">6.71</span><span class="u-muted">← .best-time(展示タイム最速)</span></div>
+    <div class="row"><span class="boat boat--sm boat-2">2</span>全国勝率 <span class="num best-value">7.42</span><span class="u-muted">← .best-value(太字だけ)</span></div>
+    <div class="row"><span class="boat boat--sm boat-5">5</span>進入 <span class="course-changed num">5→3</span><span class="u-muted">← 枠番と違う</span></div>
+  </div>
+
+  <!-- ===== レースカード ===== -->
+  <h2>8. レースカード(S1)</h2>
+  <p class="note">レイアウトの正は design/screens/(デザイナーA)。ここは状態ごとの色・線の当て方の基準。</p>
+  <h3>独立カード(.rcard)</h3>
+  <div class="rcards" id="rcards"></div>
+  <h3>リスト内の行(.rlist &gt; .rcard.rcard--row)— S1 の既定</h3>
+  <div class="rlist" id="rlist"></div>
+
+  <!-- ===== 帯・操作 ===== -->
+  <h2>9. 帯・ボタン・切替</h2>
+  <div class="stack">
+    <div class="banner banner--warn"><svg><use href="#i-cloud-off"/></svg>オフライン表示中(21:05 時点のデータ)</div>
+    <div class="banner banner--info"><svg><use href="#i-clock"/></svg>直前情報は締切の約10分前に反映されます</div>
+    <div class="banner banner--error"><svg style="color:var(--c-danger)"><use href="#i-alert"/></svg><div style="flex:1">データを読み込めませんでした</div><button class="btn btn--primary">再読み込み</button></div>
+    <div class="seg" role="tablist"><button role="tab" aria-selected="true">締切順</button><button role="tab">場ごと</button></div>
+    <div class="seg" role="tablist"><button role="tab">単勝</button><button role="tab">2連単</button><button role="tab" aria-selected="true">3連単</button></div>
+    <div class="row"><button class="btn btn--primary">主ボタン</button><button class="btn">副ボタン</button></div>
+  </div>
+
+  <!-- ===== グラフ ===== -->
+  <h2>10. 累積回収率の推移(S3)</h2>
+  <p class="note">線1本(2px)+ 100% の破線基準線。最新値だけ直接ラベル。縦軸は 0〜最大値の切り上げ。色は1色(系列が1つなので凡例は不要)。</p>
+  <div class="card"><svg class="chart" id="chart" viewBox="0 0 400 180" role="img" aria-label="累積回収率の推移"></svg></div>
+
+  <!-- ===== v0.3: 期待値ランク ===== -->
+  <h2>11. 期待値ランク(公開版)</h2>
+  <p class="note">公開JSONは ev_rank だけ(数値なし)。文字 A〜D に加え、A=塗り+右上の三角 / B=太い枠 / C=淡い地 / D=破線 / なし=点線「–」で、色を見なくても区別できる。</p>
+  <div class="card stack">
+    <div class="row">
+      <span class="evrank evrank--a" aria-label="期待値ランクA">A</span>
+      <span class="evrank evrank--b" aria-label="期待値ランクB">B</span>
+      <span class="evrank evrank--c" aria-label="期待値ランクC">C</span>
+      <span class="evrank evrank--d" aria-label="期待値ランクD">D</span>
+      <span class="evrank evrank--none" aria-label="オッズなし">–</span>
+      <span class="u-muted" style="font-size:11px">24px</span>
+      <span class="evrank evrank--sm evrank--a">A</span><span class="evrank evrank--sm evrank--b">B</span><span class="evrank evrank--sm evrank--c">C</span><span class="evrank evrank--sm evrank--d">D</span>
+      <span class="u-muted" style="font-size:11px">sm 20</span>
+    </div>
+    <div class="evlegend">
+      <span class="evrank-label"><span class="evrank evrank--a">A</span>1.20以上</span>
+      <span class="evrank-label"><span class="evrank evrank--b">B</span>1.00〜1.20</span>
+      <span class="evrank-label"><span class="evrank evrank--c">C</span>0.80〜1.00</span>
+      <span class="evrank-label"><span class="evrank evrank--d">D</span>0.80未満</span>
+      <span class="evrank-label"><span class="evrank evrank--none">–</span>オッズなし</span>
+    </div>
+  </div>
+  <h3>推奨買い目の行に付ける(必要オッズの左)</h3>
+  <div class="card card--flush">
+    <div style="padding:12px 16px 4px"><span class="oddstime oddstime--ok"><svg><use href="#i-clock"/></svg>10:40時点(締切5分前)のオッズ</span></div>
+    <div id="bets-rank"></div>
+    <div style="padding:8px 16px 12px"><div class="oddsnote"><svg><use href="#i-info"/></svg><span>締切前のオッズで計算したランクです。オッズは締切まで変わり、確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新のオッズで判断してください。</span></div></div>
+  </div>
+
+  <!-- ===== v0.3: オッズの時点 ===== -->
+  <h2>12. オッズの時点(odds_snapshot)</h2>
+  <div class="card stack">
+    <div class="row"><span class="oddstime oddstime--ok"><svg><use href="#i-clock"/></svg>10:40時点(締切5分前)</span><span class="u-muted" style="font-size:11px">ok</span></div>
+    <div class="row"><span class="oddstime oddstime--partial"><svg><use href="#i-alert"/></svg>10:40時点・一部の券種のみ</span><span class="u-muted" style="font-size:11px">partial</span></div>
+    <div class="row"><span class="oddstime oddstime--late"><svg><use href="#i-clock"/></svg>取得遅れ(オッズなし)</span><span class="u-muted" style="font-size:11px">late</span></div>
+    <div class="row"><span class="oddstime oddstime--stopped"><svg><use href="#i-ban"/></svg>本日の取得は停止中</span><span class="u-muted" style="font-size:11px">stopped</span></div>
+    <div class="row"><span class="oddstime oddstime--not-targeted">オッズ取得の対象外</span><span class="u-muted" style="font-size:11px">not_targeted</span></div>
+    <div class="row"><span class="oddstime oddstime--none"><svg><use href="#i-clock"/></svg>未取得(締切5分前に取得予定)</span><span class="u-muted" style="font-size:11px">odds_snapshot = null・締切前</span></div>
+  </div>
+
+  <!-- ===== v0.3: ローカル版 ===== -->
+  <h2>13. ローカル表示(数値あり)</h2>
+  <p class="note">docs/data-local を読んでいるときだけ。上部バーに目印を常に出す。数値は右寄せ・等幅。</p>
+  <div class="card stack">
+    <div class="row"><span class="localmark"><svg><use href="#i-home"/></svg>ローカル表示</span><span class="localmark"><svg><use href="#i-home"/></svg>ローカル</span><span class="u-muted" style="font-size:11px">← 幅が狭いとき</span></div>
+    <table class="evtable">
+      <thead><tr><th>組合せ</th><th>確率</th><th>オッズ</th><th>期待値</th></tr></thead>
+      <tbody id="evtable"></tbody>
+    </table>
+    <div class="oddsnote"><svg><use href="#i-info"/></svg><span>10:40時点(締切5分前)のオッズ。「手入力」は S7 で入力した値で、取得したオッズより優先します。</span></div>
+  </div>
+
+  <!-- ===== v0.3: 設定 ===== -->
+  <h2>14. 設定画面の部品(S6)</h2>
+  <p class="note">既定と違う項目は「左の帯 + ● 既定から変更」。操作すると切り替わる(このカタログ内だけの動き)。</p>
+  <div class="setsummary" id="setsummary"></div>
+  <div class="setgroup__title">推奨買い目の決め方</div>
+  <div class="setgroup" id="settings">
+    <div class="setting" data-key="types">
+      <div class="setting__head"><span class="setting__label">券種</span><span class="changed-tag" hidden>既定から変更</span><span class="setting__desc">複数選べます。既定: 3連単</span></div>
+      <div class="pick-chips">
+        <button class="pick-chip" data-type="win" aria-pressed="false">単勝</button>
+        <button class="pick-chip" data-type="exacta" aria-pressed="true">2連単</button>
+        <button class="pick-chip" data-type="trifecta" aria-pressed="true">3連単</button>
+      </div>
+    </div>
+    <div class="setting" data-key="k">
+      <div class="setting__head"><span class="setting__label">点数</span><span class="changed-tag" hidden>既定から変更</span><span class="setting__desc">確率の高い順に買う点数。既定: 3連単 5点</span></div>
+      <div class="stepper-row"><span class="stepper-row__label">2連単<span class="stepper-row__range">1〜10点</span></span>
+        <div class="stepper" data-step="exacta" data-min="1" data-max="10"><button aria-label="減らす">−</button><output>3<small>点</small></output><button aria-label="増やす">＋</button></div></div>
+      <div class="stepper-row"><span class="stepper-row__label">3連単<span class="stepper-row__range">1〜20点</span></span>
+        <div class="stepper" data-step="trifecta" data-min="1" data-max="20"><button aria-label="減らす">−</button><output>5<small>点</small></output><button aria-label="増やす">＋</button></div></div>
+    </div>
+    <div class="setting" data-key="theta">
+      <div class="setting__head"><span class="setting__label">最低確率</span><span class="changed-tag" hidden>既定から変更</span><span class="setting__desc">この確率未満の組合せは買わない。既定: なし</span></div>
+      <div class="seg seg--sm" role="radiogroup" aria-label="最低確率">
+        <button role="radio" data-v="0">なし</button><button role="radio" data-v="1">1%</button><button role="radio" data-v="2">2%</button><button role="radio" data-v="3">3%</button><button role="radio" data-v="5">5%</button>
+      </div>
+    </div>
+    <div class="setting" data-key="ev">
+      <div class="setting__head"><span class="setting__label">期待値で絞る</span><span class="changed-tag" hidden>既定から変更</span><span class="setting__desc">締切前のオッズが取れたレースだけで使えます。既定: なし</span></div>
+      <div class="seg seg--sm" role="radiogroup" aria-label="期待値で絞る">
+        <button role="radio" data-v="none">なし</button><button role="radio" data-v="B">B以上</button><button role="radio" data-v="A">Aだけ</button>
+      </div>
+      <div class="setting setting--inline" data-key="noodds" style="padding:0;border:0">
+        <span style="font-size:13px">オッズが無いレースは見送る<span class="setting__desc" style="display:block">オフ = 確率だけで選ぶ(既定)</span></span>
+        <button class="switch" role="switch" aria-checked="false"><span class="switch__track"></span><span class="switch__text"></span></button>
+      </div>
+    </div>
+    <div class="setting" data-key="conf">
+      <div class="setting__head"><span class="setting__label">堅さで見送る</span><span class="changed-tag" hidden>既定から変更</span><span class="setting__desc">既定: なし</span></div>
+      <select class="select" aria-label="堅さで見送る"><option value="none">なし</option><option value="ara">「荒」なら見送り</option><option value="chu">「中」以下なら見送り</option></select>
+    </div>
+    <div class="setting" data-key="yen">
+      <div class="setting__head"><span class="setting__label">1点あたりの金額(試算用)</span><span class="changed-tag" hidden>既定から変更</span><span class="default-hint num" id="yenval"></span></div>
+      <input class="range" type="range" min="100" max="1000" step="100" value="100" aria-label="1点あたりの金額">
+      <div class="range-ticks num"><span>100</span><span>300</span><span>500</span><span>700</span><span>1,000円</span></div>
+    </div>
+  </div>
+  <h3>券種+点数を1行にまとめる形(デザイナーAの S6 モックの形)</h3>
+  <div class="setgroup">
+    <div class="setting">
+      <div class="setting__head" style="width:100%"><span class="setting__label">券種と点数</span><span class="changed-tag changed-tag--end">既定から変更</span></div>
+      <div>
+        <div class="typerow is-off"><span class="checkbox" role="checkbox" aria-checked="false" tabindex="0" aria-label="単勝"></span><span class="typerow__name">単勝<small>1〜3点</small></span><span class="stepper is-off"><button disabled aria-label="減らす">−</button><output>1<small>点</small></output><button disabled aria-label="増やす">＋</button></span></div>
+        <div class="typerow"><span class="checkbox" role="checkbox" aria-checked="true" tabindex="0" aria-label="2連単"></span><span class="typerow__name">2連単<small>1〜10点</small></span><span class="stepper"><button aria-label="減らす">−</button><output>3<small>点</small></output><button aria-label="増やす">＋</button></span></div>
+        <div class="typerow"><span class="checkbox" role="checkbox" aria-checked="true" tabindex="0" aria-label="3連単"></span><span class="typerow__name">3連単<small>1〜20点</small></span><span class="stepper"><button aria-label="減らす">−</button><output>5<small>点</small></output><button aria-label="増やす">＋</button></span></div>
+      </div>
+    </div>
+    <div class="setting">
+      <div class="setting__head"><span class="setting__label">堅さで見送り</span></div>
+      <div class="choice" role="radiogroup"><button role="radio" aria-checked="false">なし</button><button role="radio" aria-checked="true">「荒」なら見送り</button><button role="radio" aria-checked="false">「中」以下なら見送り</button></div>
+      <div class="choice choice--fill" role="radiogroup"><button role="radio" aria-checked="false">なし</button><button role="radio" aria-checked="true"><span class="evrank evrank--sm evrank--b">B</span>以上</button><button role="radio" aria-checked="false"><span class="evrank evrank--sm evrank--a">A</span>だけ</button></div>
+    </div>
+    <div class="setting">
+      <div class="setting__head"><span class="setting__label">オッズが無いとき</span></div>
+      <div>
+        <div class="radio-row" role="radio" aria-checked="true" tabindex="0"><span class="radio"></span><span>確率だけで選ぶ<small>既定</small></span></div>
+        <div class="radio-row" role="radio" aria-checked="false" tabindex="0"><span class="radio"></span><span>見送る<small>期待値で絞る設定のときだけ効きます</small></span></div>
+      </div>
+    </div>
+    <div class="setting">
+      <div class="setting__head"><span class="setting__label">適用の順序</span></div>
+      <ol class="flow">
+        <li>確率の高い順に並べる<span class="v">2連単・3連単</span></li>
+        <li>最低確率より低いものを除く<span class="v">2%</span></li>
+        <li class="is-off">期待値の条件で除く<span class="v">なし</span></li>
+        <li>上位から点数分を選ぶ<span class="v">3点・5点</span></li>
+        <li>堅さで見送る<span class="v">荒なら見送り</span></li>
+      </ol>
+    </div>
+  </div>
+  <div class="row" style="margin-top:12px"><span class="toast" role="status"><svg><use href="#i-check"/></svg>保存しました</span></div>
+
+  <div class="row" style="margin-top:12px;justify-content:space-between">
+    <button class="btn btn--reset" id="reset"><svg><use href="#i-reset"/></svg>既定に戻す</button>
+    <span class="u-muted" style="font-size:11px">変更中の項目がないときは押せない</span>
+  </div>
+
+  <!-- ===== v0.4: Worker 経由のオッズ取得 ===== -->
+  <h2>15. オッズ取得(S2・中継 Worker)</h2>
+  <p class="note">押してから応答まで最大30秒ほど。途中経過は届かないので、進みは「目安」として経過時間で出す(30秒で9割、届いたら完了)。</p>
+  <h3>取得ボタンの状態</h3>
+  <div class="card stack">
+    <button class="fetchbtn" data-state="idle"><svg class="fetchbtn__icon"><use href="#i-download"/></svg><span><span class="fetchbtn__label">オッズを取る</span><span class="fetchbtn__sub">3券種・約30秒</span></span></button>
+    <button class="fetchbtn" data-state="loading" disabled aria-busy="true"><svg class="fetchbtn__icon"><use href="#i-spin"/></svg><span><span class="fetchbtn__label">取得中…</span><span class="fetchbtn__sub">12秒経過(目安30秒)</span></span></button>
+    <button class="fetchbtn" data-state="cooldown" disabled><svg class="fetchbtn__icon"><use href="#i-clock"/></svg><span><span class="fetchbtn__label">取り直しは あと42秒</span><span class="fetchbtn__sub">同じレースは60秒に1回まで</span></span></button>
+    <button class="fetchbtn" data-state="disabled" disabled><svg class="fetchbtn__icon"><use href="#i-ban"/></svg><span><span class="fetchbtn__label">オッズを取る</span><span class="fetchbtn__sub">締切後のため取得できません</span></span></button>
+    <p class="note" style="margin:0">待機 = 塗り / 取得中 = 淡い地 + 回る輪 / 更新待ち = 枠だけ + 残り秒数 / 押せない = 破線 + 理由。</p>
+  </div>
+
+  <h3>コンパクトな箱(デザイナーAの S2 の形)</h3>
+  <div class="stack">
+    <div class="fetchbox" role="status"><span class="fetchbox__icon"><svg><use href="#i-list"/></svg></span><div class="fetchbox__text"><span class="oddssrc oddssrc--rank">ランクのみ</span> <b>14:27時点</b>のオッズで計算<br>ボタンで今のオッズを取り、期待値を数値で見られます。</div><button class="fetchbtn fetchbtn--compact" data-state="idle">オッズを取る<small>30秒ほど</small></button></div>
+    <div class="fetchbox" role="status"><span class="fetchbox__icon"><svg><use href="#i-download"/></svg></span><div class="fetchbox__text"><span class="oddssrc oddssrc--worker">取得</span> <b>14:31:05</b>時点のオッズで計算</div><button class="fetchbtn fetchbtn--compact fetchbtn--sub" disabled>更新<small>あと42秒</small></button></div>
+    <div class="fetchbox fetchbox--warn" role="status"><span class="fetchbox__icon"><svg><use href="#i-alert"/></svg></span><div class="fetchbox__text"><b class="fetchbox__title">一部の券種だけ取得しました</b>単勝・複勝は取れませんでした。</div><button class="fetchbtn fetchbtn--compact fetchbtn--sub">再試行</button></div>
+  </div>
+
+  <h3>取得中</h3>
+  <div class="fetchprog" style="--t:.4" role="status" aria-live="polite">
+    <div class="fetchprog__head"><svg><use href="#i-spin"/></svg>公式サイトからオッズを取得中<span class="fetchprog__time num">12秒 / 約30秒</span></div>
+    <div class="fetchprog__bar" aria-hidden="true"></div>
+    <div class="fetchprog__foot"><span class="fetchprog__note">3連単 → 2連単・2連複 → 単勝・複勝 の順に取ります。45秒たっても届かなければ打ち切ります。</span><button class="btn btn--text" style="min-height:40px">取り消す</button></div>
+  </div>
+
+  <h3>取得後(時刻・キャッシュ・更新)</h3>
+  <div class="card stack">
+    <div class="fetchstamp">
+      <div class="fetchstamp__main"><span class="fetchstamp__time num">10:40:12</span>時点のオッズ</div>
+      <div class="fetchstamp__sub"><span>公式の表記「10:40現在」</span><span class="pagestat pagestat--ok">3連単</span><span class="pagestat pagestat--ok">2連単</span><span class="pagestat pagestat--ok">単勝</span></div>
+      <button class="refreshbtn" disabled><svg><use href="#i-clock"/></svg>0:42</button>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--c-border);margin:0;width:100%">
+    <div class="fetchstamp">
+      <div class="fetchstamp__main"><span class="fetchstamp__time num">10:39:47</span>時点のオッズ<span class="cachetag num">25秒前に取得したもの</span></div>
+      <div class="fetchstamp__sub"><span>他の端末か直前の取得を使い回しました(60秒以内)</span></div>
+      <button class="refreshbtn" disabled><svg><use href="#i-clock"/></svg>0:35</button>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--c-border);margin:0;width:100%">
+    <div class="fetchstamp">
+      <div class="fetchstamp__main"><span class="fetchstamp__time num">10:38:02</span>時点のオッズ</div>
+      <div class="fetchstamp__sub"><span class="pagestat pagestat--ok">3連単</span><span class="pagestat pagestat--ok">2連単</span><span class="pagestat pagestat--error">単勝</span></div>
+      <button class="refreshbtn"><svg><use href="#i-reset"/></svg>更新</button>
+    </div>
+    <div class="oddsnote"><svg><use href="#i-info"/></svg><span>締切前のオッズは変わります。投票は投票アプリの最新オッズで確認してください。</span></div>
+  </div>
+
+  <h3>エラー・状態の帯(文言案)</h3>
+  <div class="stack" id="fetcherrors"></div>
+
+  <h3>オッズの出どころ(優先順: 手入力 → 取得 → ランク → なし)</h3>
+  <div class="card stack">
+    <div class="row">
+      <span class="oddssrc oddssrc--manual"><svg><use href="#i-pencil"/></svg>手入力</span>
+      <span class="oddssrc oddssrc--worker"><svg><use href="#i-download"/></svg>取得 10:40</span>
+      <span class="oddssrc oddssrc--cache"><svg><use href="#i-download"/></svg>取得(25秒前)</span>
+      <span class="oddssrc oddssrc--rank"><svg><use href="#i-list"/></svg>ランクのみ</span>
+      <span class="oddssrc oddssrc--none">オッズなし</span>
+    </div>
+    <table class="evtable">
+      <thead><tr><th>組合せ</th><th>オッズ</th><th>期待値</th></tr></thead>
+      <tbody>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span></span></td><td><span class="oddsval">26.0<small>倍</small></span> <span class="oddssrc oddssrc--manual"><svg><use href="#i-pencil"/></svg>手入力</span></td><td><span class="evval is-plus"><span class="evval__num">1.35</span><span class="evrank evrank--a">A</span></span></td></tr>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-6">6</span></span></td><td><span class="oddsval">24.1<small>倍</small></span> <span class="oddssrc oddssrc--worker"><svg><use href="#i-download"/></svg>取得</span></td><td><span class="evval"><span class="evval__num">0.99</span><span class="evrank evrank--c">C</span></span></td></tr>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span></span></td><td><span class="u-muted">–</span> <span class="oddssrc oddssrc--rank"><svg><use href="#i-list"/></svg>ランク</span></td><td><span class="evval evval--none"><span class="evval__num">–</span><span class="evrank evrank--b">B</span></span></td></tr>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span></span></td><td><span class="u-muted">–</span> <span class="oddssrc oddssrc--none">なし</span></td><td><span class="evval evval--none"><span class="evval__num">–</span><span class="evrank evrank--none">–</span></span></td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin:0">取得・手入力の行は数値の期待値、公開のランクだけの行は「–」+ ランク。行ごとに出どころを付けるのは、混在するとき(手入力した行だけ違う)。全部が同じ出どころなら見出しに1つだけでよい。</p>
+  </div>
+
+  <!-- ===== v0.4: Worker の設定 ===== -->
+  <h2>16. オッズ取得の設定(S6)</h2>
+  <div class="setgroup__title">オッズの取得(中継 Worker)</div>
+  <div class="setgroup">
+    <div class="setting">
+      <div class="field" id="f-url">
+        <label class="field__label" for="w-url">Worker の URL</label>
+        <input class="input input--mono" id="w-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://〇〇.〇〇.workers.dev" value="https://odds-proxy.example.workers.dev">
+        <span class="field__msg"><svg><use href="#i-check"/></svg>保存しました</span>
+        <span class="field__help">https:// で始まる URL。末尾の /odds は不要です。</span>
+      </div>
+    </div>
+    <div class="setting">
+      <div class="field is-invalid">
+        <label class="field__label" for="w-url2">Worker の URL(誤りの例)</label>
+        <input class="input input--mono" id="w-url2" type="url" value="odds-proxy.example.workers.dev" aria-invalid="true" aria-describedby="w-url2-msg">
+        <span class="field__msg" id="w-url2-msg"><svg><use href="#i-alert"/></svg>https:// で始まる URL を入れてください</span>
+      </div>
+    </div>
+    <div class="setting">
+      <div class="field">
+        <label class="field__label" for="w-key"><svg style="width:14px;height:14px"><use href="#i-key"/></svg>合言葉</label>
+        <div class="secret">
+          <input class="input input--mono" id="w-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" value="kawa-nami-2026">
+          <button class="secret__toggle" type="button" aria-pressed="false" aria-controls="w-key" id="w-key-toggle"><svg><use href="#i-eye"/></svg><span>表示</span></button>
+        </div>
+        <span class="field__help">Worker に設定した合言葉。この端末にだけ保存し、外部には送りません(Worker への取得のときだけ使います)。</span>
+      </div>
+    </div>
+    <div class="setting">
+      <div class="field">
+        <span class="field__label">合言葉(保存済みのとき)</span>
+        <div class="secret-saved"><span class="secret-saved__dots" aria-hidden="true">●●●●●●</span><span class="secret-saved__state">保存済み</span><button class="btn btn--text" style="min-height:40px">変更</button></div>
+        <span class="field__help">保存した合言葉は画面に戻さない。「変更」で空の入力欄に切り替える。</span>
+      </div>
+    </div>
+    <div class="setting setting--inline">
+      <span><span class="setting__label">レース詳細を開いたら自動で取る</span><span class="setting__desc" style="display:block">締切15分前以内で、60秒以内に取っていないときだけ</span></span>
+      <button class="switch" id="w-auto" role="switch" aria-checked="false"><span class="switch__track"></span><span class="switch__text"></span></button>
+    </div>
+  </div>
+
+  <!-- ===== v0.5(DB-5) ===== -->
+  <h2>17. 較正グラフ(S3)</h2>
+  <p class="note">横 = 予測の1着確率、縦 = 実際の1着率。両軸とも 0〜100%・20%刻みで固定(目盛りと点の位置が一致する)。対角の破線より下の点は「予測が強すぎる」。縦線は Wilson の95%区間、白抜きは件数30未満の帯。点をタップすると件数と区間が出る(title)。</p>
+  <div class="card"><div id="calib"></div>
+    <div class="chart-legend"><span><i class="lg-pt"></i>実際の1着率</span><span><i class="lg-ci"></i>95%区間</span><span><i class="lg-ideal"></i>予測どおりの線</span><span><i class="lg-lown"></i>件数が少ない帯</span></div>
+    <table class="evtable" style="margin-top:8px"><thead><tr><th>予測の帯</th><th>件数</th><th>予測</th><th>実際(95%区間)</th></tr></thead><tbody id="calibtable"></tbody></table>
+  </div>
+
+  <h2>18. 区間つきの数値・件数が少ない表示</h2>
+  <div class="card stack">
+    <div class="ci-num is-straddle">
+      <span class="u-muted" style="font-size:12px">回収率(実運用)</span>
+      <span class="ci-num__val">92.7%</span>
+      <span class="ci-num__bar" style="--lo:.81;--hi:1.05;--v:.927;--ref:1;--max:1.5" aria-hidden="true"></span>
+      <span class="ci-num__ci">95%区間 81〜105%</span>
+      <span class="ci-num__verdict">区間が100%をまたぐため、プラスともマイナスとも言えない</span>
+      <span class="ci-num__n">301R・1,505点</span>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--c-border);margin:0;width:100%">
+    <div class="ci-num is-lown">
+      <span class="u-muted" style="font-size:12px">回収率(11月)<span class="lown-tag" style="margin-left:6px"></span></span>
+      <span class="ci-num__val">131.0%</span>
+      <span class="ci-num__bar" style="--lo:.62;--hi:2.1;--v:1.31;--ref:1;--max:1.5" aria-hidden="true"></span>
+      <span class="ci-num__ci">95%区間 62〜210%</span>
+      <span class="ci-num__n">84R ・件数が少ないため参考程度</span>
+    </div>
+    <h3 style="margin:4px 0 0">表の中(1行版)</h3>
+    <table class="evtable">
+      <thead><tr><th>戦略</th><th>件数</th><th>回収率(95%区間)</th></tr></thead>
+      <tbody>
+        <tr><td>3連単 上位5点</td><td class="num">1,240R</td><td><span class="ci-inline">81.0%<small>(70〜93)</small></span></td></tr>
+        <tr><td>1号艇 単勝(基準)</td><td class="num">1,240R</td><td><span class="ci-inline">76.2%<small>(72〜80)</small></span></td></tr>
+        <tr class="is-lown"><td>期待値A だけ <span class="lown-tag"></span></td><td class="num">96R</td><td><span class="ci-inline">118.4%<small>(55〜196)</small></span></td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin:0">薄い表示は透明度ではなく文字色を一段薄くする(4.5:1 は保つ)+「参考」タグ。200R未満(08 4章-1)、較正は30件未満で使う。</p>
+  </div>
+
+  <h2>19. 自分の印の入力(S2)</h2>
+  <div class="card stack">
+    <div id="markrows"></div>
+    <p class="note" style="margin:0">1つの印は1艇だけ。右端はモデルの印との比較(＝ 一致 / ≠ ずれ)。</p>
+  </div>
+
+  <h2>20. 確率の根拠(S2)</h2>
+  <div class="card">
+    <div class="row" style="margin-bottom:6px"><span class="boat boat-2">2</span><b>青木 翔太</b><span class="u-muted" style="font-size:12px">1着 41.2% の主な要因</span></div>
+    <ul class="reasons">
+      <li class="reason reason--up" data-strength="3"><span class="reason__dir">上げる</span><span class="reason__label">全国勝率</span><span class="reason__val num">7.42</span><span class="reason__str" aria-label="強さ 3/3"><i></i><i></i><i></i></span></li>
+      <li class="reason reason--up" data-strength="1"><span class="reason__dir">上げる</span><span class="reason__label">この場・このコースの1着率(1年)</span><span class="reason__val num">38%</span><span class="reason__str" aria-label="強さ 1/3"><i></i><i></i><i></i></span></li>
+      <li class="reason reason--down" data-strength="2"><span class="reason__dir">下げる</span><span class="reason__label">モーター2連率</span><span class="reason__val num">28.4</span><span class="reason__str" aria-label="強さ 2/3"><i></i><i></i><i></i></span></li>
+    </ul>
+    <p class="note" style="margin:6px 0 0">向きは ▲▼ + 文字、強さは棒の数(1〜3)。寄与の大きさを数値やパーセントでは見せない(08 5.2)。</p>
+  </div>
+
+  <h2>21. 買い目合計(S2)</h2>
+  <h3>オッズあり(合成オッズ・トリガミ回避の配分)</h3>
+  <div class="betsum">
+    <div class="betsum__grid">
+      <div class="betsum__cell"><span class="betsum__k">点数</span><span class="betsum__v num">5<small>点</small></span></div>
+      <div class="betsum__cell"><span class="betsum__k">総額</span><span class="betsum__v num">1,000<small>円</small></span></div>
+      <div class="betsum__cell"><span class="betsum__k">合成オッズ</span><span class="betsum__v num">5.1<small>倍</small></span></div>
+    </div>
+    <table class="betsum__alloc">
+      <thead><tr><th>組合せ</th><th>オッズ</th><th>配分</th><th>当たれば</th></tr></thead>
+      <tbody>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span></span></td><td>19.5</td><td>300円</td><td>5,850円</td></tr>
+        <tr><td><span class="combo"><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-6">6</span></span></td><td>24.1</td><td>200円</td><td>4,820円</td></tr>
+        <tr class="is-short"><td><span class="combo"><span class="boat boat--sm boat-1">1</span><span class="combo__sep">-</span><span class="boat boat--sm boat-2">2</span><span class="combo__sep">-</span><span class="boat boat--sm boat-3">3</span></span></td><td>4.2</td><td>100円</td><td>420円</td></tr>
+      </tbody>
+    </table>
+    <div class="betsum__foot"><span class="trigami trigami--ng">この組合せではトリガミを避けられません(1-2-3)</span><button class="btn">買い目をコピー</button></div>
+  </div>
+  <h3>オッズなし(必要オッズだけ)</h3>
+  <div class="betsum">
+    <div class="betsum__grid">
+      <div class="betsum__cell"><span class="betsum__k">点数</span><span class="betsum__v num">5<small>点</small></span></div>
+      <div class="betsum__cell"><span class="betsum__k">総額</span><span class="betsum__v num">500<small>円</small></span></div>
+      <div class="betsum__cell"><span class="betsum__k">合成オッズ</span><span class="betsum__v is-none">オッズなし</span></div>
+    </div>
+    <div class="betsum__foot"><span class="trigami trigami--ok">どれが当たっても総額以上になるのは、オッズが各必要オッズ×5 以上のとき</span><button class="btn">買い目をコピー</button></div>
+  </div>
+  <p class="note">コピーの文面にはオッズ・期待値の数値を入れない(08 5.5)。例:「戸田 1R 3連単 2-1-3 100円 …/個人用の参考情報・的中を保証しない」</p>
+
+  <h2>22. 警告の帯(予算・連敗・利用時間)</h2>
+  <div class="stack">
+    <div class="banner banner--warn banner--stack" role="status"><svg><use href="#i-alert"/></svg><div class="banner__body"><b class="banner__title">今日の予算の80%を使いました</b><span class="banner__text"><span class="budget-num">4,000円</span> / 5,000円(残り 1,000円)</span><span class="budgetbar" style="--p:.8" aria-hidden="true"></span></div></div>
+    <div class="banner banner--error banner--stack" role="alert"><svg style="color:var(--c-danger)"><use href="#i-alert"/></svg><div class="banner__body"><b class="banner__title">今日の予算を超えています</b><span class="banner__text"><span class="budget-num">5,600円</span> / 5,000円(600円超過)。記録はできますが、この表示は今日の間は消えません。</span><span class="budgetbar is-over" style="--p:1.12" aria-hidden="true"></span></div></div>
+    <div class="banner banner--warn banner--stack" role="status"><svg><use href="#i-x"/></svg><div class="banner__body"><b class="banner__title">5レース続けて外れています</b><span class="banner__text">連敗は確率どおりでもよく起きます。取り返そうと金額を増やしていないか、一度確かめてください。</span></div></div>
+    <div class="banner banner--quiet" role="status"><svg><use href="#i-clock"/></svg><span>続けて60分使っています</span><button class="banner__close" aria-label="閉じる">閉じる</button></div>
+    <div class="banner banner--quiet" role="status"><svg><use href="#i-clock"/></svg><span>深夜 1:12 です</span><button class="banner__close" aria-label="閉じる">閉じる</button></div>
+    <p class="note" style="margin:0">予算は80%で黄・100%以上で赤(超えても消さない)。利用時間・深夜は枠だけの小さな帯で、操作を妨げない。</p>
+  </div>
+
+  <h2>23. 「?」の説明・収支の推移(S8)</h2>
+  <div class="card">
+    <div class="row"><b>較正</b><button class="help" id="help1" aria-expanded="true" aria-controls="hp1" aria-label="較正とは">?</button></div>
+    <div class="helppop" id="hp1" role="dialog" aria-label="較正とは"><button class="helppop__close" aria-label="閉じる">×</button><b class="helppop__title">較正(こうせい)</b>「30%」と予測したレースで、本当に約30%当たっているか。点が対角の線より下なら、予測が強すぎる。<span class="helppop__more">縦の線は95%区間。件数が少ない帯は区間が長くなる。</span></div>
+  </div>
+  <h3>累積収支とドローダウン</h3>
+  <div class="card"><div id="pnl"></div>
+    <div class="chart-legend"><span><i class="lg-line"></i>累積収支</span><span><i class="lg-ideal"></i>それまでの最高</span><span><i class="lg-dd"></i>最高からの下落(ドローダウン)</span></div>
+    <div class="row" style="margin-top:8px;font-size:13px"><span>収支 <b class="num" id="pnl-total"></b></span><span>最大ドローダウン <b class="num" id="pnl-dd"></b></span><span class="u-muted">18日・端末内の記録</span></div>
+  </div>
+
+  <!-- ===== v0.6(DA-5 対応) ===== -->
+  <h2>24. DA-5 の部品(結果・メーター・場のタブ・下部タブ)</h2>
+  <h3>同じ重さの結果チップ(.res)</h3>
+  <div class="card row"><span class="res res--hit">的中 +2,250</span><span class="res res--miss">不的中 −300</span><span class="res res--refund">返還 −100</span><span class="res res--pending">結果待ち</span></div>
+  <p class="note">的中も不的中も、同じ枠・同じ大きさ・塗りなし。違いは ✓ ✕ ↩ と文字だけ(08 4章-5)。</p>
+  <h3>自分の印・個人データの色(青緑)</h3>
+  <div class="card row"><span class="minetag"><svg><use href="#i-user"/></svg>自分の印</span><span class="minetag"><svg><use href="#i-user"/></svg>端末内のメモ</span><span class="localmark"><svg><use href="#i-home"/></svg>ローカル表示</span><span class="u-muted" style="font-size:11px">← 紫はローカル表示専用</span></div>
+  <h3>予算メーター(.meter)</h3>
+  <div class="card stack">
+    <div><div class="meter-row"><span>今日</span><span><b>2,000</b> / 5,000円</span></div><div class="meter" style="--p:.4" role="meter" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+    <div><div class="meter-row"><span>今月</span><span><b>41,000</b> / 50,000円</span></div><div class="meter is-warn" style="--p:.82" role="meter" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+    <div><div class="meter-row"><span>今日(超過)</span><span><b>5,600</b> / 5,000円</span></div><div class="meter is-over" style="--p:1.12" role="meter" aria-valuenow="112" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+    <div class="warnbar"><b>今月の予算の80%を使いました</b><br>41,000円 / 50,000円</div>
+    <div class="warnbar warnbar--over"><b>今日の予算を超えています</b><br>記録はできます。この表示は今日の間は消えません。</div>
+    <div class="gentle"><svg><use href="#i-clock"/></svg>続けて60分使っています<button class="gentle__close" aria-label="閉じる">✕</button></div>
+  </div>
+  <h3>場のタブ(.stabs)</h3>
+  <nav class="stabs" role="tablist" aria-label="場"><a role="tab" aria-selected="true">戸田<small>12R</small></a><a role="tab" aria-selected="false">平和島<small>12R</small></a><a role="tab" aria-selected="false">住之江<small>12R</small></a><a role="tab" aria-selected="false">大村<small>12R</small></a><a role="tab" aria-selected="false">桐生<small>12R</small></a></nav>
+  <h3>下部タブ(4つ)</h3>
+  <nav class="tabbar tabbar--4 card--flush" style="border:1px solid var(--c-border);border-radius:var(--radius-md)">
+    <a href="#" aria-current="page"><svg><use href="#i-race"/></svg>レース</a><a href="#"><svg><use href="#i-chart"/></svg>成績</a><a href="#"><svg><use href="#i-wallet"/></svg>収支</a><a href="#"><svg><use href="#i-more"/></svg>その他</a>
+  </nav>
+  <h3>吹き出し(.tip)</h3>
+  <div class="card"><div class="row"><b>合成オッズ</b><button class="help" aria-expanded="true" aria-label="合成オッズとは">?</button></div><div class="tip">選んだ買い目を同じ金額で買ったとき、どれが当たっても戻る倍率の目安。</div></div>
+</div>
+
+<script src="charts.js"></script>
+<script>
+// ---- 表示モード(?theme=light|dark でも指定可。スクリーンショット用) ----
+const root = document.documentElement;
+function setTheme(t) {
+  if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.themeSet === t)));
+}
+document.querySelectorAll('[data-theme-set]').forEach(b => b.addEventListener('click', () => setTheme(b.dataset.themeSet)));
+setTheme(new URLSearchParams(location.search).get('theme') || 'auto');
+
+// ---- 色見本 ----
+const swatchKeys = ['bg','surface','surface-2','text','text-2','text-3','accent','accent-weak','bar-fill-top','bar-fill','bar-track','hit','hit-weak','miss-weak','soon','soon-weak','ev-plus','ev-plus-weak','warn','warn-weak','danger','info-weak','row-muted','border'];
+document.getElementById('swatches').innerHTML = swatchKeys.map(k => `<div class="sw"><i style="background:var(--c-${k})"></i>${k}<code>--c-${k}</code></div>`).join('');
+
+const boat = (n, size = '') => `<span class="boat ${size ? 'boat--' + size : ''} boat-${n}">${n}</span>`;
+const combo = (s, size = 'sm') => `<span class="combo" aria-label="${s}">` + s.split(/([-=])/).map(t => /[-=]/.test(t) ? `<span class="combo__sep">${t}</span>` : boat(t, size)).join('') + '</span>';
+const pct = p => (p * 100).toFixed(1) + '%';
+
+// ---- 各艇の確率(サンプル) ----
+const boats = [
+  {e:1, name:'高山 弘斗', rank:'B1', br:'埼玉', w:.281, t2:.495, t3:.662, r:2},
+  {e:2, name:'青木 翔太', rank:'A1', br:'東京', w:.412, t2:.612, t3:.748, r:1},
+  {e:3, name:'中村 健',   rank:'A2', br:'静岡', w:.121, t2:.311, t3:.502, r:3},
+  {e:4, name:'佐々木 大輔', rank:'B1', br:'福岡', w:.092, t2:.248, t3:.431, r:4},
+  {e:5, name:'吉田 光',   rank:'B2', br:'大阪', w:.058, t2:.180, t3:.352, r:5},
+  {e:6, name:'山本 陸',   rank:'B1', br:'広島', w:.036, t2:.154, t3:.305, r:6},
+];
+const marks = ['', '◎', '○', '▲', '△'];
+document.getElementById('boats').innerHTML = boats.map(b => `
+  <div class="prow">
+    <span class="mark ${b.r === 1 ? 'mark--1' : ''} ${b.r > 4 ? 'mark--none' : ''}" aria-label="予想${b.r}位">${marks[b.r] || '・'}</span>
+    ${boat(b.e, 'lg')}
+    <div class="prow__bars">
+      <div class="prow__who"><span class="prow__name">${b.name}</span><span class="prow__sub">${b.rank} · ${b.br}</span></div>
+      <div class="pbar ${b.r === 1 ? 'is-top' : ''}" style="--p:${b.w};--p2:${b.t2};--p3:${b.t3}"><span class="pbar__l3"></span><span class="pbar__l2"></span><span class="pbar__fill"></span></div>
+    </div>
+    <div class="prow__pct num">${pct(b.w)}<small>2着内 ${Math.round(b.t2*100)}%</small><small>3着内 ${Math.round(b.t3*100)}%</small></div>
+  </div>`).join('');
+
+// ---- 推奨買い目 ----
+const bets = [['2-1-3',.052,19.3],['2-1-6',.041,24.4],['1-2-3',.038,26.4],['2-3-1',.031,32.3],['2-1-4',.027,37.1]];
+const betRow = ([c, p, r], hit) => `
+  <div class="bet ${hit ? 'is-hit' : ''}">
+    <div class="bet__combo">${combo(c, 'bet')}${hit ? '<span class="bet__hit"><svg><use href="#i-check"/></svg>的中</span>' : ''}</div>
+    <span class="bet__prob">${pct(p)}</span>
+    <span class="req" aria-label="必要オッズ ${r}倍以上"><span class="req__ge">≧</span><span class="req__val">${r.toFixed(1)}</span><span class="req__unit">倍</span></span>
+  </div>`;
+document.getElementById('bets-open').innerHTML = bets.map(b => betRow(b, false)).join('');
+document.getElementById('bets-done').innerHTML = bets.map(b => betRow(b, b[0] === '2-1-6')).join('');
+
+// ---- 期待値(Phase 2) ----
+const evRows = [['2-1-3',.052,19.3,'24.5'],['2-1-6',.041,24.4,'18.0'],['1-2-3',.038,26.4,'']];
+document.getElementById('evdemo').innerHTML = evRows.map(([c,p,r,v],i) => `
+  <div class="ev">
+    <div>${combo(c)}<div class="req-cap num">確率 ${pct(p)} · 必要 ≧${r}倍</div></div>
+    <input class="oddsin num" inputmode="decimal" aria-label="${c} のオッズ" value="${v}" data-p="${p}" id="odds${i}">
+    <span class="evtag" id="ev${i}"></span>
+  </div>`).join('');
+function updateEv(input) {
+  const tag = document.getElementById(input.id.replace('odds', 'ev'));
+  const o = parseFloat(input.value);
+  if (!o) { tag.className = 'evtag evtag--empty'; tag.innerHTML = '期待値 –'; return; }
+  const ev = o * parseFloat(input.dataset.p);
+  const plus = ev >= 1;
+  tag.className = 'evtag ' + (plus ? 'evtag--plus' : 'evtag--minus');
+  tag.innerHTML = `<svg><use href="${plus ? '#i-plus' : '#i-x'}"/></svg>${ev.toFixed(2)} ${plus ? '買い' : '見送り'}`;
+}
+document.querySelectorAll('.oddsin').forEach(i => { updateEv(i); i.addEventListener('input', () => updateEv(i)); });
+
+// ---- レースカード ----
+const cards = [
+  {cls:'is-soon', left:'3<small>分</small>', clock:'14:30', title:'桐生', rno:6, sub:'予選 · 一般 3日目', fav:1, p:.52, conf:3, chip:'<span class="chip chip--bets">5点</span>'},
+  {cls:'', left:'24<small>分</small>', clock:'14:51', title:'戸田', rno:5, sub:'予選 · 一般 3日目', fav:3, p:.28, conf:1, chip:'<span class="chip chip--bets">5点</span>'},
+  {cls:'', left:'31<small>分</small>', clock:'14:58', title:'住之江', rno:4, sub:'一般戦 · G3 2日目', fav:2, p:.33, conf:1, chip:'<span class="chip chip--skip">見送り</span>'},
+  {cls:'is-closed is-hit', left:'締切', clock:'10:45', title:'戸田', rno:1, sub:'予選 · 一般 3日目', fav:2, p:.41, conf:2, chip:'<span class="result result--hit"><svg><use href="#i-check"/></svg>¥2,750</span>'},
+  {cls:'is-closed', left:'締切', clock:'11:12', title:'戸田', rno:2, sub:'予選 · 一般 3日目', fav:1, p:.47, conf:2, chip:'<span class="result result--miss"><svg><use href="#i-x"/></svg>不的中</span>'},
+  {cls:'is-closed', left:'—', clock:'11:40', title:'江戸川', rno:3, sub:'一般 · 2日目', fav:0, chip:'<span class="chip chip--canceled"><svg><use href="#i-ban"/></svg>中止</span>'},
+  {cls:'', left:'45<small>分</small>', clock:'15:12', title:'多摩川', rno:7, sub:'一般 · 初日', fav:0, chip:'<span class="chip chip--nopred">予想なし</span>'},
+];
+const confLbl = ['', '荒', '中', '堅'];
+const rcardHtml = (c, extra = '') => `
+  <a class="rcard ${extra} ${c.cls}" href="#">
+    <div class="rcard__time"><span class="rcard__left num">${c.left}</span><span class="rcard__clock num">${c.clock}</span></div>
+    <div><div class="rcard__title">${c.title} <span class="rcard__rno">${c.rno}R</span></div><div class="rcard__sub">${c.sub}</div></div>
+    <div class="rcard__pred">
+      ${c.fav ? `<div class="rcard__fav">${boat(c.fav)}<span>${Math.round(c.p*100)}%</span><span class="conf conf--${c.conf}"><span class="conf__bars"><i></i><i></i><i></i></span>${confLbl[c.conf]}</span></div>` : ''}
+      <div class="rcard__meta">${extra ? c.chip.replace('class="result ', 'class="result result--sm ') : c.chip}</div>
+    </div>
+  </a>`;
+document.getElementById('rcards').innerHTML = cards.map(c => rcardHtml(c)).join('');
+document.getElementById('rlist').innerHTML = cards.map(c => rcardHtml(c, 'rcard--row')).join('');
+
+// ---- 推移グラフ ----
+(function () {
+  const data = [0.82,0.95,1.12,1.04,0.97,0.88,0.93,1.01,0.96,0.92,0.89,0.94,0.927];
+  const W = 400, H = 180, L = 36, R = 52, T = 12, B = 24;
+  const max = Math.ceil(Math.max(...data, 1) * 2) / 2; // 0.5刻みで切り上げ
+  const x = i => L + i * (W - L - R) / (data.length - 1);
+  const y = v => T + (1 - v / max) * (H - T - B);
+  let s = '';
+  for (let v = 0; v <= max + 1e-9; v += 0.5) s += `<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${Math.round(v*100)}%</text>`;
+  s += `<line class="base" x1="${L}" x2="${W-R}" y1="${y(1)}" y2="${y(1)}"/>`;
+  s += `<polyline class="line" points="${data.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}"/>`;
+  const last = data.length - 1;
+  s += `<circle class="end" cx="${x(last)}" cy="${y(data[last])}" r="4.5"/><text class="lbl" x="${x(last)+8}" y="${y(data[last])+4}">${(data[last]*100).toFixed(1)}%</text>`;
+  s += `<text x="${L}" y="${H-6}">11/1</text><text x="${W-R}" y="${H-6}" text-anchor="end">11/13</text>`;
+  document.getElementById('chart').innerHTML = s;
+})();
+
+// ---- v0.3: 期待値ランク付きの推奨買い目(公開版) ----
+const rankBets = [['2-1-3',.052,19.3,'a'],['2-1-6',.041,24.4,'b'],['1-2-3',.038,26.4,'c'],['2-3-1',.031,32.3,'d'],['2-1-4',.027,37.1,'none']];
+const rankTxt = {a:'A', b:'B', c:'C', d:'D', none:'–'};
+document.getElementById('bets-rank').innerHTML = rankBets.map(([c,p,r,k]) => `
+  <div class="bet">
+    <div class="bet__combo">${combo(c, 'bet')}</div>
+    <span class="bet__prob">${pct(p)}</span>
+    <span style="display:inline-flex;gap:6px;align-items:center"><span class="evrank evrank--${k}" aria-label="期待値ランク${rankTxt[k]}">${rankTxt[k]}</span><span class="req"><span class="req__ge">≧</span><span class="req__val">${r.toFixed(1)}</span><span class="req__unit">倍</span></span></span>
+  </div>`).join('');
+
+// ---- v0.3: ローカル版の期待値の表 ----
+const evRowsLocal = [['2-1-3',.052,24.5,false],['2-1-6',.041,27.0,true],['1-2-3',.038,22.1,false],['2-3-1',.031,null,false]];
+const rankOf = ev => ev == null ? 'none' : ev >= 1.2 ? 'a' : ev >= 1.0 ? 'b' : ev >= 0.8 ? 'c' : 'd';
+document.getElementById('evtable').innerHTML = evRowsLocal.map(([c,p,o,manual]) => {
+  const ev = o == null ? null : p * o; const k = rankOf(ev);
+  return `<tr class="${manual ? 'is-manual' : ''}"><td>${combo(c)}</td><td class="u-prob">${pct(p)}</td>
+    <td>${o == null ? '<span class="u-muted">–</span>' : `<span class="oddsval">${o.toFixed(1)}<small>倍</small></span>`}</td>
+    <td><span class="evval ${ev != null && ev >= 1 ? 'is-plus' : ''} ${ev == null ? 'evval--none' : ''}"><span class="evval__num">${ev == null ? '–' : ev.toFixed(2)}</span><span class="evrank evrank--${k}">${rankTxt[k]}</span></span></td></tr>`;
+}).join('');
+
+// ---- v0.3: 設定(カタログ内の動きだけ。保存はしない) ----
+(function () {
+  const DEF = {types: 'trifecta', exacta: 3, trifecta: 5, theta: '0', ev: 'none', noodds: false, conf: 'none', yen: 100};
+  const st = {types: 'exacta,trifecta', exacta: 3, trifecta: 5, theta: '2', ev: 'none', noodds: false, conf: 'none', yen: 100};
+  const $ = sel => document.querySelector(sel);
+  const changed = {
+    types: () => st.types !== DEF.types,
+    k: () => st.exacta !== DEF.exacta || st.trifecta !== DEF.trifecta,
+    theta: () => st.theta !== DEF.theta,
+    ev: () => st.ev !== DEF.ev || st.noodds !== DEF.noodds,
+    conf: () => st.conf !== DEF.conf,
+    yen: () => st.yen !== DEF.yen,
+  };
+  function render() {
+    document.querySelectorAll('.pick-chip').forEach(b => b.setAttribute('aria-pressed', String(st.types.split(',').includes(b.dataset.type))));
+    document.querySelectorAll('#settings .stepper').forEach(sp => {
+      const v = st[sp.dataset.step]; sp.querySelector('output').innerHTML = `${v}<small>点</small>`;
+      const [dec, inc] = sp.querySelectorAll('button'); dec.disabled = v <= +sp.dataset.min; inc.disabled = v >= +sp.dataset.max;
+    });
+    document.querySelectorAll('[data-key="theta"] [role=radio]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === st.theta)));
+    document.querySelectorAll('[data-key="ev"] .seg [role=radio]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === st.ev)));
+    $('#settings .switch').setAttribute('aria-checked', String(st.noodds));
+    $('#settings .select').value = st.conf;
+    $('#settings .range').value = st.yen; $('#yenval').textContent = `${st.yen.toLocaleString()}円(既定 100円)`;
+    let any = false;
+    Object.entries(changed).forEach(([k, f]) => { const c = f(); any ||= c; const el = $(`.setting[data-key="${k}"]`); el.classList.toggle('is-changed', c); el.querySelector('.changed-tag').hidden = !c; });
+    $('#reset').disabled = !any;
+    const names = {win: '単勝', exacta: '2連単', trifecta: '3連単'};
+    $('#setsummary').innerHTML = `<b>今の設定</b>${st.types.split(',').map(t => names[t] + (st[t] ? ` 上位${st[t]}点` : '')).join('、')}${st.theta !== '0' ? `・確率${st.theta}%以上` : ''}${st.ev !== 'none' ? `・期待値${st.ev === 'A' ? 'Aだけ' : 'B以上'}` : ''}${any ? '<span class="changed-tag">既定から変更</span>' : ''}`;
+  }
+  document.querySelectorAll('.pick-chip').forEach(b => b.addEventListener('click', () => {
+    const set = new Set(st.types.split(',').filter(Boolean)); set.has(b.dataset.type) ? set.delete(b.dataset.type) : set.add(b.dataset.type);
+    if (set.size) st.types = ['win', 'exacta', 'trifecta'].filter(t => set.has(t)).join(','); render();
+  }));
+  document.querySelectorAll('#settings .stepper').forEach(sp => { const [dec, inc] = sp.querySelectorAll('button'); const k = sp.dataset.step;
+    dec.addEventListener('click', () => { st[k]--; render(); }); inc.addEventListener('click', () => { st[k]++; render(); }); });
+  document.querySelectorAll('[data-key="theta"] [role=radio]').forEach(b => b.addEventListener('click', () => { st.theta = b.dataset.v; render(); }));
+  document.querySelectorAll('[data-key="ev"] .seg [role=radio]').forEach(b => b.addEventListener('click', () => { st.ev = b.dataset.v; render(); }));
+  $('#settings .switch').addEventListener('click', () => { st.noodds = !st.noodds; render(); });
+  $('#settings .select').addEventListener('change', e => { st.conf = e.target.value; render(); });
+  $('#settings .range').addEventListener('input', e => { st.yen = +e.target.value; render(); });
+  $('#reset').addEventListener('click', () => { Object.assign(st, DEF); render(); });
+  render();
+})();
+// ---- v0.4: オッズ取得のエラー・状態の帯(文言案) ----
+const fetchStates = [
+  {code:'未設定', kind:'info', icon:'i-key', title:'オッズ取得の設定がまだです', text:'設定で Worker の URL と合言葉を入れると、このレースのオッズを取れます。', action:'設定へ'},
+  {code:'401 unauthorized', kind:'error', icon:'i-key', title:'合言葉が違います', text:'設定の合言葉を確かめてください。', action:'設定へ'},
+  {code:'409 closed', kind:'muted', icon:'i-clock', title:'締切後のため取得しません', text:'確定オッズは翌日に反映されます。'},
+  {code:'429 daily_limit', kind:'warn', icon:'i-alert', title:'今日の取得上限に達しました', text:'公式サイトへの負担を抑えるため、1日の取得数に上限があります。明日(0時)に戻ります。それまでは必要オッズで判断してください。'},
+  {code:'502 upstream_error', kind:'error', icon:'i-alert', title:'公式サイトから取得できませんでした', text:'公式サイトが混み合っているか、一時的に応答していません。少し待ってから再試行してください。', action:'再試行'},
+  {code:'503 stopped', kind:'error', icon:'i-ban', title:'今日はオッズの取得を停止しています', text:'公式サイトから取得を断られたため、今日は自動で止めています。明日(0時)に再開します。'},
+  {code:'通信失敗・45秒で打ち切り', kind:'warn', icon:'i-cloud-off', title:'通信できませんでした', text:'電波の良い場所で再試行してください。', action:'再試行'},
+  {code:'オフライン', kind:'muted', icon:'i-cloud-off', title:'オフラインのため取得できません', text:'つながったら「オッズを取る」を押してください。'},
+  {code:'200 一部失敗', kind:'warn', icon:'i-alert', title:'一部の券種だけ取得しました', text:'単勝・複勝は取れませんでした。取れた券種だけで期待値を計算しています。', action:'再試行'},
+  {code:'400 bad_request', kind:'error', icon:'i-alert', title:'取得できません(要求の誤り)', text:'アプリを再読み込みしてください。直らないときは日付が今日かどうかを確かめてください。', action:'再読み込み'},
+];
+document.getElementById('fetcherrors').innerHTML = fetchStates.map(e => `
+  <div>
+    <div class="u-muted" style="font-size:11px;margin-bottom:2px">${e.code}</div>
+    <div class="banner banner--${e.kind} banner--stack" role="${e.kind === 'error' ? 'alert' : 'status'}">
+      <svg style="${e.kind === 'error' ? 'color:var(--c-danger)' : ''}"><use href="#${e.icon}"/></svg>
+      <div class="banner__body"><b class="banner__title">${e.title}</b><span class="banner__text">${e.text}</span></div>
+      ${e.action ? `<div class="banner__actions"><button class="btn${e.action === '再試行' ? ' btn--primary' : ''}">${e.action}</button></div>` : ''}
+    </div>
+  </div>`).join('');
+
+// ---- v0.4: 合言葉の表示切替 ----
+(function () {
+  const btn = document.getElementById('w-key-toggle'), input = document.getElementById('w-key');
+  btn.addEventListener('click', () => {
+    const show = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(show)); input.type = show ? 'text' : 'password';
+    btn.innerHTML = `<svg><use href="${show ? '#i-eye-off' : '#i-eye'}"/></svg><span>${show ? '隠す' : '表示'}</span>`;
+  });
+  [document.getElementById('w-auto')].forEach(sw => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+})();
+// ---- v0.5: 較正・収支・印(サンプルの値) ----
+(function () {
+  const C = window.BRCharts;
+  const bins = [{pred:.05,k:9,n:212},{pred:.15,k:38,n:301},{pred:.25,k:70,n:288},{pred:.35,k:80,n:240},{pred:.45,k:84,n:197},{pred:.55,k:71,n:150},{pred:.65,k:58,n:104},{pred:.75,k:35,n:61},{pred:.85,k:15,n:22},{pred:.95,k:4,n:6}];
+  document.getElementById('calib').innerHTML = C.calibration(bins, {minN: 30});
+  document.getElementById('calibtable').innerHTML = bins.map((b, i) => { const [lo, hi] = C.wilson(b.k, b.n);
+    return `<tr class="${b.n < 30 ? 'is-lown' : ''}"><td>${i*10}〜${i*10+10}%</td><td class="num">${b.n}</td><td class="num">${(b.pred*100).toFixed(0)}%</td><td><span class="ci-inline">${(b.k/b.n*100).toFixed(1)}%<small>(${(lo*100).toFixed(0)}〜${(hi*100).toFixed(0)})</small></span>${b.n < 30 ? ' <span class="lown-tag"></span>' : ''}</td></tr>`; }).join('');
+  const days = [1200,-500,-800,2300,-500,-1500,-900,-500,4100,-500,-500,-700,1800,-500,-400,-500,3200,-500].map((p, i) => ({label: `11/${i+1}`, pnl: p}));
+  const r = C.pnl(days);
+  document.getElementById('pnl').innerHTML = r.svg;
+  document.getElementById('pnl-total').textContent = C.yen(r.total) + '円';
+  document.getElementById('pnl-dd').textContent = '−' + Math.abs(r.maxDrawdown).toLocaleString() + '円';
+  // 印の入力
+  const marks = ['◎', '○', '▲', '△'];
+  const rows = [[1,'高山 弘斗','○','◎'],[2,'青木 翔太','◎','○'],[3,'中村 健','▲','▲'],[4,'佐々木 大輔','','△']];
+  document.getElementById('markrows').innerHTML = rows.map(([e, n, mine, model]) => `
+    <div class="row" style="flex-wrap:nowrap;gap:8px;min-height:48px">
+      ${boat(e)}<span style="flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n}</span>
+      <div class="markpick markpick--mine" role="radiogroup" aria-label="${e}号艇の印">${marks.map(m => `<button role="radio" aria-checked="${m === mine}">${m}</button>`).join('')}</div>
+      <span class="markvs ${mine !== model ? 'is-diff' : ''}">自<b class="is-mine">${mine || '–'}</b><span class="eq">${mine === model ? '＝' : '≠'}</span>モ<b>${model}</b></span>
+    </div>`).join('');
+  document.getElementById('help1').addEventListener('click', e => { const b = e.currentTarget, open = b.getAttribute('aria-expanded') !== 'true';
+    b.setAttribute('aria-expanded', String(open)); document.getElementById('hp1').hidden = !open; });
+})();
+</script>
+</body>
+</html>

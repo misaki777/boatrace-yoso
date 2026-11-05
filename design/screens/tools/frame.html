@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>frame</title>
+<!-- スクリーンショット用: 指定した幅の iframe を左上に置くだけ。?src=..&w=360&h=900 -->
+<style>html,body{margin:0;padding:0;background:#fff}iframe{display:block;border:0}</style>
+</head>
+<body>
+<script>
+  const p = new URLSearchParams(location.search);
+  const f = document.createElement('iframe');
+  f.src = p.get('src');
+  f.width = p.get('w') || 360;
+  f.height = p.get('h') || 900;
+  document.body.appendChild(f);
+</script>
+</body>
+</html>

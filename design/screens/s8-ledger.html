@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S8 収支(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S8 収支。DA-5(Phase 3a, spec/08)。架空データ。購入記録・印・メモは端末内(IndexedDB)だけ。 -->
+<!-- ================================================================= -->
+<section class="state" data-state="normal" data-title="通常(連敗の警告・予算80%・ドローダウン)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">収支</h1>
+    <button class="iconbtn" aria-label="記録を追加">＋</button>
+  </header>
+  <div class="warnbar"><b>5連敗中です</b>(警告の回数: 5)。記録は続けられます。</div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">予算</h2><a class="right" href="#/settings">設定 ›</a></div>
+    <div class="card__body"><div class="fewnote">今日 2,400 / 3,000円</div><div class="meter is-warn"><i style="width:80%"></i></div><div class="fewnote" style="margin-top:8px">今月 25,200 / 30,000円</div><div class="meter is-warn"><i style="width:84%"></i></div></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">収支</h2><span class="right">10/19〜 · 42件</span></div>
+    <div class="kpi"><div><div class="k">購入</div><div class="v">25,200円</div></div><div><div class="k">払戻</div><div class="v">21,800円</div></div><div><div class="k">収支</div><div class="v is-minus">−3,400円</div></div><div><div class="k">回収率</div><div class="v few">86.5%</div><span class="fewnote">件数が少ないため参考程度</span></div></div>
+    <div class="card__body"><svg class="chart" viewBox="0 0 320 150" role="img" aria-label="累計収支の推移"><line class="grid" x1="36" x2="312" y1="20" y2="20"/><line class="base" x1="36" x2="312" y1="60" y2="60"/><line class="grid" x1="36" x2="312" y1="130" y2="130"/><text x="30" y="23" text-anchor="end">+5千</text><text x="30" y="63" text-anchor="end">0</text><text x="30" y="133" text-anchor="end">−1万</text><rect x="160" y="34" width="120" height="66" fill="var(--c-danger-weak)"/><polyline class="line" points="36,60 60,52 85,40 110,48 135,38 160,34 185,58 210,74 235,88 260,100 280,90 312,82"/><text x="220" y="116" text-anchor="middle" style="fill:var(--c-danger)">最大ドローダウン −6,600円</text><text x="36" y="146">10/19</text><text x="312" y="146" text-anchor="end">11/2</text></svg></div>
+  </section>
+  <div class="sechead">記録 <span class="count">新しい順</span><span class="right">的中・不的中は同じ大きさ</span></div>
+  <div class="list">
+    <div class="r12" style="grid-template-columns:44px 1fr auto"><span class="tm">11/2<br>14:28</span><span class="mid" style="flex-direction:column;align-items:flex-start;gap:2px"><b style="font-size:13px">戸田 5R 3連単</b><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span></span><span class="rt" style="flex-direction:column;align-items:flex-end;gap:2px"><span class="chip chip--wait">結果待ち</span><span class="fewnote">500円 → —</span></span></div>
+    <div class="r12" style="grid-template-columns:44px 1fr auto"><span class="tm">11/2<br>13:55</span><span class="mid" style="flex-direction:column;align-items:flex-start;gap:2px"><b style="font-size:13px">戸田 4R 3連単</b><span class="combo"><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w6">6</span></span></span><span class="rt" style="flex-direction:column;align-items:flex-end;gap:2px"><span class="res">✓ 的中 +2,250</span><span class="fewnote">500円 → 2,750円</span></span></div>
+    <div class="r12" style="grid-template-columns:44px 1fr auto"><span class="tm">11/2<br>13:20</span><span class="mid" style="flex-direction:column;align-items:flex-start;gap:2px"><b style="font-size:13px">住之江 3R 2連単</b><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span></span></span><span class="rt" style="flex-direction:column;align-items:flex-end;gap:2px"><span class="res">× 不的中 −300</span><span class="fewnote">300円 → 0円</span></span></div>
+    <div class="r12" style="grid-template-columns:44px 1fr auto"><span class="tm">11/2<br>12:40</span><span class="mid" style="flex-direction:column;align-items:flex-start;gap:2px"><b style="font-size:13px">大村 6R 3連単</b><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span></span><span class="rt" style="flex-direction:column;align-items:flex-end;gap:2px"><span class="res">返還 −100</span><span class="fewnote">200円 → 100円(返還)</span></span></div>
+  </div>
+  <p class="disclaimer">払戻は結果から自動で計算します(保存しません)。左にスワイプで編集・削除。</p>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">月別</h2></div>
+    <div class="card__body" style="padding:8px 0 4px"><table class="tbl"><thead><tr><th>月</th><th>件数</th><th>購入</th><th>払戻</th><th>収支</th></tr></thead><tbody><tr class="few"><td>2026-11</td><td>12</td><td>6,000</td><td>4,950</td><td class="is-minus">−1,050</td></tr><tr class="few"><td>2026-10</td><td>30</td><td>19,200</td><td>16,850</td><td class="is-minus">−2,350</td></tr></tbody></table></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">バックアップ</h2><span class="right">最終 10/30</span></div>
+    <p class="card__note" style="padding-top:6px"><b>記録はこの端末の中だけにあります。</b>ブラウザのデータ消去や端末の交換で消えます。ときどき書き出してください。</p>
+    <div class="sum__btns" style="padding-top:0"><button class="btn">JSONに書き出す</button><button class="btn">読み込む</button></div>
+  </section>
+  <p class="disclaimer">取り返そうと賭け金を増やすのは控えましょう。つらいときは <a href="#/about">相談窓口</a> へ。</p>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="over" data-title="予算を超えた(警告は消えない)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">収支</h1>
+    <button class="iconbtn" aria-label="記録を追加">＋</button>
+  </header>
+  <div class="warnbar warnbar--over"><b>今月の予算を超えました</b>(31,500円 / 30,000円)。記録はできますが、この表示は月末まで消えません。</div>
+  <div class="empty"><div class="empty__title">(以下、通常と同じ)</div></div>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="empty" data-title="記録なし">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">収支</h1>
+    <button class="iconbtn" aria-label="記録を追加">＋</button>
+  </header>
+  <div class="empty"><div class="empty__icon">✎</div><div class="empty__title">購入の記録はまだありません</div><div class="empty__text">レース詳細の「購入を記録」か、右上の＋で記録します。記録はこの端末の中だけに保存され、外には送りません。</div><button class="btn">バックアップを読み込む</button></div>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

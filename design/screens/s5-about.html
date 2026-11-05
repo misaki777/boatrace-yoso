@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S5 このアプリについて(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S5 このアプリについて。下部タブ「その他」の中身。Phase 2 で「設定」の行が増える。 -->
+<section class="state" data-state="about" data-title="その他 / このアプリについて(公開版)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">その他</h1>
+  </header>
+
+  <section class="card">
+    <a class="linkrow" style="border-top:0" href="#/settings">設定 <small>推奨買い目の決め方・表示</small></a>
+    <a class="linkrow" href="#/settings">買い方 <small><span class="mine">既定から変更中</span></small></a>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">このアプリについて</h2></div>
+    <div class="prose">
+      <p><b>非公式データに基づく個人用の参考情報です。</b>内容の正確性は保証しません。</p>
+      <ul>
+        <li>舟券の購入は自己責任でお願いします。</li>
+        <li><b>20歳未満の方は舟券を購入できません。</b></li>
+        <li>のめり込みが気になるときは相談窓口へ: 消費者ホットライン 188、精神保健福祉センター(各都道府県)、ギャンブル等依存症の相談先一覧(文言・連絡先は PM の付録 P-4 で確定)。</li>
+        <li>回収率はシミュレーションで、将来の成績を保証しません。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">予想のしくみ</h2></div>
+    <div class="prose">
+      <p>LightGBM で各艇の1着確率を出し、Harville の方法で2連単・3連単などの組合せの確率に変換しています。「必要オッズ」は 1 ÷ 確率 で、これより高いオッズなら期待値がプラスになる目安です。</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">データの出典</h2></div>
+    <a class="linkrow" href="https://github.com/boatraceopenapi/api">Boatrace Open API <small>MIT</small></a>
+    <a class="linkrow" href="https://github.com/turnmark/api">Turnmark API <small>MIT</small></a>
+    <p class="card__note" style="padding-top:8px">いずれも非公式・個人運営のデータです。</p>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">データの状態</h2></div>
+    <div class="prose" style="font-size:12px">
+      <p>データの出どころ: <b>公開版</b>(GitHub Pages。オッズの数値なし)<br>データ生成: 2026-11-02 21:05<br>モデル: pre_20261101_a1b2(学習 〜10/31)<br>データ形式: schema_version 1 · アプリ版: 0.1.0</p>
+    </div>
+  </section>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<section class="state" data-state="about-local" data-title="その他(ローカル表示)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">その他</h1><span class="localmark" style="margin-right:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg>ローカル</span>
+  </header>
+
+  <section class="card">
+    <a class="linkrow" style="border-top:0" href="#/settings">設定 <small>推奨買い目の決め方・表示</small></a>
+    <a class="linkrow" href="#/settings">買い方 <small><span class="mine">既定から変更中</span></small></a>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">このアプリについて</h2></div>
+    <div class="prose">
+      <p><b>非公式データに基づく個人用の参考情報です。</b>内容の正確性は保証しません。</p>
+      <ul>
+        <li>舟券の購入は自己責任でお願いします。</li>
+        <li><b>20歳未満の方は舟券を購入できません。</b></li>
+        <li>のめり込みが気になるときは相談窓口へ: 消費者ホットライン 188、精神保健福祉センター(各都道府県)、ギャンブル等依存症の相談先一覧(文言・連絡先は PM の付録 P-4 で確定)。</li>
+        <li>回収率はシミュレーションで、将来の成績を保証しません。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">予想のしくみ</h2></div>
+    <div class="prose">
+      <p>LightGBM で各艇の1着確率を出し、Harville の方法で2連単・3連単などの組合せの確率に変換しています。「必要オッズ」は 1 ÷ 確率 で、これより高いオッズなら期待値がプラスになる目安です。</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">データの出典</h2></div>
+    <a class="linkrow" href="https://github.com/boatraceopenapi/api">Boatrace Open API <small>MIT</small></a>
+    <a class="linkrow" href="https://github.com/turnmark/api">Turnmark API <small>MIT</small></a>
+    <p class="card__note" style="padding-top:8px">いずれも非公式・個人運営のデータです。</p>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">データの状態</h2></div>
+    <div class="prose" style="font-size:12px">
+      <p>データの出どころ: <b>ローカル</b>(PC の data-local。締切前オッズ・期待値の数値あり。私的使用のため公開しない)<br>オフライン表示: 使えません(LAN の http のため)<br>データ生成: 2026-11-02 21:05<br>モデル: pre_20261101_a1b2(学習 〜10/31)<br>データ形式: schema_version 1 · アプリ版: 0.1.0</p>
+    </div>
+  </section>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

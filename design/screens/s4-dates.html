@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S4 日付の選択(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S4 日付の選択。S1 の日付ボタンから開くボトムシート。index.json の dates を表示。 -->
+<section class="state" data-state="sheet" data-title="日付の選択(ボトムシート)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-expanded="true">11/2(月)<span class="caret">▲</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="daysum"><span>結果 <b>48</b>/156R</span><span>的中 <b>7</b></span><span class="roi">回収率 <b>84.0%</b></span></div>
+  <div class="scrim"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+    <div class="sheet__grip"></div>
+    <div class="sheet__head"><span class="sheet__title" id="sheet-t">日付を選ぶ</span><button class="iconbtn" aria-label="閉じる">✕</button></div>
+    <a class="date-row" aria-selected="true" href="#"><span class="check">✓</span><span class="d">11/2<small>月 · 今日</small></span><span class="r"><b class="is-minus">84.0%</b><span>途中 48/156R</span></span></a>
+    <a class="date-row" href="#"><span class="check"></span><span class="d">11/1<small>日</small></span><span class="r"><b class="is-plus">▲108.7%</b><span>確定 168R</span></span></a>
+    <a class="date-row" href="#"><span class="check"></span><span class="d">10/31<small>土</small></span><span class="r"><b class="is-minus">71.2%</b><span>確定 180R</span></span></a>
+    <a class="date-row" href="#"><span class="check"></span><span class="d">10/30<small>金</small></span><span class="r"><b class="is-minus">96.4%</b><span>確定 156R</span></span></a>
+    <a class="date-row" href="#"><span class="check"></span><span class="d">10/29<small>木</small></span><span class="r"><b class="is-plus">▲131.0%</b><span>確定 144R</span></span></a>
+    <a class="date-row" href="#"><span class="check"></span><span class="d">10/28<small>水</small></span><span class="r"><b class="faint">—</b><span>予想のみ</span></span></a>
+  </div>
+</div>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

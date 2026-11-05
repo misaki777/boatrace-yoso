@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S1 ホーム(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!--
+  S1 今日のレース一覧(ホーム)
+  モックの前提: 2026-11-02(月) 14:28 に開いた。データ生成は 14:05。
+  架空のデータ。選手名・数値は実在しない。
+-->
+
+<!-- ================================================================= -->
+<section class="state" data-state="today" data-title="当日・締切順(既定)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog" aria-label="日付を選ぶ">11/2(月)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+
+  <div class="daysum">
+    <span>結果 <b class="num">48</b>/156R</span>
+    <span>的中 <b class="num">7</b></span>
+    <span class="roi">回収率 <b class="num is-minus">84.0%</b></span>
+  </div>
+
+  <div class="seg" role="tablist">
+    <button role="tab" aria-selected="true">締切順</button>
+    <button role="tab" aria-selected="false">場ごと</button>
+  </div>
+
+  <div class="sechead">締切前 <span class="count">108R</span><span class="right">現在 14:28</span></div>
+  <div class="list">
+    <a class="race-row is-urgent" href="#/race/20261102-01-06">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">2<small>分</small></span><span class="rr-clock">14:30</span></div>
+      <div class="rr-main"><div class="rr-title">桐生 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">52%</span></div>
+        <div class="rr-meta"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="chip">5点</span></div>
+      </div>
+    </a>
+    <a class="race-row is-urgent" href="#/race/20261102-02-05">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">4<small>分</small></span><span class="rr-clock">14:32</span></div>
+      <div class="rr-main"><div class="rr-title">戸田 <span class="rno">5R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w3">3</span><span class="rr-pwin">28%</span></div>
+        <div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip">5点</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-12-04">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">7<small>分</small></span><span class="rr-clock">14:35</span></div>
+      <div class="rr-main"><div class="rr-title">住之江 <span class="rno">4R</span></div><div class="rr-sub">一般戦 · G3 2日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w2">2</span><span class="rr-pwin">33%</span></div>
+        <div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip chip--skip">見送り</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-04-06">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">11<small>分</small></span><span class="rr-clock">14:39</span></div>
+      <div class="rr-main"><div class="rr-title">平和島 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 初日</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">44%</span></div>
+        <div class="rr-meta"><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span><span class="chip">5点</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-20-05">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">16<small>分</small></span><span class="rr-clock">14:44</span></div>
+      <div class="rr-main"><div class="rr-title">若松 <span class="rno">5R</span></div><div class="rr-sub">予選 · G1 4日目</div></div>
+      <div class="rr-pred">
+        <span class="chip chip--none">予想なし</span>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-24-07">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">19<small>分</small></span><span class="rr-clock">14:47</span></div>
+      <div class="rr-main"><div class="rr-title">大村 <span class="rno">7R</span></div><div class="rr-sub">予選 · 一般 5日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">61%</span></div>
+        <div class="rr-meta"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="chip">5点</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-15-06">
+      <div class="rr-time"><span class="rr-left">締切</span><span class="rr-countdown rr-countdown--clock">15:31</span><span class="rr-clock">63分後</span></div>
+      <div class="rr-main"><div class="rr-title">丸亀 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 2日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-fav"><span class="waku waku--m w4">4</span><span class="rr-pwin">31%</span></div>
+        <div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip">5点</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="sechead">締切済み <span class="count">48R</span></div>
+  <a class="more" href="#closed">締切済みのレースを表示(結果 46 · 結果待ち 2)<span>▼</span></a>
+
+  <p class="disclaimer">非公式データに基づく参考情報です。正確性は保証しません。<a href="#/about">このアプリについて</a></p>
+
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="today-closed" data-title="当日・締切済みを展開(下へスクロールした位置)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/2(月)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+
+  <div class="sechead">締切済み <span class="count">48R</span><span class="right">新しい順</span></div>
+  <div class="list">
+    <a class="race-row" href="#/race/20261102-02-04">
+      <div class="rr-time"><span class="rr-closed">済</span><span class="rr-clock">14:02</span></div>
+      <div class="rr-main"><div class="rr-title">戸田 <span class="rno">4R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-result"><span class="combo"><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w6">6</span></span></div>
+        <div class="rr-meta"><span class="chip chip--hit">✓ 的中</span><span class="rr-return">2,750円</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-01-05">
+      <div class="rr-time"><span class="rr-closed">済</span><span class="rr-clock">14:00</span></div>
+      <div class="rr-main"><div class="rr-title">桐生 <span class="rno">5R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred"><span class="chip chip--wait">結果待ち</span><span class="faint" style="font-size:11px">推奨5点</span></div>
+    </a>
+    <a class="race-row" href="#/race/20261102-12-03">
+      <div class="rr-time"><span class="rr-closed">済</span><span class="rr-clock">13:58</span></div>
+      <div class="rr-main"><div class="rr-title">住之江 <span class="rno">3R</span></div><div class="rr-sub">一般戦 · G3 2日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-result"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span></div>
+        <div class="rr-meta"><span class="chip chip--miss">× 不的中</span></div>
+      </div>
+    </a>
+    <a class="race-row" href="#/race/20261102-04-05">
+      <div class="rr-time"><span class="rr-closed">済</span><span class="rr-clock">13:52</span></div>
+      <div class="rr-main"><div class="rr-title">平和島 <span class="rno">5R</span></div><div class="rr-sub">予選 · 一般 初日</div></div>
+      <div class="rr-pred">
+        <div class="rr-result"><span class="combo"><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span></div>
+        <div class="rr-meta"><span class="chip chip--skip">見送り</span></div>
+      </div>
+    </a>
+    <a class="race-row is-muted" href="#/race/20261102-20-04">
+      <div class="rr-time"><span class="rr-closed">—</span><span class="rr-clock">13:48</span></div>
+      <div class="rr-main"><div class="rr-title">若松 <span class="rno">4R</span></div><div class="rr-sub">予選 · G1 4日目</div></div>
+      <div class="rr-pred"><span class="chip chip--cancel">中止</span><span class="faint" style="font-size:11px">返還</span></div>
+    </a>
+    <a class="race-row" href="#/race/20261102-24-06">
+      <div class="rr-time"><span class="rr-closed">済</span><span class="rr-clock">13:45</span></div>
+      <div class="rr-main"><div class="rr-title">大村 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 5日目</div></div>
+      <div class="rr-pred">
+        <div class="rr-result"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w3">3</span></span></div>
+        <div class="rr-meta"><span class="faint" style="font-size:11px">欠場あり</span><span class="chip chip--miss">× 不的中</span></div>
+      </div>
+    </a>
+  </div>
+  <a class="more" href="#closed">締切済みをたたむ<span>▲</span></a>
+
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="by-stadium" data-title="当日・場ごと">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/2(月)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="seg" role="tablist">
+    <button role="tab" aria-selected="false">締切順</button>
+    <button role="tab" aria-selected="true">場ごと</button>
+  </div>
+
+  <div class="stadium">
+    <div class="stadium__head"><span class="stadium__name">桐生</span><span class="chip chip--grade g-ippan">一般</span><span class="faint" style="font-size:12px">3日目</span><span class="faint" style="margin-left:auto;font-size:12px">次 6R 14:30</span></div>
+    <div class="stadium__title">第42回 上州からっ風杯</div>
+    <div class="stadium__grid">
+      <a class="rcell is-done is-hit"><span class="rcell__r">1R</span><span class="waku waku--s w1">1</span><span class="rcell__s">✓的中</span></a>
+      <a class="rcell is-done"><span class="rcell__r">2R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">3R</span><span class="waku waku--s w2">2</span><span class="rcell__s">見送</span></a>
+      <a class="rcell is-done"><span class="rcell__r">4R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">5R</span><span class="waku waku--s w4">4</span><span class="rcell__s">待ち</span></a>
+      <a class="rcell is-next"><span class="rcell__r">6R</span><span class="waku waku--s w1">1</span><span class="rcell__s">あと2分</span></a>
+      <a class="rcell"><span class="rcell__r">7R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:00</span></a>
+      <a class="rcell"><span class="rcell__r">8R</span><span class="waku waku--s w3">3</span><span class="rcell__s">15:29</span></a>
+      <a class="rcell"><span class="rcell__r">9R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:58</span></a>
+      <a class="rcell"><span class="rcell__r">10R</span><span class="waku waku--s w2">2</span><span class="rcell__s">16:27</span></a>
+      <a class="rcell"><span class="rcell__r">11R</span><span class="waku waku--s w1">1</span><span class="rcell__s">16:56</span></a>
+      <a class="rcell"><span class="rcell__r">12R</span><span class="waku waku--s w1">1</span><span class="rcell__s">17:25</span></a>
+    </div>
+  </div>
+
+  <div class="stadium">
+    <div class="stadium__head"><span class="stadium__name">戸田</span><span class="chip chip--grade g-ippan">一般</span><span class="faint" style="font-size:12px">3日目</span><span class="faint" style="margin-left:auto;font-size:12px">次 5R 14:32</span></div>
+    <div class="stadium__title">第58回 報知新聞社杯</div>
+    <div class="stadium__grid">
+      <a class="rcell is-done"><span class="rcell__r">1R</span><span class="waku waku--s w2">2</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">2R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">3R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done is-hit"><span class="rcell__r">4R</span><span class="waku waku--s w2">2</span><span class="rcell__s">✓的中</span></a>
+      <a class="rcell is-next"><span class="rcell__r">5R</span><span class="waku waku--s w3">3</span><span class="rcell__s">あと4分</span></a>
+      <a class="rcell"><span class="rcell__r">6R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:02</span></a>
+      <a class="rcell"><span class="rcell__r">7R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:31</span></a>
+      <a class="rcell"><span class="rcell__r">8R</span><span class="rcell__s">予想なし</span></a>
+      <a class="rcell"><span class="rcell__r">9R</span><span class="waku waku--s w5">5</span><span class="rcell__s">16:29</span></a>
+      <a class="rcell"><span class="rcell__r">10R</span><span class="waku waku--s w1">1</span><span class="rcell__s">16:58</span></a>
+      <a class="rcell"><span class="rcell__r">11R</span><span class="waku waku--s w1">1</span><span class="rcell__s">17:27</span></a>
+      <a class="rcell"><span class="rcell__r">12R</span><span class="waku waku--s w6">6</span><span class="rcell__s">17:56</span></a>
+    </div>
+  </div>
+
+  <div class="stadium">
+    <div class="stadium__head"><span class="stadium__name">若松</span><span class="chip chip--grade">G1</span><span class="faint" style="font-size:12px">4日目</span><span class="faint" style="margin-left:auto;font-size:12px">次 5R 14:44</span></div>
+    <div class="stadium__title">開設74周年記念 全日本覇者決定戦</div>
+    <div class="stadium__grid">
+      <a class="rcell is-done"><span class="rcell__r">1R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">2R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">3R</span><span class="waku waku--s w2">2</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">4R</span><span class="rcell__s">中止</span></a>
+      <a class="rcell is-next"><span class="rcell__r">5R</span><span class="rcell__s">予想なし</span><span class="rcell__s">あと16分</span></a>
+      <a class="rcell"><span class="rcell__r">6R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:12</span></a>
+      <a class="rcell"><span class="rcell__r">7R</span><span class="waku waku--s w1">1</span><span class="rcell__s">15:40</span></a>
+      <a class="rcell"><span class="rcell__r">8R</span><span class="waku waku--s w4">4</span><span class="rcell__s">16:08</span></a>
+      <a class="rcell"><span class="rcell__r">9R</span><span class="waku waku--s w1">1</span><span class="rcell__s">16:36</span></a>
+      <a class="rcell"><span class="rcell__r">10R</span><span class="waku waku--s w1">1</span><span class="rcell__s">17:04</span></a>
+      <a class="rcell"><span class="rcell__r">11R</span><span class="waku waku--s w3">3</span><span class="rcell__s">17:32</span></a>
+      <a class="rcell"><span class="rcell__r">12R</span><span class="waku waku--s w1">1</span><span class="rcell__s">18:00</span></a>
+    </div>
+  </div>
+
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="past" data-title="過去日(status=final)・場ごとが既定">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/1(日)<span class="caret">▼</span></button>
+    <span class="chip chip--pre">確定</span>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 11/2 09:40</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="banner banner--muted"><span class="banner__icon">ℹ</span><div class="banner__body">過去の日付を表示しています。</div><a class="banner__action btn btn--small" href="#/">今日へ</a></div>
+
+  <div class="daysum">
+    <span>結果 <b class="num">168</b>/168R</span>
+    <span>的中 <b class="num">30</b></span>
+    <span class="roi">回収率 <b class="num is-plus">108.7%</b></span>
+  </div>
+  <div class="seg" role="tablist">
+    <button role="tab" aria-selected="false">締切順</button>
+    <button role="tab" aria-selected="true">場ごと</button>
+  </div>
+
+  <div class="stadium">
+    <div class="stadium__head"><span class="stadium__name">桐生</span><span class="chip chip--grade g-ippan">一般</span><span class="faint" style="font-size:12px">2日目</span><span class="num" style="margin-left:auto;font-size:12px;font-weight:700">的中2 · <span class="is-plus">131%</span></span></div>
+    <div class="stadium__grid">
+      <a class="rcell is-done"><span class="rcell__r">1R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done is-hit"><span class="rcell__r">2R</span><span class="waku waku--s w1">1</span><span class="rcell__s">✓的中</span></a>
+      <a class="rcell is-done"><span class="rcell__r">3R</span><span class="waku waku--s w3">3</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">4R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">5R</span><span class="waku waku--s w2">2</span><span class="rcell__s">見送</span></a>
+      <a class="rcell is-done"><span class="rcell__r">6R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">7R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done is-hit"><span class="rcell__r">8R</span><span class="waku waku--s w4">4</span><span class="rcell__s">✓的中</span></a>
+      <a class="rcell is-done"><span class="rcell__r">9R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">10R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">11R</span><span class="waku waku--s w2">2</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">12R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+    </div>
+  </div>
+  <div class="stadium">
+    <div class="stadium__head"><span class="stadium__name">戸田</span><span class="chip chip--grade g-ippan">一般</span><span class="faint" style="font-size:12px">2日目</span><span class="num" style="margin-left:auto;font-size:12px;font-weight:700">的中1 · <span class="is-minus">46%</span></span></div>
+    <div class="stadium__grid">
+      <a class="rcell is-done"><span class="rcell__r">1R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">2R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done is-hit"><span class="rcell__r">3R</span><span class="waku waku--s w1">1</span><span class="rcell__s">✓的中</span></a>
+      <a class="rcell is-done"><span class="rcell__r">4R</span><span class="waku waku--s w5">5</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">5R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">6R</span><span class="waku waku--s w2">2</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">7R</span><span class="waku waku--s w1">1</span><span class="rcell__s">見送</span></a>
+      <a class="rcell is-done"><span class="rcell__r">8R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">9R</span><span class="waku waku--s w3">3</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">10R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">11R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+      <a class="rcell is-done"><span class="rcell__r">12R</span><span class="waku waku--s w1">1</span><span class="rcell__s">×</span></a>
+    </div>
+  </div>
+
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="loading" data-title="読み込み中(初回・キャッシュなし)">
+<div class="app">
+  <header class="appbar">
+    <span class="sk" style="width:96px;height:22px;margin-left:8px"></span>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">読み込み中…</span>
+    <button class="iconbtn" aria-label="再読み込み" disabled style="opacity:.4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="daysum"><span class="sk" style="width:100%;height:20px"></span></div>
+  <div class="seg"><button aria-selected="true">締切順</button><button>場ごと</button></div>
+  <div class="sechead"><span class="sk" style="width:80px;height:12px"></span></div>
+  <div class="list" aria-busy="true">
+    <div class="race-row"><div><span class="sk" style="width:36px;height:30px;margin:auto"></span></div><div><span class="sk" style="width:70%;height:16px"></span><span class="sk" style="width:50%;height:11px;margin-top:6px"></span></div><div><span class="sk" style="width:64px;height:24px"></span></div></div>
+    <div class="race-row"><div><span class="sk" style="width:36px;height:30px;margin:auto"></span></div><div><span class="sk" style="width:60%;height:16px"></span><span class="sk" style="width:45%;height:11px;margin-top:6px"></span></div><div><span class="sk" style="width:64px;height:24px"></span></div></div>
+    <div class="race-row"><div><span class="sk" style="width:36px;height:30px;margin:auto"></span></div><div><span class="sk" style="width:65%;height:16px"></span><span class="sk" style="width:40%;height:11px;margin-top:6px"></span></div><div><span class="sk" style="width:64px;height:24px"></span></div></div>
+    <div class="race-row"><div><span class="sk" style="width:36px;height:30px;margin:auto"></span></div><div><span class="sk" style="width:55%;height:16px"></span><span class="sk" style="width:50%;height:11px;margin-top:6px"></span></div><div><span class="sk" style="width:64px;height:24px"></span></div></div>
+    <div class="race-row"><div><span class="sk" style="width:36px;height:30px;margin:auto"></span></div><div><span class="sk" style="width:70%;height:16px"></span><span class="sk" style="width:45%;height:11px;margin-top:6px"></span></div><div><span class="sk" style="width:64px;height:24px"></span></div></div>
+  </div>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="offline" data-title="オフライン(キャッシュを表示中)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/2(月)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="banner banner--offline" role="status">
+    <span class="banner__icon">⚠</span>
+    <div class="banner__body"><b>オフライン表示中(14:05時点)</b><br>通信できないため、前回読み込んだデータを表示しています。締切までの残り時間は端末の時計で更新しています。</div>
+  </div>
+  <div class="seg" role="tablist">
+    <button role="tab" aria-selected="true">締切順</button>
+    <button role="tab" aria-selected="false">場ごと</button>
+  </div>
+  <div class="sechead">締切前 <span class="count">108R</span><span class="right">現在 14:28</span></div>
+  <div class="list">
+    <a class="race-row is-urgent" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">2<small>分</small></span><span class="rr-clock">14:30</span></div>
+      <div class="rr-main"><div class="rr-title">桐生 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">52%</span></div><div class="rr-meta"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="chip">5点</span></div></div>
+    </a>
+    <a class="race-row is-urgent" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">4<small>分</small></span><span class="rr-clock">14:32</span></div>
+      <div class="rr-main"><div class="rr-title">戸田 <span class="rno">5R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w3">3</span><span class="rr-pwin">28%</span></div><div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip">5点</span></div></div>
+    </a>
+    <a class="race-row" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">7<small>分</small></span><span class="rr-clock">14:35</span></div>
+      <div class="rr-main"><div class="rr-title">住之江 <span class="rno">4R</span></div><div class="rr-sub">一般戦 · G3 2日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w2">2</span><span class="rr-pwin">33%</span></div><div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip chip--skip">見送り</span></div></div>
+    </a>
+  </div>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="error" data-title="エラー(キャッシュなし・読み込み失敗)">
+<div class="app">
+  <header class="appbar">
+    <span class="appbar__title" style="padding-left:8px">ボート予想</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="empty" role="alert">
+    <div class="empty__icon">⚠</div>
+    <div class="empty__title">データを読み込めませんでした</div>
+    <div class="empty__text">通信状態を確認して、もう一度読み込んでください。<br>前回のデータも端末に残っていません。</div>
+    <button class="btn btn--primary">再読み込み</button>
+    <div class="empty__text faint" style="margin-top:16px">詳細: index.json の取得に失敗(ネットワークエラー)</div>
+  </div>
+  <div class="empty" role="alert">
+    <div class="empty__icon">⟳</div>
+    <div class="empty__title">アプリの更新が必要です</div>
+    <div class="empty__text">データの形式が新しくなりました(schema_version 2)。<br>アプリを再読み込みすると最新版に切り替わります。</div>
+    <button class="btn btn--primary">アプリを再読み込み</button>
+  </div>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="no-today" data-title="今日のデータがまだない(latest_date が昨日)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/3(火)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 11/2 21:05</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="empty">
+    <div class="empty__icon">◷</div>
+    <div class="empty__title">今日の予想はまだありません</div>
+    <div class="empty__text">予想は前日の夜〜当日の朝に作成します。<br>最新のデータは 11/2(月)のものです。</div>
+    <a class="btn" href="#/date/2026-11-02">11/2(月)の結果を見る</a>
+  </div>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="local-custom" data-title="ローカル表示・設定を変更中(期待値B以上・荒は見送り)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date" aria-haspopup="dialog">11/2(月)<span class="caret">▼</span></button>
+    <span class="localmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg>ローカル</span>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:27</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="daysum">
+    <span>結果 <b class="num">48</b>/156R</span>
+    <span>的中 <b class="num">7</b></span>
+    <span class="roi">回収率 <b class="num is-minus">84.0%</b></span>
+  </div>
+  <p class="disclaimer" style="margin-top:4px">集計は既定の買い方(3連単 上位5点)。一覧の点数は<a href="#/settings">あなたの設定</a>で計算しています。</p>
+  <div class="seg" role="tablist">
+    <button role="tab" aria-selected="true">締切順</button>
+    <button role="tab" aria-selected="false">場ごと</button>
+  </div>
+  <div class="sechead">締切前 <span class="count">108R</span><span class="mine" style="margin-left:8px">あなたの設定</span><span class="right">現在 14:28</span></div>
+  <div class="list">
+    <a class="race-row is-urgent" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">2<small>分</small></span><span class="rr-clock">14:30</span></div>
+      <div class="rr-main"><div class="rr-title">桐生 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">52%</span></div><div class="rr-meta"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="chip">4点</span><span class="evr evr--A evr--s" aria-label="期待値ランク最高A">A</span></div></div>
+    </a>
+    <a class="race-row is-urgent" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">4<small>分</small></span><span class="rr-clock">14:32</span></div>
+      <div class="rr-main"><div class="rr-title">戸田 <span class="rno">5R</span></div><div class="rr-sub">予選 · 一般 3日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w3">3</span><span class="rr-pwin">28%</span></div><div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip chip--skip">見送り</span></div></div>
+    </a>
+    <a class="race-row" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">7<small>分</small></span><span class="rr-clock">14:35</span></div>
+      <div class="rr-main"><div class="rr-title">住之江 <span class="rno">4R</span></div><div class="rr-sub">一般戦 · G3 2日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w2">2</span><span class="rr-pwin">33%</span></div><div class="rr-meta"><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="chip chip--skip">見送り</span></div></div>
+    </a>
+    <a class="race-row" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">11<small>分</small></span><span class="rr-clock">14:39</span></div>
+      <div class="rr-main"><div class="rr-title">平和島 <span class="rno">6R</span></div><div class="rr-sub">予選 · 一般 初日</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">44%</span></div><div class="rr-meta"><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span><span class="chip">2点</span><span class="evr evr--B evr--s" aria-label="期待値ランク最高B">B</span></div></div>
+    </a>
+    <a class="race-row" href="#">
+      <div class="rr-time"><span class="rr-left">あと</span><span class="rr-countdown">19<small>分</small></span><span class="rr-clock">14:47</span></div>
+      <div class="rr-main"><div class="rr-title">大村 <span class="rno">7R</span></div><div class="rr-sub">予選 · 一般 5日目</div></div>
+      <div class="rr-pred"><div class="rr-fav"><span class="waku waku--m w1">1</span><span class="rr-pwin">61%</span></div><div class="rr-meta"><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="chip">8点</span><span class="evr evr--none evr--s" aria-label="期待値ランクなし">—</span></div></div>
+    </a>
+  </div>
+  <p class="disclaimer">右端の A〜D = その場の推奨で最も高い期待値ランク(「—」はオッズ未取得)。締切前のオッズは締切までに変わります。</p>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="local-error" data-title="ローカル表示でPCにつながらない">
+<div class="app">
+  <header class="appbar">
+    <span class="appbar__title" style="padding-left:8px">ボート予想</span>
+    <span class="localmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg>ローカル</span>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="empty" role="alert">
+    <div class="empty__icon">⚠</div>
+    <div class="empty__title">PCのデータにつながりません</div>
+    <div class="empty__text">PCで <code>python -m http.server</code> が動いているか、同じWi-Fiにつないでいるかを確かめてください。<br>ローカル表示ではオフライン表示(前回のデータ)は使えません。</div>
+    <button class="btn btn--primary">再読み込み</button>
+    <div class="empty__text"><a href="?data=public" style="text-decoration:underline">公開版のデータで見る</a>(オッズの数値なし)</div>
+  </div>
+  <nav class="tabbar">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="stadium-focus" data-title="場で絞る(1場の1〜12R・DA-5)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date">11/2(月)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="seg" role="tablist" style="grid-template-columns:1fr 1fr 1fr"><button role="tab" aria-selected="false">締切順</button><button role="tab" aria-selected="false">場ごと</button><button role="tab" aria-selected="true">場で絞る</button></div>
+  <nav class="stabs" role="tablist"><a aria-selected="false">桐生</a><a aria-selected="true">戸田</a><a aria-selected="false">江戸川</a><a aria-selected="false">平和島</a><a aria-selected="false">住之江</a><a aria-selected="false">若松</a><a aria-selected="false">大村</a></nav>
+  <div class="sechead">戸田 · 一般 3日目 <span class="count">第58回 報知新聞社杯</span><span class="right">的中1 / 結果4R</span></div>
+  <div class="list">
+    <a class="r12 is-done" href="#"><span class="rn">1R</span><span class="tm">10:45<br>済</span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span><span class="mymark" title="自分の印あり">印</span></span><span class="rt"><span class="res">✓ 的中 2,750円</span></span></a>
+    <a class="r12 is-done" href="#"><span class="rn">2R</span><span class="tm">11:13<br>済</span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span></span><span class="rt"><span class="res">× 不的中</span></span></a>
+    <a class="r12 is-done" href="#"><span class="rn">3R</span><span class="tm">11:41<br>済</span><span class="mid"><span class="waku waku--m w2">2</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span></span><span class="rt"><span class="chip chip--skip">見送り</span></span></a>
+    <a class="r12 is-done" href="#"><span class="rn">4R</span><span class="tm">12:09<br>済</span><span class="mid"><span class="waku waku--m w2">2</span><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span><span class="mymark" title="自分の印あり">印</span></span><span class="rt"><span class="res">× 不的中</span></span></a>
+    <a class="r12 is-next" href="#"><span class="rn">5R</span><span class="tm">14:32<br>あと4分</span><span class="mid"><span class="waku waku--m w3">3</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span><span class="mymark" title="自分の印あり">印</span></span><span class="rt"><span class="chip">5点</span></span></a>
+    <a class="r12" href="#"><span class="rn">6R</span><span class="tm">15:02<br></span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span></span><span class="rt"><span class="chip">5点</span></span></a>
+    <a class="r12" href="#"><span class="rn">7R</span><span class="tm">15:31<br></span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span></span><span class="rt"><span class="chip">5点</span></span></a>
+    <a class="r12" href="#"><span class="rn">8R</span><span class="tm">16:00<br></span><span class="mid"></span><span class="rt"><span class="chip chip--none">予想なし</span></span></a>
+    <a class="r12" href="#"><span class="rn">9R</span><span class="tm">16:29<br></span><span class="mid"><span class="waku waku--m w5">5</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span></span><span class="rt"><span class="chip chip--skip">見送り</span></span></a>
+    <a class="r12" href="#"><span class="rn">10R</span><span class="tm">16:58<br></span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--2"><span class="conf__bars"><i></i><i></i><i></i></span>中</span></span><span class="rt"><span class="chip">5点</span></span></a>
+    <a class="r12" href="#"><span class="rn">11R</span><span class="tm">17:27<br></span><span class="mid"><span class="waku waku--m w1">1</span><span class="conf conf--3"><span class="conf__bars"><i></i><i></i><i></i></span>堅</span></span><span class="rt"><span class="chip">5点</span></span></a>
+    <a class="r12" href="#"><span class="rn">12R</span><span class="tm">17:56<br></span><span class="mid"><span class="waku waku--m w6">6</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒</span></span><span class="rt"><span class="chip">5点</span></span></a>
+  </div>
+  <p class="disclaimer">「印」= 自分の印を付けたレース。左右スワイプでも場を切り替えられます。</p>
+  <nav class="tabbar tabbar--4">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="gentle" data-title="依存対策: 深夜・連続利用・予算80%の表示(DA-5)">
+<div class="app">
+  <header class="appbar">
+    <button class="appbar__date">11/3(火)<span class="caret">▼</span></button>
+    <span class="appbar__spacer"></span>
+    <span class="appbar__updated">更新 23:40</span>
+  </header>
+  <div class="gentle" role="note">🌙 0時を過ぎました。今日は 72分 使っています。<span class="x">✕</span></div>
+  <div class="warnbar"><b>今月の予算の 84% を使いました</b>(25,200円 / 30,000円)。<a href="#/ledger" style="text-decoration:underline">収支を見る</a></div>
+  <div class="daysum"><span>結果 <b>156</b>/156R</span><span>的中 <b>21</b></span><span class="roi">回収率 <b class="is-minus">72.5%</b></span></div>
+  <div class="empty"><div class="empty__title">本日のレースはすべて締切済みです</div><div class="empty__text">明日の予想は朝に出ます。</div></div>
+  <nav class="tabbar tabbar--4">
+    <a href="#/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

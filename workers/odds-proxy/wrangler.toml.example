@@ -1,0 +1,27 @@
+# 中継 Worker の設定の雛形。wrangler.toml にコピーして使う(README.md の手順 4)。
+#   cp wrangler.toml.example wrangler.toml
+# 秘密の値(合言葉 ODDS_KEY)はここに書かない。`npx wrangler secret put ODDS_KEY` で設定する。
+
+name = "odds-proxy"
+main = "src/index.mjs"
+compatibility_date = "2026-11-01"
+
+# workers.dev のアドレス(https://odds-proxy.<アカウント>.workers.dev)で公開する
+workers_dev = true
+
+# KV(キャッシュ・1日の使用数・停止フラグ)。id は `npx wrangler kv namespace create ODDS_KV` の出力に置き換える
+[[kv_namespaces]]
+binding = "ODDS_KV"
+id = "<ここに KV の id を貼る>"
+
+[vars]
+# 許可するオリジン(カンマ区切り。末尾の / は不要)。
+#   GitHub Pages を公開したら https://<GitHubのユーザー名>.github.io を足す
+#   自宅Wi-Fiでのローカル表示を使うなら http://<PCのLANのIP>:8000 を足す(例: http://192.168.1.10:8000)
+ALLOWED_ORIGINS = "http://localhost:8000,http://127.0.0.1:8000"
+# 1日に公式サイトから取るページ数の上限(既定300、最大700。キャッシュから返した分は数えない)
+DAILY_LIMIT = "300"
+
+# ダッシュボードでログを見られるようにする(ログにオッズの数値は出さない)
+[observability]
+enabled = true

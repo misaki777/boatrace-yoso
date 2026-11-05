@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S3 成績(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- S3 成績。架空のデータ。performance.json を読む。 -->
+
+<!-- ================================================================= -->
+<section class="state" data-state="normal" data-title="通常(実運用15日分)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">成績</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+
+  <!-- A: 実運用の累計 -->
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">実運用の回収率</h2><span class="right">10/19〜11/2 · 3連単上位5点</span></div>
+    <div class="roi-hero">
+      <span class="v is-minus">92.7<small>%</small></span>
+      <span class="delta is-minus">▼ 100%まで あと7.3pt</span>
+    </div>
+    <div class="kpi">
+      <div><div class="k">的中率(レース)</div><div class="v">16.9%</div></div>
+      <div><div class="k">レース数 / 点数</div><div class="v">301R / 1,505点</div></div>
+      <div><div class="k">投資(1点100円)</div><div class="v">150,500円</div></div>
+      <div><div class="k">払戻</div><div class="v">139,500円</div></div>
+      <div style="grid-column:1/3"><div class="k">収支</div><div class="v is-minus">−11,000円</div></div>
+    </div>
+  </section>
+
+  <!-- A: 累積回収率の推移 -->
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">累積回収率の推移</h2><span class="right">点線 = 100%</span></div>
+    <div class="card__body">
+      <svg class="chart" viewBox="0 0 320 160" role="img" aria-label="累積回収率の推移。最新92.7%">
+        <line class="grid" x1="36" x2="316" y1="10" y2="10"/>
+        <line class="grid" x1="36" x2="316" y1="42.5" y2="42.5"/>
+        <line class="grid" x1="36" x2="316" y1="107.5" y2="107.5"/>
+        <line class="grid" x1="36" x2="316" y1="140" y2="140"/>
+        <line class="base" x1="36" x2="316" y1="75" y2="75"/>
+        <text x="30" y="13" text-anchor="end">150%</text>
+        <text x="30" y="78" text-anchor="end">100%</text>
+        <text x="30" y="143" text-anchor="end">50%</text>
+        <polyline class="line" points="36,111.4 55.7,81.5 75.4,90.6 95.1,72.4 114.8,62 134.6,78.9 154.3,84.1 174,76.3 193.7,68.5 213.4,73.7 233.1,80.2 252.9,82.8 272.6,77.6 292.3,86.7 312,84.1"/>
+        <circle class="dot" cx="312" cy="84.1" r="4"/>
+        <text x="36" y="156">10/19</text>
+        <text x="174" y="156" text-anchor="middle">10/26</text>
+        <text x="312" y="156" text-anchor="end">11/2</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- B: 月別 -->
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">月別</h2></div>
+    <div class="card__body" style="padding:8px 0 4px">
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>月</th><th>R数</th><th>投資</th><th>払戻</th><th>回収率</th></tr></thead>
+        <tbody>
+          <tr><td>2026-11</td><td>301</td><td>150,500</td><td>139,500</td><td class="is-minus"><b>92.7%</b></td></tr>
+          <tr><td>2026-10</td><td>1,820</td><td>910,000</td><td>935,600</td><td class="is-plus"><b>▲102.8%</b></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- B: バックテスト -->
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">バックテスト</h2><span class="right">10/1〜10/31</span></div>
+    <p class="card__note" style="padding-top:4px;padding-bottom:4px">回収率と95%区間。点線 = 100%</p>
+    <div class="ci-row">
+      <div class="name">3連単 確率上位5点 <small>採用中 · 的中率 17%</small></div>
+      <div class="roi is-minus">81%</div>
+      <div class="ci-track"><span class="axis"></span><span class="base100" style="left:50%"></span><span class="range" style="left:35%;width:11.5%"></span><span class="pt" style="left:40.5%"></span></div>
+    </div>
+    <div class="ci-row is-ref">
+      <div class="name">3連単 期待値1.2以上 <span class="chip chip--ref">参考値(後知恵)</span><small>確定オッズで選んだ値 · 的中率 4%</small></div>
+      <div class="roi">105%</div>
+      <div class="ci-track"><span class="axis"></span><span class="base100" style="left:50%"></span><span class="range" style="left:41%;width:24.5%"></span><span class="pt" style="left:52.5%"></span></div>
+    </div>
+    <div class="ci-scale"><span>0%</span><span>100%</span><span>200%</span></div>
+  </section>
+
+  <!-- C: モデル -->
+  <section class="card">
+    <details class="fold">
+      <summary>モデルの情報 <span class="count">pre_20261101_a1b2</span></summary>
+      <div class="prose" style="font-size:12px">
+        <p>種類: 前日モデル(出走表のみ) · 学習: 〜2026-10-31<br>1着的中率 51.2% · 3連単上位10点的中 33.1% · logloss 1.312</p>
+      </div>
+    </details>
+  </section>
+
+  <p class="disclaimer"><b>回収率はシミュレーションであり、将来の成績を保証しません。</b>推奨買い目を1点100円で買ったと仮定した値です。</p>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="few" data-title="実運用のデータが少ない(1〜2日)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">成績</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">実運用の回収率</h2><span class="right">11/1〜11/2</span></div>
+    <div class="roi-hero"><span class="v is-plus">108.7<small>%</small></span><span class="delta muted">2日分 · 168R</span></div>
+    <div class="kpi">
+      <div><div class="k">的中率(レース)</div><div class="v">17.9%</div></div>
+      <div><div class="k">収支</div><div class="v is-plus">+7,300円</div></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">累積回収率の推移</h2></div>
+    <div class="empty" style="margin:8px 12px 12px;padding:20px 12px;border-style:dashed">
+      <div class="empty__text" style="margin:0">グラフは3日分以上たまると表示します。</div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">バックテスト</h2></div>
+    <p class="card__note" style="padding-top:8px">まだありません(モデルの検証が済むと表示します)。</p>
+  </section>
+  <p class="disclaimer"><b>回収率はシミュレーションであり、将来の成績を保証しません。</b>少ない日数の回収率は大きくぶれます。</p>
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="error" data-title="読み込み失敗(performance.json)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">成績</h1>
+    <button class="iconbtn" aria-label="再読み込み"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+  </header>
+  <div class="empty" role="alert">
+    <div class="empty__icon">⚠</div>
+    <div class="empty__title">成績を読み込めませんでした</div>
+    <div class="empty__text">通信状態を確認して、もう一度読み込んでください。</div>
+    <button class="btn btn--primary">再読み込み</button>
+  </div>
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="custom" data-title="設定が既定と違うときの注記">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">成績</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <div class="banner" role="note"><span class="banner__icon">ℹ</span><div class="banner__body"><b>成績は既定の買い方で集計しています</b><br>既定: 3連単 上位5点 · 1点100円<br>今の設定: 2連単 上位3点 + 3連単 上位5点 · 期待値B以上 · 荒は見送り · 1点200円</div><a class="banner__action btn btn--small" href="#/settings">設定</a></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">実運用の回収率</h2><span class="right">10/19〜11/2 · <b>既定</b> 3連単上位5点</span></div>
+    <div class="roi-hero"><span class="v is-minus">92.7<small>%</small></span><span class="delta is-minus">▼ 100%まで あと7.3pt</span></div>
+    <div class="kpi">
+      <div><div class="k">的中率(レース)</div><div class="v">16.9%</div></div>
+      <div><div class="k">レース数 / 点数</div><div class="v">301R / 1,505点</div></div>
+      <div><div class="k">投資(1点100円)</div><div class="v">150,500円</div></div>
+      <div><div class="k">払戻</div><div class="v">139,500円</div></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">今の設定での試算</h2><span class="chip chip--pre" style="margin-left:auto">Phase 2b</span></div>
+    <p class="card__note" style="padding-top:8px">読み込み済みの日だけで試算します(期待値の条件は、締切前オッズがある 11/2 だけ)。<br>[試算する] ボタン → 結果は回収率・的中率・対象日数を表示。</p>
+  </section>
+  <p class="disclaimer"><b>回収率はシミュレーションであり、将来の成績を保証しません。</b>推奨買い目を1点100円で買ったと仮定した値です。</p>
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="p3a" data-title="Phase 3a: 実運用/検証タブ・較正・戦略比較(基準2種)・月別(DA-5)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">成績</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <div class="seg" role="tablist"><button role="tab" aria-selected="true">実運用</button><button role="tab" aria-selected="false">検証(バックテスト)</button></div>
+  <div class="seg" role="tablist" style="margin-top:6px"><button role="tab" aria-selected="true">前日版</button><button role="tab" aria-selected="false">直前版(まだ無し)</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">実運用の回収率</h2><span class="right">10/19〜11/2 · 301R · 既定の買い方</span></div>
+    <div class="roi-hero"><span class="v">92.7<small>%</small></span><span class="delta neutral">95%区間 71〜116%<br>プラスともマイナスとも言えない</span></div>
+    <p class="card__note"><span class="fewnote">件数 301R。的中 51R / 不的中 250R(同じ重さで表示)。</span></p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">較正<span class="help">?</span></h2><span class="right">1着確率 · 1,806艇</span></div>
+    <div class="card__body"><svg class="chart" viewBox="0 0 320 320" role="img" aria-label="較正グラフ"><line class="grid" x1="36" x2="312" y1="290.0" y2="290.0"/><text x="30" y="293.0" text-anchor="end">0%</text><text x="36.0" y="306" text-anchor="middle">0%</text><line class="grid" x1="36" x2="312" y1="225.0" y2="225.0"/><text x="30" y="228.0" text-anchor="end">25%</text><text x="105.0" y="306" text-anchor="middle">25%</text><line class="grid" x1="36" x2="312" y1="160.0" y2="160.0"/><text x="30" y="163.0" text-anchor="end">50%</text><text x="174.0" y="306" text-anchor="middle">50%</text><line class="grid" x1="36" x2="312" y1="95.0" y2="95.0"/><text x="30" y="98.0" text-anchor="end">75%</text><text x="242.99999999999997" y="306" text-anchor="middle">75%</text><line class="grid" x1="36" x2="312" y1="30.0" y2="30.0"/><text x="30" y="33.0" text-anchor="end">100%</text><text x="312.0" y="306" text-anchor="middle">100%</text><line class="base" x1="36.0" y1="290.0" x2="312.0" y2="30.0"/><g opacity="1"><line x1="47.316" x2="47.316" y1="290.0" y2="257.7860790757963" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="47.316" cy="277.0" r="4.648" fill="var(--c-chart-line)"/></g><g opacity="1"><line x1="75.192" x2="75.192" y1="261.11809301749884" y2="236.20190698250116" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="75.192" cy="248.66" r="6.92" fill="var(--c-chart-line)"/></g><g opacity="1"><line x1="108.588" x2="108.588" y1="244.34678687714523" y2="216.05321312285477" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="108.588" cy="230.2" r="6.04" fill="var(--c-chart-line)"/></g><g opacity="1"><line x1="133.704" x2="133.704" y1="225.92292783356547" y2="192.35707216643453" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="133.704" cy="209.14" r="5.16" fill="var(--c-chart-line)"/></g><g opacity="1"><line x1="159.64799999999997" x2="159.64799999999997" y1="201.8465778656605" y2="161.8334221343395" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="159.64799999999997" cy="181.83999999999997" r="4.52" fill="var(--c-chart-line)"/></g><g opacity="1"><line x1="186.42" x2="186.42" y1="178.20677324489566" y2="129.83322675510433" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="186.42" cy="154.02" r="4.04" fill="var(--c-chart-line)"/></g><g opacity="0.4"><line x1="214.572" x2="214.572" y1="165.8433666561813" y2="102.1566333438187" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="214.572" cy="134.0" r="3.6" fill="var(--c-chart-line)"/></g><g opacity="0.4"><line x1="239.964" x2="239.964" y1="166.9287835006964" y2="66.23121649930357" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="239.964" cy="116.57999999999998" r="3.24" fill="var(--c-chart-line)"/></g><g opacity="0.4"><line x1="267.84" x2="267.84" y1="194.20388155425115" y2="30.0" stroke="var(--c-chart-line)" stroke-width="2"/><circle cx="267.84" cy="102.27999999999997" r="3.072" fill="var(--c-chart-line)"/></g><text x="174" y="318" text-anchor="middle">予測した1着確率</text></svg><p class="fewnote">点 = 予測の帯ごとの実際の1着率、縦線 = 95%区間、点の大きさ = 件数。点線(45度)に近いほど確率どおり。薄い点は200件未満(参考程度)。<br>高い確率の帯でやや下回る傾向(70%以上で予測より低め)。</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">戦略の比較</h2><span class="right">検証 10/1〜10/31</span></div>
+    <div class="card__body" style="padding:8px 0 4px"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>戦略</th><th>件数</th><th>回収率<br>95%区間</th><th>的中率</th><th>最大連敗</th><th>最大損失</th></tr></thead><tbody><tr><td class="l" style="white-space:normal;min-width:120px">3連単 上位5点(採用中)</td><td>3,010R</td><td><b>81.2%</b><span class="ci">70〜93%</span></td><td>17%</td><td>38連敗</td><td>−58,200円</td></tr><tr><td class="l" style="white-space:normal;min-width:120px">期待値B以上・3連単</td><td>1,240R</td><td><b>96.0%</b><span class="ci">78〜118%</span></td><td>8%</td><td>61連敗</td><td>−41,600円</td></tr><tr><td class="l" style="white-space:normal;min-width:120px"><span class="chip chip--pre" style="height:18px">基準</span> 1号艇の単勝</td><td>3,010R</td><td><b>78.5%</b><span class="ci">75〜82%</span></td><td>52%</td><td>9連敗</td><td>−66,800円</td></tr><tr><td class="l" style="white-space:normal;min-width:120px"><span class="chip chip--pre" style="height:18px">基準</span> 1号艇から3連単上位5点</td><td>3,010R</td><td><b>74.1%</b><span class="ci">65〜84%</span></td><td>12%</td><td>44連敗</td><td>−79,100円</td></tr><tr class="few"><td class="l" style="white-space:normal;min-width:120px">「荒」見送り+上位3点</td><td>160R</td><td><b>112%</b><span class="ci">71〜158%</span></td><td>15%</td><td>21連敗</td><td>−9,800円</td></tr></tbody></table></div></div>
+    <p class="card__note">「基準」は何も考えずに買った場合の比較用。薄い行は200R未満(参考程度)。検証期間で条件を選んだ戦略は後知恵を含みます。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">月別</h2><span class="right">実運用</span></div>
+    <div class="card__body" style="padding:8px 0 4px"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>月</th><th>件数</th><th>回収率 / 95%区間</th><th>的中</th><th>モデル</th></tr></thead><tbody><tr class="few"><td>2026-11</td><td>301R</td><td>92.7% <span class="ci">71〜116</span></td><td>51</td><td>a1b2</td></tr><tr><td>2026-10</td><td>1,820R</td><td>102.8% <span class="ci">93〜113</span></td><td>309</td><td>9f3c→a1b2</td></tr></tbody></table></div></div>
+  </section>
+  <a class="more" href="#/my-marks">自分の予想の成績(S9)›</a>
+  <p class="disclaimer"><b>回収率はシミュレーションであり、将来の成績を保証しません。</b>予想は日ごとに確定し、後から書き換えていません。</p>
+  <nav class="tabbar tabbar--4">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

@@ -218,3 +218,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+data/raw/
+
+# boatrace-yoso: 生成物(git管理外)
+data/interim/
+data/features/
+data/predictions/
+models/
+reports/
+# 締切前オッズの数値を含むローカル表示用JSON(公開しない。spec 07)
+docs/data-local/
+# 公式サイトから取得した締切前オッズ(data/raw/ に含まれるが、念のため明示)
+data/raw/official_odds/
+
+# Cloudflare Worker の実設定(KV の id や LAN アドレスを含む)
+workers/odds-proxy/wrangler.toml
+workers/odds-proxy/.wrangler/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
+
+# wrangler が作る作業用ファイル
+.wrangler/
+wrangler.jsonc

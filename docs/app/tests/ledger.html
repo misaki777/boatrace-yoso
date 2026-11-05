@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>収支の計算のテスト</title>
+<!-- 開発用のテストページ。本番の画面からはリンクしない。手計算した購入記録で、払戻・収支・最大ドローダウン・連敗・予算の警告・印の成績を確かめる(app/ledger.js) -->
+<link rel="icon" href="../../icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../styles/tokens.css">
+<style>
+  body { font-family: var(--font-family-base); background: var(--c-bg); color: var(--c-text); margin: 0; padding: 16px; font-size: 14px; }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  #summary { font-size: 16px; font-weight: 800; margin: 8px 0 12px; }
+  #summary.ok { color: var(--c-ev-plus-text); }
+  #summary.ng { color: var(--c-danger); }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  td, th { border-top: 1px solid var(--c-border); padding: 4px 6px; text-align: left; vertical-align: top; }
+  .pass { color: var(--c-ev-plus-text); font-weight: 700; }
+  .fail { color: var(--c-danger); font-weight: 700; }
+  pre { white-space: pre-wrap; word-break: break-all; margin: 0; font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>収支の計算のテスト</h1>
+
+<div id="summary" role="status">実行中…</div>
+<table><thead><tr><th>区分</th><th>id</th><th>結果</th><th>詳細</th></tr></thead><tbody id="rows"></tbody></table>
+<script type="module" src="ledger-test.js"></script>
+</body>
+</html>

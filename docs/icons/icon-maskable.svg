@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- boatrace-yoso アプリアイコン(purpose: maskable)。全面塗り。図案は中心から半径 205px(40%)の安全領域内に収める -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2B47C2"/>
+      <stop offset="1" stop-color="#172A78"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- 確率バー(右肩上がり。最も高いバーは琥珀色) -->
+  <rect x="150" y="236" width="56" height="104" rx="14" fill="#FFFFFF" fill-opacity="0.72"/>
+  <rect x="228" y="186" width="56" height="154" rx="14" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="306" y="128" width="56" height="212" rx="14" fill="#FFB224"/>
+  <!-- 水面の波 -->
+  <path d="M132 380 q31 -26 62 0 t62 0 t62 0 t62 0" fill="none" stroke="#7CD4FF" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

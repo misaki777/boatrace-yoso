@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S2 レース詳細(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!--
+  S2 レース詳細
+  モックの前提: 2026-11-02(月) 14:28 に開いた。データ生成は 14:05。架空のデータ。
+  ブロックの並び順は状態で変わる(README.md 4章)。
+-->
+
+<!-- ================================================================= -->
+<section class="state" data-state="before" data-title="締切前・推奨あり(既定の並び)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+
+  <div class="racehead">
+    <div class="racehead__row">
+      <span class="racehead__close">締切 <b>14:32</b></span>
+      <span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span>
+    </div>
+    <div class="racehead__sub">
+      <span>予選 · 一般 3日目</span>
+      <span class="chip chip--pre">前日予想 07:30</span>
+      <span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span>
+    </div>
+  </div>
+
+  <!-- A: 推奨買い目 -->
+  <section class="card card--emph" aria-labelledby="rec1">
+    <div class="card__head"><h2 class="card__title" id="rec1">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="pick-head"><span>組合せ</span><span>確率</span><span>必要オッズ</span></div>
+    <div class="pick-row">
+      <span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span>
+      <span class="prob">3.1%</span>
+      <span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span>
+    </div>
+    <div class="pick-row">
+      <span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span>
+      <span class="prob">2.8%</span>
+      <span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span>
+    </div>
+    <div class="pick-row">
+      <span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span>
+      <span class="prob">2.6%</span>
+      <span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span>
+    </div>
+    <div class="pick-row">
+      <span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span>
+      <span class="prob">2.5%</span>
+      <span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span>
+    </div>
+    <div class="pick-row">
+      <span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span>
+      <span class="prob">2.3%</span>
+      <span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span>
+    </div>
+    <div class="pick-total"><span>5点 · 1点100円で <b>500円</b></span><span>どれか的中 <b>13.3%</b></span></div>
+  </section>
+
+  <!-- A: 各艇の確率 -->
+  <section class="card" aria-labelledby="boats1">
+    <div class="card__head"><h2 class="card__title" id="boats1">各艇の確率</h2><span class="right">1着確率</span></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer">
+        <span class="waku waku--l w1 racer__waku">1</span>
+        <div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">吉岡 健太</span><span class="racer__rank">B1 · 埼玉</span></div>
+        <div class="racer__pwin">19<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:19%"></i></span><span class="racer__sub">2着内 <b>37</b> 3着内 <b>53</b></span></div>
+      </div>
+      <div class="racer">
+        <span class="waku waku--l w2 racer__waku">2</span>
+        <div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">中西 遼</span><span class="racer__rank">A2 · 東京</span></div>
+        <div class="racer__pwin">12<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:12%"></i></span><span class="racer__sub">2着内 <b>27</b> 3着内 <b>43</b></span></div>
+      </div>
+      <div class="racer is-top">
+        <span class="waku waku--l w3 racer__waku">3</span>
+        <div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">森本 大輔</span><span class="racer__rank">A1 · 静岡</span></div>
+        <div class="racer__pwin">28<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:28%"></i></span><span class="racer__sub">2着内 <b>47</b> 3着内 <b>62</b></span></div>
+      </div>
+      <div class="racer">
+        <span class="waku waku--l w4 racer__waku">4</span>
+        <div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">村井 隆史</span><span class="racer__rank">B1 · 埼玉</span><span class="chip chip--f">F1</span></div>
+        <div class="racer__pwin">17<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:17%"></i></span><span class="racer__sub">2着内 <b>34</b> 3着内 <b>50</b></span></div>
+      </div>
+      <div class="racer">
+        <span class="waku waku--l w5 racer__waku">5</span>
+        <div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">小川 拓</span><span class="racer__rank">B1 · 群馬</span></div>
+        <div class="racer__pwin">14<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:14%"></i></span><span class="racer__sub">2着内 <b>30</b> 3着内 <b>47</b></span></div>
+      </div>
+      <div class="racer">
+        <span class="waku waku--l w6 racer__waku">6</span>
+        <div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">上野 誠一郎</span><span class="racer__rank">B2 · 千葉</span></div>
+        <div class="racer__pwin">10<small>%</small></div>
+        <div class="racer__bar"><span class="bar"><i style="width:10%"></i></span><span class="racer__sub">2着内 <b>22</b> 3着内 <b>38</b></span></div>
+      </div>
+    </div>
+    <div class="legend"><span>◎○▲△ = 1着確率の1〜4位</span><span>2着内・3着内は %</span></div>
+  </section>
+
+  <!-- B: 確率上位 -->
+  <section class="card" aria-labelledby="rank1">
+    <div class="card__head"><h2 class="card__title" id="rank1">確率上位</h2></div>
+    <nav class="tabs" role="tablist">
+      <a role="tab" aria-selected="false" href="#">単勝</a>
+      <a role="tab" aria-selected="false" href="#">2連単</a>
+      <a role="tab" aria-selected="true" href="#">3連単</a>
+    </nav>
+    <div class="rank-row is-rec"><span class="no">1</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="tag">推奨</span></span><span class="p">3.1%</span><span class="o">32.3<small>倍</small></span></div>
+    <div class="rank-row is-rec"><span class="no">2</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="tag">推奨</span></span><span class="p">2.8%</span><span class="o">35.8<small>倍</small></span></div>
+    <div class="rank-row is-rec"><span class="no">3</span><span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="tag">推奨</span></span><span class="p">2.6%</span><span class="o">38.5<small>倍</small></span></div>
+    <div class="rank-row is-rec"><span class="no">4</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="tag">推奨</span></span><span class="p">2.5%</span><span class="o">40.0<small>倍</small></span></div>
+    <div class="rank-row is-rec"><span class="no">5</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="tag">推奨</span></span><span class="p">2.3%</span><span class="o">43.5<small>倍</small></span></div>
+    <div class="rank-row"><span class="no">6</span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="p">2.2%</span><span class="o">45.5<small>倍</small></span></div>
+    <div class="rank-row"><span class="no">7</span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span></div>
+    <div class="rank-row"><span class="no">8</span><span class="combo"><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span></div>
+    <div class="rank-row"><span class="no">9</span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span><span class="p">1.9%</span><span class="o">52.7<small>倍</small></span></div>
+    <div class="rank-row"><span class="no">10</span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w3">3</span></span><span class="p">1.8%</span><span class="o">55.6<small>倍</small></span></div>
+    <a class="more" style="margin:0;border:0;border-top:1px solid var(--c-border);border-radius:0 0 12px 12px" href="#">11〜20位を表示 ▼</a>
+  </section>
+
+  <!-- B: 選手データ(折りたたみ) -->
+  <section class="card">
+    <details class="fold">
+      <summary>選手データ <span class="count">勝率・モーター・ST・F</span></summary>
+    </details>
+  </section>
+
+  <p class="disclaimer">非公式データに基づく参考情報です。舟券の購入は自己責任で。<a href="#/about">このアプリについて</a></p>
+
+  <nav class="racenav">
+    <a class="prev" href="#/race/20261102-02-04">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#/stadium/02">戸田</a>
+    <a class="next" href="#/race/20261102-02-06"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="players" data-title="締切前・選手データを開いた(下へスクロールした位置)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="racehead__cd is-urgent" style="font-size:16px;margin-right:8px"><small>あと</small>4<small>分</small></span>
+  </header>
+  <section class="card">
+    <details class="fold" open>
+      <summary>選手データ <span class="count">勝率・モーター・ST・F</span></summary>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>枠</th><th>支部</th><th>全国</th><th>当地</th><th>モ2連</th><th>平均ST</th><th>F</th></tr></thead>
+          <tbody>
+            <tr><td><span class="waku waku--s w1">1</span></td><td>埼玉</td><td>4.82</td><td>5.10</td><td>38.2</td><td>0.17</td><td>0</td></tr>
+            <tr><td><span class="waku waku--s w2">2</span></td><td>東京</td><td>5.95</td><td>5.40</td><td>31.5</td><td>0.16</td><td>0</td></tr>
+            <tr><td><span class="waku waku--s w3">3</span></td><td>静岡</td><td class="best">7.12</td><td class="best">6.88</td><td class="best">47.0</td><td class="best">0.13</td><td>0</td></tr>
+            <tr><td><span class="waku waku--s w4">4</span></td><td>埼玉</td><td>5.20</td><td>5.65</td><td>42.1</td><td>0.15</td><td><span class="chip chip--f">F1</span></td></tr>
+            <tr><td><span class="waku waku--s w5">5</span></td><td>群馬</td><td>4.97</td><td>4.30</td><td>35.8</td><td>0.18</td><td>0</td></tr>
+            <tr><td><span class="waku waku--s w6">6</span></td><td>千葉</td><td>3.41</td><td>—</td><td>29.9</td><td>0.20</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="legend" style="padding-top:8px">太字 = レース内の最高(STは最小)。当地「—」= 当地の出走なし。</p>
+    </details>
+  </section>
+  <p class="disclaimer">スクロールで上部ヘッダが残るとき、残り時間をアプリバー右に移す(更新時刻はヘッダ下のブロックに残す)。</p>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="skip" data-title="締切前・見送り(推奨0件)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">住之江 4R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row">
+      <span class="racehead__close">締切 <b>14:35</b></span>
+      <span class="racehead__cd"><small>あと</small> 7<small>分</small></span>
+    </div>
+    <div class="racehead__sub"><span>一般戦 · G3 2日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">0点</span></div>
+    <div class="skip-box"><b>見送り推奨</b><span>買い方の条件に合いません。<br>条件: 1着確率の最大値が35%以上のレースだけ、3連単 確率上位5点</span></div>
+    <p class="card__note">買う場合は下の「確率上位」の必要オッズを参考に。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">各艇の確率</h2><span class="right">1着確率</span></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer"><span class="waku waku--l w1 racer__waku">1</span><div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">加藤 順平</span><span class="racer__rank">B1 · 大阪</span></div><div class="racer__pwin">21<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:21%"></i></span><span class="racer__sub">2着内 <b>40</b> 3着内 <b>56</b></span></div></div>
+      <div class="racer is-top"><span class="waku waku--l w2 racer__waku">2</span><div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">西田 翔</span><span class="racer__rank">A1 · 兵庫</span></div><div class="racer__pwin">33<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:33%"></i></span><span class="racer__sub">2着内 <b>52</b> 3着内 <b>67</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w3 racer__waku">3</span><div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">岩崎 光</span><span class="racer__rank">A2 · 大阪</span></div><div class="racer__pwin">17<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:17%"></i></span><span class="racer__sub">2着内 <b>34</b> 3着内 <b>51</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w4 racer__waku">4</span><div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">林 浩二</span><span class="racer__rank">B1 · 福岡</span></div><div class="racer__pwin">13<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:13%"></i></span><span class="racer__sub">2着内 <b>28</b> 3着内 <b>45</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w5 racer__waku">5</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">堀 雄太</span><span class="racer__rank">B2 · 岡山</span></div><div class="racer__pwin">9<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:9%"></i></span><span class="racer__sub">2着内 <b>21</b> 3着内 <b>37</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w6 racer__waku">6</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">松田 一</span><span class="racer__rank">B1 · 香川</span></div><div class="racer__pwin">7<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:7%"></i></span><span class="racer__sub">2着内 <b>18</b> 3着内 <b>34</b></span></div></div>
+    </div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 3R <small>結果</small></a>
+    <a class="racenav__list" href="#">住之江</a>
+    <a class="next" href="#"><small>15:04</small> 5R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="preview" data-title="締切前・直前予想(Phase 2: 展示情報あり)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:20</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--preview">● 直前予想 14:15</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">各艇の確率</h2><span class="right">展示・進入つき</span></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer"><span class="waku waku--l w1 racer__waku">1</span><div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">吉岡 健太</span><span class="racer__rank">B1</span></div><div class="racer__pwin">21<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:21%"></i></span><span class="racer__sub">2着内 <b>39</b> 3着内 <b>55</b></span></div><div class="racer__extra"><span>展示 6.78</span><span>進入 1</span></div></div>
+      <div class="racer"><span class="waku waku--l w2 racer__waku">2</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">中西 遼</span><span class="racer__rank">A2</span></div><div class="racer__pwin">10<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:10%"></i></span><span class="racer__sub">2着内 <b>24</b> 3着内 <b>40</b></span></div><div class="racer__extra"><span>展示 6.85</span><span class="hl">進入 3(前付け↓)</span></div></div>
+      <div class="racer is-top"><span class="waku waku--l w3 racer__waku">3</span><div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">森本 大輔</span><span class="racer__rank">A1</span></div><div class="racer__pwin">31<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:31%"></i></span><span class="racer__sub">2着内 <b>50</b> 3着内 <b>64</b></span></div><div class="racer__extra"><span class="hl">展示 6.70 ★最速</span><span class="hl">進入 2</span></div></div>
+      <div class="racer"><span class="waku waku--l w4 racer__waku">4</span><div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">村井 隆史</span><span class="racer__rank">B1</span><span class="chip chip--f">F1</span></div><div class="racer__pwin">16<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:16%"></i></span><span class="racer__sub">2着内 <b>33</b> 3着内 <b>49</b></span></div><div class="racer__extra"><span>展示 6.74</span><span>進入 4</span></div></div>
+      <div class="racer"><span class="waku waku--l w5 racer__waku">5</span><div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">小川 拓</span><span class="racer__rank">B1</span></div><div class="racer__pwin">13<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:13%"></i></span><span class="racer__sub">2着内 <b>29</b> 3着内 <b>46</b></span></div><div class="racer__extra"><span>展示 6.81</span><span>進入 5</span></div></div>
+      <div class="racer"><span class="waku waku--l w6 racer__waku">6</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">上野 誠一郎</span><span class="racer__rank">B2</span></div><div class="racer__pwin">9<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:9%"></i></span><span class="racer__sub">2着内 <b>21</b> 3着内 <b>37</b></span></div><div class="racer__extra"><span>展示 6.92</span><span>進入 6</span></div></div>
+    </div>
+    <div class="legend"><span>★ = 展示タイム最速</span><span>黄地 = 枠番と違う進入</span></div>
+  </section>
+  <p class="disclaimer">直前予想では「推奨買い目」が先頭(既定と同じ)。このモックでは展示情報の表示を見せるため、各艇ブロックだけを示す。</p>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="result-hit" data-title="結果あり・的中(当日夜)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 4R</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:02</b></span><span class="chip chip--pre" style="margin-left:auto">結果確定</span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span></div>
+  </div>
+
+  <section class="card card--hit">
+    <div class="card__head"><h2 class="card__title">結果</h2></div>
+    <div class="result">
+      <div class="result__order">
+        <span class="result__pos"><span class="waku waku--l w2">2</span>1着</span>
+        <span class="result__pos"><span class="waku waku--l w1">1</span>2着</span>
+        <span class="result__pos"><span class="waku waku--l w6">6</span>3着</span>
+      </div>
+      <span class="result__tech">差し</span>
+    </div>
+    <div class="result__outcome is-hit">
+      <span class="chip chip--hit">✓ 的中</span><span>3連単 2-1-6</span>
+      <span class="amount">2,750円</span>
+      <span class="muted" style="width:100%">投資 500円(5点) → 払戻 2,750円 · 収支 <b class="is-plus">+2,250円</b></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <div class="pick-head"><span>組合せ</span><span>確率</span><span>必要オッズ</span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w2">2</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span></span><span class="prob">5.2%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>19.3</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row is-hit"><span class="combo"><span class="waku w2">2</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w6">6</span></span><span class="prob">4.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>24.4</b><span class="unit">倍</span></span><span class="cap cap--hit">✓ 的中 27.5倍</span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w2">2</span><span class="sep">-</span><span class="waku w3">3</span></span><span class="prob">3.9%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>25.7</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w2">2</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">3.4%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>29.5</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w2">2</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.2%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>31.3</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-total"><span>5点 <b>500円</b></span><span>どれか的中 <b>19.8%</b></span></div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">各艇の確率</h2><span class="right">1着確率 · 着順</span></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer"><span class="waku waku--l w1 racer__waku">1</span><div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">高橋 正和</span><span class="racer__rank">B1 · 埼玉</span><span class="racer__place">2着</span></div><div class="racer__pwin">28<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:28%"></i></span><span class="racer__sub">2着内 <b>50</b> 3着内 <b>66</b></span></div></div>
+      <div class="racer is-top"><span class="waku waku--l w2 racer__waku">2</span><div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">青木 勇</span><span class="racer__rank">A1 · 東京</span><span class="racer__place">1着</span></div><div class="racer__pwin">41<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:41%"></i></span><span class="racer__sub">2着内 <b>62</b> 3着内 <b>75</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w3 racer__waku">3</span><div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">田村 光一</span><span class="racer__rank">A2 · 群馬</span></div><div class="racer__pwin">13<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:13%"></i></span><span class="racer__sub">2着内 <b>31</b> 3着内 <b>50</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w4 racer__waku">4</span><div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">杉山 卓</span><span class="racer__rank">B1 · 埼玉</span></div><div class="racer__pwin">8<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:8%"></i></span><span class="racer__sub">2着内 <b>20</b> 3着内 <b>38</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w5 racer__waku">5</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">原 真吾</span><span class="racer__rank">B2 · 千葉</span></div><div class="racer__pwin">5<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:5%"></i></span><span class="racer__sub">2着内 <b>14</b> 3着内 <b>31</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w6 racer__waku">6</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">今井 亮</span><span class="racer__rank">B1 · 静岡</span><span class="racer__place">3着</span></div><div class="racer__pwin">5<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:5%"></i></span><span class="racer__sub">2着内 <b>13</b> 3着内 <b>29</b></span></div></div>
+    </div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 3R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>結果</small> 5R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="result-final" data-title="翌日・確定オッズ(公開版: ランクのみ)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">11/1 桐生 9R</h1>
+    <span class="appbar__updated">更新 11/2 09:40</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>16:01</b></span><span class="chip chip--pre" style="margin-left:auto">確定</span></div>
+    <div class="racehead__sub"><span>一般戦 · 一般 2日目</span><span class="chip chip--pre">前日予想 07:28</span></div>
+  </div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">結果</h2></div>
+    <div class="result">
+      <div class="result__order">
+        <span class="result__pos"><span class="waku waku--l w1">1</span>1着</span>
+        <span class="result__pos"><span class="waku waku--l w4">4</span>2着</span>
+        <span class="result__pos"><span class="waku waku--l w5">5</span>3着</span>
+      </div>
+      <span class="result__tech">逃げ</span>
+    </div>
+    <div class="result__outcome">
+      <span class="chip chip--miss">× 不的中</span><span>3連単 1-4-5 は推奨外</span>
+      <span class="amount" style="color:var(--c-text-2)">0円</span>
+      <span class="muted" style="width:100%">投資 500円(5点) → 払戻 0円 · 収支 <b class="is-minus">−500円</b></span>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">確定オッズでの期待値</h2><span class="right">参考(締切後のオッズ)</span></div>
+    <div class="ev-row" style="font-size:11px;color:var(--c-text-2);border-top:0"><span>推奨買い目</span><span>必要オッズ</span><span style="text-align:right;min-width:64px">ランク</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w3">3</span></span><span class="faint">≧9.8倍</span><span class="ev" style="display:flex;justify-content:flex-end"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span><span class="faint">≧11.6倍</span><span class="ev" style="display:flex;justify-content:flex-end"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="faint">≧14.3倍</span><span class="ev" style="display:flex;justify-content:flex-end"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span><span class="faint">≧25.0倍</span><span class="ev" style="display:flex;justify-content:flex-end"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="faint">≧26.4倍</span><span class="ev" style="display:flex;justify-content:flex-end"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <p class="card__note" style="padding-top:8px">確定オッズ(払戻の倍率)で計算した期待値のランク(A 1.2以上 · B 1.0〜1.2 · C 0.8〜1.0 · D 0.8未満)。締切前にこのオッズで買えたとは限りません。オッズ・期待値の数値はローカル表示でだけ見られます。</p>
+  </section>
+  <section class="card"><details class="fold"><summary>推奨買い目・各艇の確率 <span class="count">予想の内容</span></summary></details></section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 8R <small>結果</small></a>
+    <a class="racenav__list" href="#">桐生</a>
+    <a class="next" href="#"><small>結果</small> 10R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="result-final-local" data-title="翌日・確定オッズ(ローカル版: 数値あり)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">11/1 桐生 9R</h1><span class="localmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg>ローカル</span>
+    <span class="appbar__updated">更新 11/2 09:40</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>16:01</b></span><span class="chip chip--pre" style="margin-left:auto">確定</span></div>
+    <div class="racehead__sub"><span>一般戦 · 一般 2日目</span><span class="chip chip--pre">前日予想 07:28</span></div>
+  </div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">結果</h2></div>
+    <div class="result">
+      <div class="result__order">
+        <span class="result__pos"><span class="waku waku--l w1">1</span>1着</span>
+        <span class="result__pos"><span class="waku waku--l w4">4</span>2着</span>
+        <span class="result__pos"><span class="waku waku--l w5">5</span>3着</span>
+      </div>
+      <span class="result__tech">逃げ</span>
+    </div>
+    <div class="result__outcome">
+      <span class="chip chip--miss">× 不的中</span><span>3連単 1-4-5 は推奨外</span>
+      <span class="amount" style="color:var(--c-text-2)">0円</span>
+      <span class="muted" style="width:100%">投資 500円(5点) → 払戻 0円 · 収支 <b class="is-minus">−500円</b></span>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">確定オッズでの期待値</h2><span class="right">参考(締切後のオッズ)</span></div>
+    <div class="ev-row" style="font-size:11px;color:var(--c-text-2);border-top:0"><span>推奨買い目</span><span>確定オッズ</span><span style="text-align:right;min-width:64px">期待値</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w3">3</span></span><span>8.4倍 <span class="faint">/ 必要 9.8</span></span><span class="ev is-minus">0.86</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span><span>13.9倍 <span class="faint">/ 必要 11.6</span></span><span class="ev is-plus">▲ 1.20</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w2">2</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span>15.2倍 <span class="faint">/ 必要 14.3</span></span><span class="ev is-plus">▲ 1.06</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w2">2</span></span><span>21.0倍 <span class="faint">/ 必要 25.0</span></span><span class="ev is-minus">0.84</span></div>
+    <div class="ev-row"><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span>24.6倍 <span class="faint">/ 必要 26.4</span></span><span class="ev is-minus">0.93</span></div>
+    <p class="card__note" style="padding-top:8px">▲ = 期待値1.0以上(確定オッズが必要オッズを上回った)。締切前にこのオッズで買えたとは限らない。</p>
+  </section>
+  <section class="card"><details class="fold"><summary>推奨買い目・各艇の確率 <span class="count">予想の内容</span></summary></details></section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 8R <small>結果</small></a>
+    <a class="racenav__list" href="#">桐生</a>
+    <a class="next" href="#"><small>結果</small> 10R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="absent" data-title="欠場あり(結果あり・返還)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">大村 6R</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>13:45</b></span><span class="chip chip--pre" style="margin-left:auto">結果確定</span></div>
+    <div class="racehead__sub"><span>予選 · 一般 5日目</span><span class="chip chip--pre">前日予想 07:30</span></div>
+  </div>
+  <div class="banner banner--offline"><span class="banner__icon">!</span><div class="banner__body"><b>4号艇が欠場</b><br>4を含む買い目は返還(払戻に計上)。確率は欠場前の予想のまま表示しています。</div></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">結果</h2></div>
+    <div class="result">
+      <div class="result__order">
+        <span class="result__pos"><span class="waku waku--l w1">1</span>1着</span>
+        <span class="result__pos"><span class="waku waku--l w2">2</span>2着</span>
+        <span class="result__pos"><span class="waku waku--l w3">3</span>3着</span>
+      </div>
+      <span class="result__tech">逃げ</span>
+    </div>
+    <div class="result__outcome">
+      <span class="chip chip--miss">× 不的中</span><span>返還 2点</span>
+      <span class="amount" style="color:var(--c-text-2)">200円</span>
+      <span class="muted" style="width:100%">投資 500円 → 払戻 200円(返還分) · 収支 <b class="is-minus">−300円</b></span>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <div class="pick-head"><span>組合せ</span><span>確率</span><span>必要オッズ</span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w2">2</span></span><span class="prob">9.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>10.5</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row is-refund"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4 is-absent">4</span><span class="sep">-</span><span class="waku w2">2</span></span><span class="prob">7.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>14.1</b><span class="unit">倍</span></span><span class="cap cap--refund">返還</span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">6.0%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>16.7</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row is-refund"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w2">2</span><span class="sep">-</span><span class="waku w4 is-absent">4</span></span><span class="prob">5.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>17.3</b><span class="unit">倍</span></span><span class="cap cap--refund">返還</span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w3">3</span></span><span class="prob">5.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>19.7</b><span class="unit">倍</span></span></span></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">各艇の確率</h2></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer is-top"><span class="waku waku--l w1 racer__waku">1</span><div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">福田 浩</span><span class="racer__rank">A1 · 長崎</span><span class="racer__place">1着</span></div><div class="racer__pwin">61<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:61%"></i></span><span class="racer__sub">2着内 <b>78</b> 3着内 <b>87</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w2 racer__waku">2</span><div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">宮本 修</span><span class="racer__rank">B1 · 佐賀</span><span class="racer__place">2着</span></div><div class="racer__pwin">10<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:10%"></i></span><span class="racer__sub">2着内 <b>32</b> 3着内 <b>55</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w3 racer__waku">3</span><div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">谷口 健</span><span class="racer__rank">A2 · 福岡</span><span class="racer__place">3着</span></div><div class="racer__pwin">12<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:12%"></i></span><span class="racer__sub">2着内 <b>36</b> 3着内 <b>58</b></span></div></div>
+      <div class="racer is-absent"><span class="waku waku--l w4 racer__waku is-absent">4</span><div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">岡 直樹</span><span class="chip chip--cancel">欠場</span></div><div class="racer__pwin faint">9<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:9%"></i></span><span class="racer__sub">予想時の値</span></div></div>
+      <div class="racer"><span class="waku waku--l w5 racer__waku">5</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">平野 剛</span><span class="racer__rank">B1 · 長崎</span></div><div class="racer__pwin">5<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:5%"></i></span><span class="racer__sub">2着内 <b>18</b> 3着内 <b>36</b></span></div></div>
+      <div class="racer"><span class="waku waku--l w6 racer__waku">6</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">川口 学</span><span class="racer__rank">B2 · 福岡</span></div><div class="racer__pwin">3<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:3%"></i></span><span class="racer__sub">2着内 <b>11</b> 3着内 <b>24</b></span></div></div>
+    </div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 5R <small>結果</small></a>
+    <a class="racenav__list" href="#">大村</a>
+    <a class="next" href="#"><small>14:47</small> 7R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="canceled" data-title="中止">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">若松 4R</h1>
+    <span class="appbar__updated">更新 21:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>13:48</b></span><span class="chip chip--cancel" style="margin-left:auto">中止</span></div>
+    <div class="racehead__sub"><span>予選 · G1 4日目</span></div>
+  </div>
+  <div class="empty">
+    <div class="empty__icon">⊘</div>
+    <div class="empty__title">このレースは中止になりました</div>
+    <div class="empty__text">舟券は全額返還です。成績(回収率)の計算からは外しています。</div>
+  </div>
+  <section class="card"><details class="fold"><summary>中止前の予想を見る <span class="count">推奨5点 · ◎1</span></summary></details></section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 3R <small>結果</small></a>
+    <a class="racenav__list" href="#">若松</a>
+    <a class="next" href="#"><small>14:44</small> 5R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="no-prediction" data-title="予想なし(prediction=null)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">若松 5R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:44</b></span><span class="racehead__cd"><small>あと</small> 16<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · G1 4日目</span></div>
+  </div>
+  <div class="empty">
+    <div class="empty__icon">—</div>
+    <div class="empty__title">このレースの予想はありません</div>
+    <div class="empty__text">出走表のデータが欠けていたため、予想できませんでした。</div>
+  </div>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>中止</small></a>
+    <a class="racenav__list" href="#">若松</a>
+    <a class="next" href="#"><small>15:12</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="closed-wait" data-title="締切後・結果待ち">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">桐生 5R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:00</b></span><span class="chip chip--wait" style="margin-left:auto">締切済み · 結果待ち</span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span></div>
+  </div>
+  <div class="banner banner--muted"><span class="banner__icon">ℹ</span><div class="banner__body">結果は次のデータ更新で反映されます。</div></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <div class="pick-head"><span>組合せ</span><span>確率</span><span>必要オッズ</span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w2">2</span></span><span class="prob">3.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>27.8</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span class="combo"><span class="waku w4">4</span><span class="sep">-</span><span class="waku w2">2</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-total"><span>…(以下略)</span><span></span></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">桐生</a>
+    <a class="next" href="#"><small>14:30</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="ev-public" data-title="期待値ランク(公開版: ランクと取得時刻のみ)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="oddstime oddstime--ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>14:27時点</b>(締切5分前)のオッズで期待値を計算</span></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <div class="legend" style="padding-top:8px"><span>期待値ランク: A 1.2以上 · B 1.0〜1.2 · C 0.8〜1.0 · D 0.8未満</span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。買う前に投票アプリの最新オッズで確かめてください。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">確率上位</h2><span class="right">期待値つき</span></div>
+    <nav class="tabs" role="tablist"><a role="tab" aria-selected="false" href="#">単勝</a><a role="tab" aria-selected="false" href="#">2連単</a><a role="tab" aria-selected="true" href="#">3連単</a></nav>
+    <div class="rank-row has-ev is-rec"><span class="no">1</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="tag">推奨</span></span><span class="p">3.1%</span><span class="o">32.3<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">2</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="tag">推奨</span></span><span class="p">2.8%</span><span class="o">35.8<small>倍</small></span><span class="evr evr--A evr--s" aria-label="期待値ランクA">A</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">3</span><span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="tag">推奨</span></span><span class="p">2.6%</span><span class="o">38.5<small>倍</small></span><span class="evr evr--D evr--s" aria-label="期待値ランクD">D</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">4</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="tag">推奨</span></span><span class="p">2.5%</span><span class="o">40.0<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">5</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="tag">推奨</span></span><span class="p">2.3%</span><span class="o">43.5<small>倍</small></span><span class="evr evr--C evr--s" aria-label="期待値ランクC">C</span></div>
+    <div class="rank-row has-ev"><span class="no">6</span><span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span></span><span class="p">2.2%</span><span class="o">45.5<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev"><span class="no">7</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span><span class="evr evr--A evr--s" aria-label="期待値ランクA">A</span></div>
+    <div class="rank-row has-ev"><span class="no">8</span><span><span class="combo"><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span><span class="evr evr--D evr--s" aria-label="期待値ランクD">D</span></div>
+    <a class="more" style="margin:0;border:0;border-top:1px solid var(--c-border);border-radius:0 0 12px 12px" href="#">9〜20位を表示 ▼</a>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="ev-local" data-title="期待値(ローカル版: オッズ・期待値の数値あり)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1><span class="localmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg>ローカル</span>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="oddstime oddstime--ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>14:27時点</b>(締切5分前)の締切前オッズ</span></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">締切前オッズ <b>34.8</b>倍 → 期待値 <b class="ev-plus">▲ 1.08</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span><span class="local">締切前オッズ <b>48.2</b>倍 → 期待値 <b class="ev-plus">▲ 1.35</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span><span class="local">締切前オッズ <b>30.1</b>倍 → 期待値 <b class="">0.78</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">締切前オッズ <b>45.0</b>倍 → 期待値 <b class="ev-plus">▲ 1.13</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">締切前オッズ <b>39.6</b>倍 → 期待値 <b class="">0.91</b></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <div class="legend" style="padding-top:8px"><span>期待値ランク: A 1.2以上 · B 1.0〜1.2 · C 0.8〜1.0 · D 0.8未満</span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。買う前に投票アプリの最新オッズで確かめてください。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="ev-custom" data-title="設定で計算し直した推奨(期待値B以上で絞る・1点200円)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="mine">あなたの設定</span><span class="right"><a href="#/settings">設定 ›</a></span></div>
+    <p class="picks-hint">3連単 上位5点 · <b>期待値ランクB以上</b>だけ</p>
+    <div class="oddstime oddstime--ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>14:27時点</b>(締切5分前)のオッズで期待値を計算</span></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.2%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>45.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.0%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>50.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-total"><span>5点 · 1点200円で <b>1,000円</b></span><span>どれか的中 <b>12.6%</b></span></div>
+    <p class="oddsnote">既定の推奨(3連単 上位5点)とは違います。ランクC・D の 1-3-4、3-5-1 を外し、6位・7位の 1-3-5、3-4-5 を入れました。</p>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。買う前に投票アプリの最新オッズで確かめてください。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">確率上位</h2><span class="right">期待値つき</span></div>
+    <nav class="tabs" role="tablist"><a role="tab" aria-selected="false" href="#">単勝</a><a role="tab" aria-selected="false" href="#">2連単</a><a role="tab" aria-selected="true" href="#">3連単</a></nav>
+    <div class="rank-row has-ev is-rec"><span class="no">1</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span><span class="tag">推奨</span></span><span class="p">3.1%</span><span class="o">32.3<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">2</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span><span class="tag">推奨</span></span><span class="p">2.8%</span><span class="o">35.8<small>倍</small></span><span class="evr evr--A evr--s" aria-label="期待値ランクA">A</span></div>
+    <div class="rank-row has-ev"><span class="no">3</span><span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span></span></span><span class="p">2.6%</span><span class="o">38.5<small>倍</small></span><span class="evr evr--D evr--s" aria-label="期待値ランクD">D</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">4</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="tag">推奨</span></span><span class="p">2.5%</span><span class="o">40.0<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev"><span class="no">5</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span></span><span class="p">2.3%</span><span class="o">43.5<small>倍</small></span><span class="evr evr--C evr--s" aria-label="期待値ランクC">C</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">6</span><span><span class="combo"><span class="waku waku--s w1">1</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="tag">推奨</span></span><span class="p">2.2%</span><span class="o">45.5<small>倍</small></span><span class="evr evr--B evr--s" aria-label="期待値ランクB">B</span></div>
+    <div class="rank-row has-ev is-rec"><span class="no">7</span><span><span class="combo"><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w5">5</span></span><span class="tag">推奨</span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span><span class="evr evr--A evr--s" aria-label="期待値ランクA">A</span></div>
+    <div class="rank-row has-ev"><span class="no">8</span><span><span class="combo"><span class="waku waku--s w4">4</span><span class="sep">-</span><span class="waku waku--s w3">3</span><span class="sep">-</span><span class="waku waku--s w1">1</span></span></span><span class="p">2.0%</span><span class="o">50.0<small>倍</small></span><span class="evr evr--D evr--s" aria-label="期待値ランクD">D</span></div>
+    <a class="more" style="margin:0;border:0;border-top:1px solid var(--c-border);border-radius:0 0 12px 12px" href="#">9〜20位を表示 ▼</a>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="odds-late" data-title="締切前オッズの取得遅れ(status=late)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="oddstime oddstime--late"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg><span><b>締切前オッズを取得できませんでした</b>(取得が間に合わず)。期待値ランクはありません。必要オッズを投票アプリのオッズと比べてください。</span></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b></span></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="odds-pending" data-title="オッズ未取得(取得前・odds_snapshot=null)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd "><small>あと</small> 24<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="oddstime oddstime--none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>オッズは<b>締切5分前(14:27ごろ)</b>に取得します。取得後に期待値ランクが出ます。</span></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--none" aria-label="期待値ランクなし">—</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b></span></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="ev-custom-noodds" data-title="設定(期待値で絞る)+オッズなし → 見送り">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="mine">あなたの設定</span><span class="right"><a href="#/settings">設定 ›</a></span></div>
+    <div class="oddstime oddstime--late"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg><span><b>締切前オッズを取得できませんでした</b>(取得が間に合わず)</span></div>
+    <div class="skip-box"><b>見送り</b><span>期待値で絞る設定ですが、オッズが無いため見送りました。<br>(設定: オッズが無いときは「見送る」)</span></div>
+    <p class="card__note">既定の推奨は 5点(3-1-4 ほか)。確率上位の必要オッズも参考に。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-ready" data-title="Worker で取得する前(公開ランク 14:27時点を表示中)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch" role="status"><div class="fetch__row"><div class="fetch__text"><span class="src">公開ランク</span><b>14:27時点</b>のオッズで計算<br>ボタンで今のオッズを取り、期待値を数値で見られます。</div><button class="fetchbtn">オッズを取る<small>30秒ほど</small></button></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-loading" data-title="取得中(進み具合・取り消し)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch" role="status" aria-live="polite"><div class="fetch__row"><div class="fetch__text"><span class="fetch__title">オッズを取得中… 12秒</span>公式サイトから順に取っています(30秒ほど。最大45秒で打ち切り)</div><button class="fetchbtn fetchbtn--sub">取り消し</button></div><div class="progress" aria-hidden="true"><i style="width:45%"></i></div><div class="steps"><span class="is-done">3連単</span><span class="is-now">2連単・2連複</span><span>単勝・複勝</span></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-ok" data-title="取得成功(数値で表示・推奨を再計算・60秒は更新不可)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch" role="status"><div class="fetch__row"><div class="fetch__text"><span class="src src--worker">今のオッズ</span><b>14:28:40 時点</b>(公式「14:28現在」)<br>推奨・期待値をこのオッズで計算し直しました。</div><button class="fetchbtn" disabled>更新<small>あと48秒</small></button></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>31.5</b>倍 → 期待値 <b class="">0.98</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span><span class="local">オッズ <b>44.0</b>倍 → 期待値 <b class="ev-plus">▲ 1.23</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span><span class="local">オッズ <b>29.4</b>倍 → 期待値 <b class="">0.76</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">オッズ <b>46.8</b>倍 → 期待値 <b class="ev-plus">▲ 1.17</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>40.1</b>倍 → 期待値 <b class="">0.92</b></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>2点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+    <p class="oddsnote" style="padding-top:0">取得したオッズはこの端末にだけ表示します(保存・送信しません)。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-cached" data-title="取得成功・キャッシュから(◯秒前に取得したもの)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch" role="status"><div class="fetch__row"><div class="fetch__text"><span class="src src--cache">キャッシュ</span><b>14:28:10 時点</b>(32秒前に取得したもの)<br>直前に取ったオッズを使い回しています。</div><button class="fetchbtn" disabled>更新<small>あと28秒</small></button></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>31.5</b>倍 → 期待値 <b class="">0.98</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span><span class="local">オッズ <b>44.0</b>倍 → 期待値 <b class="ev-plus">▲ 1.23</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span><span class="local">オッズ <b>29.4</b>倍 → 期待値 <b class="">0.76</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">オッズ <b>46.8</b>倍 → 期待値 <b class="ev-plus">▲ 1.17</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>40.1</b>倍 → 期待値 <b class="">0.92</b></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>2点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+    <p class="oddsnote" style="padding-top:0">取得したオッズはこの端末にだけ表示します(保存・送信しません)。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-partial" data-title="一部の券種だけ取得(取れた券種で計算)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch fetch--warn" role="status"><div class="fetch__row"><span class="fetch__icon">!</span><div class="fetch__text"><span class="fetch__title">一部の券種を取れませんでした</span><b>14:28:40 時点</b> · 取れた券種だけで計算しています。</div><button class="fetchbtn" disabled>更新<small>あと48秒</small></button></div><div class="steps" style="margin-top:8px"><span class="is-done">3連単</span><span class="is-done">2連単・2連複</span><span class="is-fail">単勝・複勝</span></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>31.5</b>倍 → 期待値 <b class="">0.98</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span><span class="local">オッズ <b>44.0</b>倍 → 期待値 <b class="ev-plus">▲ 1.23</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span><span class="local">オッズ <b>29.4</b>倍 → 期待値 <b class="">0.76</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">オッズ <b>46.8</b>倍 → 期待値 <b class="ev-plus">▲ 1.17</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>40.1</b>倍 → 期待値 <b class="">0.92</b></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>2点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+    <p class="oddsnote" style="padding-top:0">取得したオッズはこの端末にだけ表示します(保存・送信しません)。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-nokey" data-title="合言葉(または URL)が未設定 → 設定へ誘導">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch fetch--warn" role="alert"><div class="fetch__row"><span class="fetch__icon">🔑</span><div class="fetch__text"><span class="fetch__title">オッズ取得の設定がまだです</span>Worker の URL と合言葉を設定すると、ここで今のオッズを取れます。</div><a class="fetchbtn fetchbtn--sub" href="#/settings">設定へ</a></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="fetch-errors" data-title="取得の失敗(各エラーの表示一覧)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <p class="catalog-h">失敗の表示(推奨カードの同じ位置に1つだけ出す。下の推奨は公開ランクのまま)</p>
+  <section class="card" style="padding-bottom:12px">
+    <p class="catalog-h" style="margin:12px 12px 0">401 unauthorized</p>
+    <div class="fetch fetch--error" role="alert"><div class="fetch__row"><span class="fetch__icon">🔑</span><div class="fetch__text"><span class="fetch__title">合言葉が違います</span>設定の合言葉を確かめてください。</div><a class="fetchbtn fetchbtn--sub" href="#/settings">設定へ</a></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">409 closed</p>
+    <div class="fetch fetch--warn" role="alert"><div class="fetch__row"><span class="fetch__icon">⏱</span><div class="fetch__text"><span class="fetch__title">締切後のため取得しません</span>確定オッズは翌日に反映されます。</div></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">429 daily_limit</p>
+    <div class="fetch fetch--warn" role="alert"><div class="fetch__row"><span class="fetch__icon">⊘</span><div class="fetch__text"><span class="fetch__title">今日の取得上限に達しました</span>上限 300ページ / 日。明日になると使えます。必要オッズと投票アプリのオッズで判断してください。</div></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">502 upstream_error</p>
+    <div class="fetch fetch--error" role="alert"><div class="fetch__row"><span class="fetch__icon">!</span><div class="fetch__text"><span class="fetch__title">公式サイトから取得できませんでした</span>時間をおいて再試行してください。</div><button class="fetchbtn fetchbtn--sub">再試行</button></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">503 stopped</p>
+    <div class="fetch fetch--error" role="alert"><div class="fetch__row"><span class="fetch__icon">■</span><div class="fetch__text"><span class="fetch__title">今日は取得を停止しています</span>公式サイトから制限の応答があったため、今日は取りに行きません(明日に自動で再開)。</div></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">通信失敗・オフライン</p>
+    <div class="fetch fetch--warn" role="alert"><div class="fetch__row"><span class="fetch__icon">⚠</span><div class="fetch__text"><span class="fetch__title">通信できませんでした</span>電波の状態を確かめて、再試行してください。</div><button class="fetchbtn fetchbtn--sub">再試行</button></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">タイムアウト(45秒)</p>
+    <div class="fetch fetch--error" role="alert"><div class="fetch__row"><span class="fetch__icon">⏱</span><div class="fetch__text"><span class="fetch__title">時間がかかりすぎたため打ち切りました</span>公式サイトが混んでいる可能性があります。</div><button class="fetchbtn fetchbtn--sub">再試行</button></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">400 bad_request / 403 forbidden_origin</p>
+    <div class="fetch fetch--error" role="alert"><div class="fetch__row"><span class="fetch__icon">!</span><div class="fetch__text"><span class="fetch__title">取得できません(要求の誤り)</span>アプリの更新や、設定の URL を確かめてください。</div><a class="fetchbtn fetchbtn--sub" href="#/settings">設定へ</a></div></div>
+    <p class="catalog-h" style="margin:12px 12px 0">締切後に開いた(ボタン自体を出さない)</p>
+    <div class="fetch" role="status"><div class="fetch__row"><div class="fetch__text"><span class="src">公開ランク</span><b>14:27時点</b>のオッズで計算<br>締切後のため、オッズは取得できません。</div></div></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="source-manual" data-title="オッズの出どころ: 手入力が Worker より優先">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:27</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="chip chip--pre">前日予想 07:30</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら買い(期待値プラス)</p>
+    <div class="fetch" role="status"><div class="fetch__row"><div class="fetch__text"><span class="src src--worker">今のオッズ</span><b>14:28:40 時点</b> · <span class="src src--manual">手入力</span>1点<br>手入力した値を優先して計算しています(手入力 → Worker → 公開ランク の順)。</div><button class="fetchbtn">更新<small>取り直す</small></button></div></div>
+    <div class="pick-head has-ev"><span>組合せ</span><span>確率</span><span>必要オッズ</span><span>ランク</span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local"><span class="src src--manual" style="font-size:11px;font-weight:800;color:var(--c-local)">手入力</span> <input class="oddsin" value="36.0" inputmode="decimal" aria-label="オッズ"> 倍 → 期待値 <b class="ev-plus">▲ 1.12</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--A" aria-label="期待値ランクA">A</span></span><span class="local">オッズ <b>44.0</b>倍 → 期待値 <b class="ev-plus">▲ 1.23</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w1">1</span><span class="sep">-</span><span class="waku w3">3</span><span class="sep">-</span><span class="waku w4">4</span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--D" aria-label="期待値ランクD">D</span></span><span class="local">オッズ <b>29.4</b>倍 → 期待値 <b class="">0.76</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w1">1</span><span class="sep">-</span><span class="waku w5">5</span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--B" aria-label="期待値ランクB">B</span></span><span class="local">オッズ <b>46.8</b>倍 → 期待値 <b class="ev-plus">▲ 1.17</b></span></div>
+    <div class="pick-row has-ev"><span class="combo"><span class="waku w3">3</span><span class="sep">-</span><span class="waku w5">5</span><span class="sep">-</span><span class="waku w1">1</span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span><span class="evcol"><span class="evr evr--C" aria-label="期待値ランクC">C</span></span><span class="local">オッズ <b>40.1</b>倍 → 期待値 <b class="">0.92</b></span></div>
+    <div class="pick-total"><span>5点 · 500円</span><span>どれか的中 <b>13.3%</b> · B以上 <b>3点</b></span></div>
+    <p class="oddsnote"><b>締切前のオッズは締切までに変わります。</b>確定オッズ(払戻の倍率)とは違います。投票は投票アプリの最新オッズで確認してください。</p>
+    <p class="oddsnote" style="padding-top:0">取得したオッズはこの端末にだけ表示します(保存・送信しません)。</p>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="loading" data-title="読み込み中(直リンクで開いた直後)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="一覧へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+  </header>
+  <div class="racehead"><span class="sk" style="width:60%;height:22px"></span><span class="sk" style="width:80%;height:14px;margin-top:8px"></span></div>
+  <section class="card" aria-busy="true"><div class="card__body"><span class="sk" style="width:40%;height:16px"></span><span class="sk" style="height:44px;margin-top:12px"></span><span class="sk" style="height:44px;margin-top:8px"></span><span class="sk" style="height:44px;margin-top:8px"></span></div></section>
+  <section class="card"><div class="card__body"><span class="sk" style="width:40%;height:16px"></span><span class="sk" style="height:40px;margin-top:12px"></span><span class="sk" style="height:40px;margin-top:8px"></span></div></section>
+  <p class="disclaimer">URL(#/race/20261102-02-05)からわかる場名・R番号は先に出す。</p>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="p3a-before" data-title="Phase 3a: 版・根拠・自分の印・メモ・直前情報・買い目合計(DA-5)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">戸田 5R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <div class="ver"><span class="chip chip--pre">前日版</span><span class="lock">🔒 確定 07:30</span><span>モデル pre_20261101_a1b2</span><span>直前版: なし(検証中)</span></div>
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">モデルの上位の買い目</h2><span class="right">3連単 確率上位5点</span></div>
+    <p class="picks-hint">投票アプリのオッズが <b>必要オッズ以上</b> なら期待値プラスの目安<span class="help" aria-label="必要オッズとは">?</span></p>
+    <div class="tip">必要オッズ = 1 ÷ 確率。これより高いオッズなら、確率どおりなら長い目で見て損をしない目安です(的中を保証しません)。</div>
+    <div class="pick-head"><span>組合せ</span><span>確率</span><span>必要オッズ</span></div>
+    <div class="pick-row"><span><input type="checkbox" checked aria-label="選ぶ" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><span class="combo"><span class="waku  w3">3</span><span class="sep">-</span><span class="waku  w1">1</span><span class="sep">-</span><span class="waku  w4">4</span></span></span><span class="prob">3.1%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>32.3</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span><input type="checkbox" checked aria-label="選ぶ" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><span class="combo"><span class="waku  w3">3</span><span class="sep">-</span><span class="waku  w4">4</span><span class="sep">-</span><span class="waku  w1">1</span></span></span><span class="prob">2.8%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>35.8</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span><input type="checkbox" checked aria-label="選ぶ" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><span class="combo"><span class="waku  w1">1</span><span class="sep">-</span><span class="waku  w3">3</span><span class="sep">-</span><span class="waku  w4">4</span></span></span><span class="prob">2.6%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>38.5</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span><input type="checkbox" checked aria-label="選ぶ" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><span class="combo"><span class="waku  w3">3</span><span class="sep">-</span><span class="waku  w1">1</span><span class="sep">-</span><span class="waku  w5">5</span></span></span><span class="prob">2.5%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>40.0</b><span class="unit">倍</span></span></span></div>
+    <div class="pick-row"><span><input type="checkbox" checked aria-label="選ぶ" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><span class="combo"><span class="waku  w3">3</span><span class="sep">-</span><span class="waku  w5">5</span><span class="sep">-</span><span class="waku  w1">1</span></span></span><span class="prob">2.3%</span><span class="reqodds"><span class="req"><span class="ge">≧</span><b>43.5</b><span class="unit">倍</span></span></span></div>
+  </section>
+  <section class="sum" aria-label="買い目合計">
+    <div class="card__head"><h2 class="card__title">選んだ買い目の合計</h2><span class="right">1点100円</span></div>
+    <div class="sum__grid" style="margin-top:8px"><div><div class="k">点数</div><div class="v">5点</div></div><div><div class="k">総額</div><div class="v">500円</div></div><div><div class="k">合成オッズ<span class="help">?</span></div><div class="v">7.8倍</div></div></div>
+    <p class="alloc" style="padding-top:8px">トリガミ<span class="help">?</span>を避ける配分(総額500円のまま): 3-1-4 100 · 3-4-1 100 · 1-3-4 100 · 3-1-5 100 · 3-5-1 100 → どれが当たっても払戻 ≧ 総額。<br>オッズは14:28:40に取得したもの(手入力・Worker)。オッズが無いときは合成オッズを出しません。</p>
+    <div class="sum__btns"><button class="btn">買い目をコピー</button><button class="btn btn--primary">購入を記録</button></div>
+    <p class="alloc">コピーの中身: 「戸田 5R 3連単 3-1-4 100円 …(オッズの数値なし)/ 個人用の参考情報・的中を保証しない」<br><a href="https://www.boatrace.jp/" style="text-decoration:underline">公式サイト(トップ)を開く ↗</a></p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">各艇の確率と根拠</h2><span class="right">▲上げる / ▼下げる要因</span></div>
+    <div class="card__body" style="padding:0">
+      <div class="racer"><span class="waku waku--l w1 racer__waku">1</span><div class="racer__name"><span class="racer__mark">○</span><span class="racer__nm">吉岡 健太</span><span class="racer__rank">B1 · 埼玉</span></div><div class="racer__pwin">19<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:19%"></i></span><span class="racer__sub">2着内 <b>37</b> 3着内 <b>53</b></span></div><div class="why"><span class="up">1コース<span class="lv">▮▮▮</span></span><span class="dn">全国勝率 4.82<span class="lv">▮▮</span></span><span class="dn">当地勝率 5.10<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="false">◎</button><button aria-pressed="true">○</button><button aria-pressed="false">▲</button><button aria-pressed="false">△</button></div></div>
+      <div class="racer"><span class="waku waku--l w2 racer__waku">2</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">中西 遼</span><span class="racer__rank">A2 · 東京</span></div><div class="racer__pwin">12<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:12%"></i></span><span class="racer__sub">2着内 <b>27</b> 3着内 <b>43</b></span></div><div class="why"><span class="up">全国勝率 5.95<span class="lv">▮▮</span></span><span class="dn">2コース<span class="lv">▮</span></span><span class="dn">モーター2連率 31.5<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="false">◎</button><button aria-pressed="false">○</button><button aria-pressed="false">▲</button><button aria-pressed="false">△</button></div></div>
+      <div class="racer"><span class="waku waku--l w3 racer__waku">3</span><div class="racer__name"><span class="racer__mark m1">◎</span><span class="racer__nm">森本 大輔</span><span class="racer__rank">A1 · 静岡</span></div><div class="racer__pwin">28<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:28%"></i></span><span class="racer__sub">2着内 <b>47</b> 3着内 <b>62</b></span></div><div class="why"><span class="up">全国勝率 7.12<span class="lv">▮▮▮</span></span><span class="up">平均ST 0.13<span class="lv">▮▮</span></span><span class="up">この場・3コースの1着率(1年)<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="true">◎</button><button aria-pressed="false">○</button><button aria-pressed="false">▲</button><button aria-pressed="false">△</button></div></div>
+      <div class="racer"><span class="waku waku--l w4 racer__waku">4</span><div class="racer__name"><span class="racer__mark">▲</span><span class="racer__nm">村井 隆史</span><span class="racer__rank">B1 · 埼玉</span></div><div class="racer__pwin">17<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:17%"></i></span><span class="racer__sub">2着内 <b>34</b> 3着内 <b>50</b></span></div><div class="why"><span class="up">モーター2連率 42.1<span class="lv">▮▮</span></span><span class="dn">F1<span class="lv">▮▮</span></span><span class="up">当地勝率 5.65<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="false">◎</button><button aria-pressed="false">○</button><button aria-pressed="true">▲</button><button aria-pressed="false">△</button></div></div>
+      <div class="racer"><span class="waku waku--l w5 racer__waku">5</span><div class="racer__name"><span class="racer__mark">△</span><span class="racer__nm">小川 拓</span><span class="racer__rank">B1 · 群馬</span></div><div class="racer__pwin">14<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:14%"></i></span><span class="racer__sub">2着内 <b>30</b> 3着内 <b>47</b></span></div><div class="why"><span class="dn">5コース<span class="lv">▮▮</span></span><span class="up">平均ST 0.15<span class="lv">▮</span></span><span class="dn">当地勝率 4.30<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="false">◎</button><button aria-pressed="false">○</button><button aria-pressed="false">▲</button><button aria-pressed="false">△</button></div></div>
+      <div class="racer"><span class="waku waku--l w6 racer__waku">6</span><div class="racer__name"><span class="racer__mark"></span><span class="racer__nm">上野 誠一郎</span><span class="racer__rank">B2 · 千葉</span></div><div class="racer__pwin">10<small>%</small></div><div class="racer__bar"><span class="bar"><i style="width:10%"></i></span><span class="racer__sub">2着内 <b>22</b> 3着内 <b>38</b></span></div><div class="why"><span class="dn">6コース<span class="lv">▮▮▮</span></span><span class="dn">全国勝率 3.41<span class="lv">▮▮</span></span><span class="dn">級別 B2<span class="lv">▮</span></span></div><div class="markpick"><span class="lbl">自分</span><button aria-pressed="false">◎</button><button aria-pressed="false">○</button><button aria-pressed="false">▲</button><button aria-pressed="true">△</button></div></div>
+    </div>
+    <div class="legend"><span>根拠 = 確率を動かした要因の上位3つ(▮の数は相対的な大きさ。確率の%ではありません)</span><span>自分 = あなたの印(端末内だけ)</span></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">メモ</h2><span class="right">端末内だけ · 38/500字</span></div>
+    <div class="card__body" style="padding:8px 0 0"><textarea class="memo">3号艇は前節から足が良さそう。2号艇の前付けに注意。</textarea></div>
+    <p class="card__note">自分の印: ◎3 ○1 ▲4 △6(モデル: ◎3 ○1 ▲4 △5)。<b>端末のデータは消えることがあります。</b><a href="#/ledger" style="text-decoration:underline">バックアップ</a></p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">直前情報</h2><span class="right">13:58 発表 · 予想には未使用</span></div>
+    <div class="card__body"><div class="exh"><span class="h">枠</span><span class="h">展示タイム</span><span class="h">展示進入</span><span class="h">展示ST</span><span class="h">チルト</span>
+      <span><span class="waku waku--s w1">1</span></span><span>6.78</span><span>1</span><span>.14</span><span>0.0</span>
+      <span><span class="waku waku--s w2">2</span></span><span>6.85</span><span><b>3</b></span><span>.18</span><span>0.0</span>
+      <span><span class="waku waku--s w3">3</span></span><span><b>6.70★</b></span><span><b>2</b></span><span>.09</span><span>0.0</span>
+      <span><span class="waku waku--s w4">4</span></span><span>6.74</span><span>4</span><span>.15</span><span>0.0</span>
+      <span><span class="waku waku--s w5">5</span></span><span>6.81</span><span>5</span><span>.20</span><span>0.0</span>
+      <span><span class="waku waku--s w6">6</span></span><span>6.92</span><span>6</span><span>.17</span><span>0.0</span>
+    </div><p class="fewnote" style="margin-top:8px">天候 晴 · 風 南西 2m · 波 2cm。太字 = 最速 / 枠番と違う進入。</p></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="p3a-skip-reason" data-title="見送りの理由(どの条件で0点になったか・DA-5)">
+<div class="app app--detail">
+  <header class="appbar">
+    <a class="iconbtn" href="#/" aria-label="戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">住之江 4R</h1>
+    <span class="appbar__updated">更新 14:05</span>
+  </header>
+  <div class="racehead">
+    <div class="racehead__row"><span class="racehead__close">締切 <b>14:32</b></span><span class="racehead__cd is-urgent"><small>あと</small> 4<small>分</small></span></div>
+    <div class="racehead__sub"><span>予選 · 一般 3日目</span><span class="conf conf--1"><span class="conf__bars"><i></i><i></i><i></i></span>荒れ気味</span></div>
+  </div>
+  <div class="ver"><span class="chip chip--pre">前日版</span><span class="lock">🔒 確定 07:30</span><span>モデル pre_20261101_a1b2</span><span>直前版: なし(検証中)</span></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">モデルの上位の買い目</h2><span class="right">0点</span></div>
+    <div class="skip-box"><b>見送り</b><span>条件に合う買い目がありません。</span></div>
+    <div class="card__body"><b style="font-size:13px">見送りの理由</b>
+      <ol class="flow"><li>券種ごとに確率の高い順<span class="v">5点</span></li><li>最低確率 2% 以上<span class="v">→ 3点</span></li><li>期待値ランクB以上<span class="v" style="color:var(--c-danger)">→ 0点</span></li><li>堅さ「荒」なら見送り<span class="v">(当たらず)</span></li></ol>
+      <p class="set-help">③の期待値の条件で 0点 になりました。<a href="#/settings" style="text-decoration:underline">設定を見る</a></p></div>
+  </section>
+  <nav class="racenav">
+    <a class="prev" href="#">‹ 4R <small>結果</small></a>
+    <a class="racenav__list" href="#">戸田</a>
+    <a class="next" href="#"><small>15:02</small> 6R ›</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

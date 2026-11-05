@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <!-- スプラッシュの見本(参考用)。Android の PWA は manifest の background_color + アイコン + name から自動で作るので、
+       この画像を配る必要はない。iOS で apple-touch-startup-image を使う場合の原本として置く -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1D3196"/>
+      <stop offset="1" stop-color="#172A78"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <g transform="translate(348 708) scale(0.75)">
+    <rect x="150" y="236" width="56" height="104" rx="14" fill="#FFFFFF" fill-opacity="0.72"/>
+    <rect x="228" y="186" width="56" height="154" rx="14" fill="#FFFFFF" fill-opacity="0.9"/>
+    <rect x="306" y="128" width="56" height="212" rx="14" fill="#FFB224"/>
+    <path d="M132 380 q31 -26 62 0 t62 0 t62 0 t62 0" fill="none" stroke="#7CD4FF" stroke-width="22" stroke-linecap="round"/>
+  </g>
+  <text x="540" y="1110" text-anchor="middle" fill="#FFFFFF" font-family="system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', sans-serif" font-size="56" font-weight="700">ボートレース予想</text>
+  <text x="540" y="1176" text-anchor="middle" fill="#B9C6FF" font-family="system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', sans-serif" font-size="30">個人用の参考情報</text>
+</svg>

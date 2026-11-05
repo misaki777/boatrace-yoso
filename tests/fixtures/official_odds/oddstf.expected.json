@@ -1,0 +1,35 @@
+{
+ "page": "oddstf",
+ "odds_time_label": "オッズ更新時間 10:40",
+ "is_final_odds": false,
+ "odds": {
+  "win": {
+   "1": 1.0,
+   "2": 2.2,
+   "3": null,
+   "4": 4.4,
+   "5": null,
+   "6": 6.6
+  },
+  "place": {
+   "1": {
+    "lower_limit": 1.0,
+    "upper_limit": 2.1
+   },
+   "2": {
+    "lower_limit": 2.0,
+    "upper_limit": 3.2
+   },
+   "3": null,
+   "4": {
+    "lower_limit": 4.0,
+    "upper_limit": 5.4
+   },
+   "5": null,
+   "6": {
+    "lower_limit": 6.0,
+    "upper_limit": 7.6
+   }
+  }
+ }
+}

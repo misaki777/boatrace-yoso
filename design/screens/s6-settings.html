@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S6 設定(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!--
+  S6 設定(spec/07 4.2)。下部タブ「その他」→「設定」。変更はその場で localStorage(settings.v1)に保存する(保存ボタンなし)。
+  項目の並び = 適用の順序(①券種と点数 → ②最低確率 → ③期待値 → ④堅さで見送り)。
+-->
+
+<!-- ================================================================= -->
+<section class="state" data-state="default" data-title="既定のまま">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/about" aria-label="その他へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">設定</h1>
+  </header>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目の決め方</h2><span class="chip chip--pre" style="margin-left:auto">既定</span></div>
+    <div class="set-summary">
+      <b>3連単 確率上位5点</b>
+      <div class="set-help" style="margin-top:2px">今日(11/2)は 96R で推奨 · 計 480点</div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">1</span>券種と点数 <small>複数選べます</small></div>
+      <div class="bt-row is-off"><span class="check" role="checkbox" aria-checked="false"></span><span class="nm">単勝<small>1〜3点</small></span><span class="stepper is-off"><button disabled>−</button><output>1<small>点</small></output><button disabled>＋</button></span></div>
+      <div class="bt-row is-off"><span class="check" role="checkbox" aria-checked="false"></span><span class="nm">2連単<small>1〜10点</small></span><span class="stepper is-off"><button disabled>−</button><output>3<small>点</small></output><button disabled>＋</button></span></div>
+      <div class="bt-row"><span class="check is-on" role="checkbox" aria-checked="true">✓</span><span class="nm">3連単<small>1〜20点</small></span><span class="stepper"><button aria-label="減らす">−</button><output>5<small>点</small></output><button aria-label="増やす">＋</button></span></div>
+      <p class="set-help">各券種で、確率の高い順に選びます。</p>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">2</span>最低確率 <small>これ未満の組合せは買わない</small></div>
+      <div class="choice choice--fill" role="radiogroup">
+        <button role="radio" aria-checked="true">なし</button><button role="radio" aria-checked="false">1%</button><button role="radio" aria-checked="false">2%</button><button role="radio" aria-checked="false">3%</button><button role="radio" aria-checked="false">5%</button>
+      </div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">3</span>期待値で絞る <small>締切前オッズがあるレースだけ</small></div>
+      <div class="choice" role="radiogroup">
+        <button role="radio" aria-checked="true">なし</button>
+        <button role="radio" aria-checked="false"><span class="evr evr--B evr--s" style="vertical-align:-4px">B</span> 以上(1.0以上)</button>
+        <button role="radio" aria-checked="false"><span class="evr evr--A evr--s" style="vertical-align:-4px">A</span> だけ(1.2以上)</button>
+      </div>
+      <div class="set-group is-disabled" style="padding:12px 0 0;border-top:0">
+        <div class="set-label" style="margin-bottom:0;font-weight:400;font-size:12px">オッズが無いとき(期待値で絞るときだけ有効)</div>
+        <div class="radio-row"><span class="radio is-on"></span><span>確率だけで選ぶ</span></div>
+        <div class="radio-row"><span class="radio"></span><span>見送る</span></div>
+      </div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">4</span>堅さで見送り</div>
+      <div class="choice" role="radiogroup">
+        <button role="radio" aria-checked="true">なし</button>
+        <button role="radio" aria-checked="false">「荒」なら見送り</button>
+        <button role="radio" aria-checked="false">「中」以下なら見送り</button>
+      </div>
+      <p class="set-help">堅 = 1着確率の最大値 50%以上、中 = 35〜50%、荒 = 35%未満(固定)。</p>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label">1点あたりの金額 <small>投資・払戻の試算にだけ使います</small></div>
+      <div class="stepper"><button aria-label="減らす" disabled>−</button><output style="min-width:84px">100<small>円</small></output><button aria-label="増やす">＋</button></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">オッズの取得(Worker)</h2><span class="chip chip--wait" style="margin-left:auto">未設定</span></div>
+    <p class="card__note" style="padding-top:4px">レース詳細の「オッズを取る」で、そのレースの今のオッズを取ります。オッズはこの端末にだけ表示し、保存・送信しません。</p>
+    <div class="set-group"><div class="field"><label>Worker の URL</label><input class="input" type="url" inputmode="url" placeholder="https://xxxx.workers.dev" value="" aria-label="Worker の URL"></div></div>
+    <div class="set-group"><div class="field"><label>合言葉</label><div class="inputwrap"><input class="input" type="password" placeholder="合言葉" aria-label="合言葉"><button class="btn btn--small" aria-label="合言葉を表示">表示</button></div><span class="hint">Worker に設定した合言葉。この端末にだけ保存し、保存後は伏せて表示します。</span></div></div>
+    <div class="set-group is-disabled"><div class="switch-row"><span class="txt">レース詳細を開いたら自動で取る<small>締切まで15分以内で、60秒以内に取っていないときだけ</small></span><span class="switch" role="switch" aria-checked="false"></span></div></div>
+  </section>
+
+  <section class="card">
+    <details class="fold">
+      <summary>どう選ばれるか <span class="count">適用の順序</span></summary>
+      <div class="card__body" style="padding-top:0">
+        <ol class="flow">
+          <li>券種ごとに、確率の高い順に並べる<span class="v">3連単</span></li>
+          <li>最低確率に届かない組合せを除く<span class="v">なし</span></li>
+          <li>期待値の条件に合わない組合せを除く<span class="v">なし</span></li>
+          <li>上から点数ぶんを選ぶ<span class="v">5点</span></li>
+          <li>堅さが条件に当たるレースは全部見送る<span class="v">なし</span></li>
+        </ol>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">表示</h2></div>
+    <div class="set-group" style="border-top:0">
+      <div class="set-label">表示モード</div>
+      <div class="choice choice--fill" role="radiogroup"><button role="radio" aria-checked="true">端末に合わせる</button><button role="radio" aria-checked="false">ライト</button><button role="radio" aria-checked="false">ダーク</button></div>
+    </div>
+    <div class="set-group">
+      <div class="set-label">お気に入りの場 <small>一覧の絞り込みに使います</small></div>
+      <div class="multi">
+        <button aria-pressed="false">桐生</button><button aria-pressed="true">戸田</button><button aria-pressed="false">江戸川</button><button aria-pressed="false">平和島</button><button aria-pressed="false">多摩川</button><button aria-pressed="false">浜名湖</button><button aria-pressed="false">蒲郡</button><button aria-pressed="false">常滑</button><button aria-pressed="false">津</button><button aria-pressed="false">三国</button><button aria-pressed="false">びわこ</button><button aria-pressed="true">住之江</button><button aria-pressed="false">尼崎</button><button aria-pressed="false">鳴門</button><button aria-pressed="false">丸亀</button><button aria-pressed="false">児島</button><button aria-pressed="false">宮島</button><button aria-pressed="false">徳山</button><button aria-pressed="false">下関</button><button aria-pressed="false">若松</button><button aria-pressed="false">芦屋</button><button aria-pressed="false">福岡</button><button aria-pressed="false">唐津</button><button aria-pressed="false">大村</button>
+      </div>
+    </div>
+    <div class="set-group">
+      <div class="set-label">確率上位に出す券種</div>
+      <div class="multi"><button aria-pressed="true">単勝</button><button aria-pressed="true">2連単</button><button aria-pressed="true">3連単</button></div>
+    </div>
+  </section>
+
+  <p class="disclaimer">設定はこの端末にだけ保存されます(サーバーには送りません)。成績画面の集計は、設定に関係なく既定の買い方で出します。</p>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="custom" data-title="既定から変更(期待値B以上・2券種・200円)">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/about" aria-label="その他へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">設定</h1>
+  </header>
+
+  <section class="card card--emph">
+    <div class="card__head"><h2 class="card__title">推奨買い目の決め方</h2><span class="mine" style="margin-left:auto">既定から変更中</span></div>
+    <div class="set-summary">
+      <b>2連単 上位3点 + 3連単 上位5点 · 期待値B以上 · 「荒」は見送り</b>
+      <div class="set-help" style="margin-top:2px">今日(11/2)は 41R で推奨 · 計 168点(既定は 96R · 480点)</div>
+      <div class="row"><button class="btn btn--small">既定に戻す</button></div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">1</span>券種と点数 <small>複数選べます</small><span class="changed">変更</span></div>
+      <div class="bt-row is-off"><span class="check" role="checkbox" aria-checked="false"></span><span class="nm">単勝<small>1〜3点</small></span><span class="stepper is-off"><button disabled>−</button><output>1<small>点</small></output><button disabled>＋</button></span></div>
+      <div class="bt-row"><span class="check is-on" role="checkbox" aria-checked="true">✓</span><span class="nm">2連単<small>1〜10点</small></span><span class="stepper"><button>−</button><output>3<small>点</small></output><button>＋</button></span></div>
+      <div class="bt-row"><span class="check is-on" role="checkbox" aria-checked="true">✓</span><span class="nm">3連単<small>1〜20点</small></span><span class="stepper"><button>−</button><output>5<small>点</small></output><button>＋</button></span></div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">2</span>最低確率 <small>これ未満の組合せは買わない</small></div>
+      <div class="choice choice--fill" role="radiogroup">
+        <button role="radio" aria-checked="true">なし</button><button role="radio" aria-checked="false">1%</button><button role="radio" aria-checked="false">2%</button><button role="radio" aria-checked="false">3%</button><button role="radio" aria-checked="false">5%</button>
+      </div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">3</span>期待値で絞る <small>締切前オッズがあるレースだけ</small><span class="changed">変更</span></div>
+      <div class="choice" role="radiogroup">
+        <button role="radio" aria-checked="false">なし</button>
+        <button role="radio" aria-checked="true"><span class="evr evr--B evr--s" style="vertical-align:-4px">B</span> 以上(1.0以上)</button>
+        <button role="radio" aria-checked="false"><span class="evr evr--A evr--s" style="vertical-align:-4px">A</span> だけ(1.2以上)</button>
+      </div>
+      <div class="set-group" style="padding:12px 0 0;border-top:0">
+        <div class="set-label" style="margin-bottom:0;font-weight:400;font-size:12px">オッズが無いとき</div>
+        <div class="radio-row"><span class="radio is-on"></span><span>確率だけで選ぶ<small>期待値の条件をはずして選ぶ</small></span></div>
+        <div class="radio-row"><span class="radio"></span><span>見送る</span></div>
+      </div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label"><span class="step">4</span>堅さで見送り<span class="changed">変更</span></div>
+      <div class="choice" role="radiogroup">
+        <button role="radio" aria-checked="false">なし</button>
+        <button role="radio" aria-checked="true">「荒」なら見送り</button>
+        <button role="radio" aria-checked="false">「中」以下なら見送り</button>
+      </div>
+    </div>
+
+    <div class="set-group">
+      <div class="set-label">1点あたりの金額 <small>投資・払戻の試算にだけ使います</small><span class="changed">変更</span></div>
+      <div class="stepper"><button aria-label="減らす">−</button><output style="min-width:84px">200<small>円</small></output><button aria-label="増やす">＋</button></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">オッズの取得(Worker)</h2><span class="chip chip--preview" style="margin-left:auto">設定済み</span></div>
+    <p class="card__note" style="padding-top:4px">レース詳細の「オッズを取る」で、そのレースの今のオッズを取ります。オッズはこの端末にだけ表示し、保存・送信しません。</p>
+    <div class="set-group"><div class="field"><label>Worker の URL</label><input class="input" type="url" inputmode="url" placeholder="https://xxxx.workers.dev" value="https://odds-proxy.example.workers.dev" aria-label="Worker の URL"></div></div>
+    <div class="set-group"><div class="field"><label>合言葉</label><div class="inputwrap"><input class="input is-saved" type="password" value="••••••••" readonly aria-label="合言葉(保存済み)"><button class="btn btn--small">変更</button></div><span class="hint">保存済み(表示しません)</span></div></div>
+    <div class="set-group"><div class="switch-row"><span class="txt">レース詳細を開いたら自動で取る<small>締切まで15分以内で、60秒以内に取っていないときだけ</small></span><span class="switch is-on" role="switch" aria-checked="true"></span></div></div>
+  </section>
+
+  <section class="card">
+    <details class="fold" open>
+      <summary>どう選ばれるか <span class="count">適用の順序</span></summary>
+      <div class="card__body" style="padding-top:0">
+        <ol class="flow">
+          <li>券種ごとに、確率の高い順に並べる<span class="v">2連単・3連単</span></li>
+          <li>最低確率に届かない組合せを除く<span class="v">なし</span></li>
+          <li>期待値ランクがB未満の組合せを除く<span class="v">B以上</span></li>
+          <li>上から点数ぶんを選ぶ<span class="v">3点・5点</span></li>
+          <li>堅さが「荒」のレースは全部見送る<span class="v">荒は見送り</span></li>
+        </ol>
+        <p class="set-help">オッズが無いレースでは③を飛ばします。</p>
+      </div>
+    </details>
+  </section>
+
+  <div class="toast" role="status">保存しました</div>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="reset" data-title="保存された設定が読めず既定に戻した">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/about" aria-label="その他へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">設定</h1>
+  </header>
+  <div class="banner banner--offline" role="status"><span class="banner__icon">!</span><div class="banner__body"><b>設定を既定に戻しました</b><br>保存されていた設定を読めなかったためです(古い形式・壊れたデータ)。必要なら設定し直してください。</div></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">推奨買い目の決め方</h2><span class="chip chip--pre" style="margin-left:auto">既定</span></div>
+    <div class="set-summary"><b>3連単 確率上位5点</b></div>
+    <div class="set-group"><div class="set-label"><span class="step">1</span>券種と点数</div><p class="set-help" style="margin:0">(以下、既定の状態と同じ)</p></div>
+  </section>
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="worker-badkey" data-title="Worker 設定: 合言葉が違うと返された(S2 の「設定へ」から来た)">
+<div class="app">
+  <header class="appbar">
+    <a class="iconbtn" href="#/about" aria-label="その他へ戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <h1 class="appbar__title">設定</h1>
+  </header>
+  <div class="banner banner--error" role="alert"><span class="banner__icon">🔑</span><div class="banner__body"><b>合言葉を確認してください</b><br>オッズの取得で「合言葉が違います」と返されました。</div></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">オッズの取得(Worker)</h2><span class="chip" style="margin-left:auto;background:var(--c-danger-weak);color:var(--c-danger)">要確認</span></div>
+    <p class="card__note" style="padding-top:4px">レース詳細の「オッズを取る」で、そのレースの今のオッズを取ります。オッズはこの端末にだけ表示し、保存・送信しません。</p>
+    <div class="set-group"><div class="field"><label>Worker の URL</label><input class="input" type="url" inputmode="url" placeholder="https://xxxx.workers.dev" value="https://odds-proxy.example.workers.dev" aria-label="Worker の URL"></div></div>
+    <div class="set-group"><div class="field"><label>合言葉</label><div class="inputwrap"><input class="input is-error" type="password" value="••••••" aria-label="合言葉" aria-invalid="true"><button class="btn btn--small" aria-label="合言葉を表示">表示</button></div><span class="err">✕ 14:28 の取得で「合言葉が違います」と返されました。入れ直してください。</span></div></div>
+    <div class="set-group"><div class="switch-row"><span class="txt">レース詳細を開いたら自動で取る<small>締切まで15分以内で、60秒以内に取っていないときだけ</small></span><span class="switch is-on" role="switch" aria-checked="true"></span></div></div>
+  </section>
+
+  <nav class="tabbar">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/about" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>
