@@ -1,0 +1,40 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-02T15:05:00+09:00",
+ "history": [
+  {
+   "date": "2026-11-01",
+   "variant": "pre",
+   "candidate": "pre_20261101_sample",
+   "adopted": true,
+   "train_to": "2026-09-30",
+   "valid": "2026-10",
+   "metrics": {
+    "win_logloss": {
+     "candidate": 1.2041,
+     "latest": 1.2102
+    },
+    "top1_acc": {
+     "candidate": 0.561,
+     "latest": 0.557
+    }
+   },
+   "reason": "基準 a〜e を満たした"
+  },
+  {
+   "date": "2026-10-01",
+   "variant": "pre",
+   "candidate": "pre_20261001_cand",
+   "adopted": false,
+   "train_to": "2026-08-31",
+   "valid": "2026-09",
+   "metrics": {
+    "win_logloss": {
+     "candidate": 1.2155,
+     "latest": 1.2101
+    }
+   },
+   "reason": "基準 a(logloss の改善)を満たさない"
+  }
+ ]
+}

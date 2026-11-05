@@ -38,7 +38,7 @@ def test_committed_sample_is_up_to_date(generated):
     """docs/data/sample/ は make_sample の出力と同じ(seed 固定で冪等)。"""
     out, _ = generated
     files = sorted(p.relative_to(out) for p in out.rglob("*.json"))
-    assert len(files) == 11, "サンプルが作られていません"
+    assert len(files) == 15, "サンプルが作られていません"
     committed = REPO / "docs" / "data"
     for rel in files:
         assert (committed / rel).exists(), f"{rel} がありません。python -m src.export.make_sample を実行してください"

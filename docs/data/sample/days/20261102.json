@@ -538,6 +538,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.521,
+       "sashi": 0.16,
+       "makuri": 0.151,
+       "makurisashi": 0.117,
+       "nuki": 0.039,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -1092,6 +1104,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.7,
+       "sashi": 0.1,
+       "makuri": 0.073,
+       "makurisashi": 0.095,
+       "nuki": 0.024,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -1646,6 +1670,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.477,
+       "sashi": 0.145,
+       "makuri": 0.208,
+       "makurisashi": 0.102,
+       "nuki": 0.056,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -2155,6 +2191,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "late"
+      },
+      "tenkai": {
+       "nige": 0.474,
+       "sashi": 0.166,
+       "makuri": 0.128,
+       "makurisashi": 0.13,
+       "nuki": 0.077,
+       "megumare": 0.025,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -2709,6 +2757,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.123,
+       "sashi": 0.218,
+       "makuri": 0.27,
+       "makurisashi": 0.237,
+       "nuki": 0.113,
+       "megumare": 0.039,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -3263,6 +3323,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.336,
+       "sashi": 0.251,
+       "makuri": 0.234,
+       "makurisashi": 0.098,
+       "nuki": 0.059,
+       "megumare": 0.022,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -3817,6 +3889,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.575,
+       "sashi": 0.115,
+       "makuri": 0.147,
+       "makurisashi": 0.094,
+       "nuki": 0.05,
+       "megumare": 0.019,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -4335,6 +4419,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.247,
+       "sashi": 0.189,
+       "makuri": 0.301,
+       "makurisashi": 0.159,
+       "nuki": 0.069,
+       "megumare": 0.035,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -4889,6 +4985,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.638,
+       "sashi": 0.134,
+       "makuri": 0.11,
+       "makurisashi": 0.076,
+       "nuki": 0.034,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -5443,6 +5551,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.77,
+       "sashi": 0.071,
+       "makuri": 0.07,
+       "makurisashi": 0.062,
+       "nuki": 0.022,
+       "megumare": 0.005,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -5997,6 +6117,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.506,
+       "sashi": 0.203,
+       "makuri": 0.135,
+       "makurisashi": 0.111,
+       "nuki": 0.03,
+       "megumare": 0.015,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -6551,6 +6683,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.583,
+       "sashi": 0.204,
+       "makuri": 0.086,
+       "makurisashi": 0.077,
+       "nuki": 0.041,
+       "megumare": 0.009,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -7114,6 +7258,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.602,
+       "sashi": 0.121,
+       "makuri": 0.142,
+       "makurisashi": 0.094,
+       "nuki": 0.033,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -7668,6 +7824,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.473,
+       "sashi": 0.204,
+       "makuri": 0.167,
+       "makurisashi": 0.105,
+       "nuki": 0.037,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -8222,6 +8390,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.514,
+       "sashi": 0.164,
+       "makuri": 0.147,
+       "makurisashi": 0.094,
+       "nuki": 0.06,
+       "megumare": 0.021,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -8777,6 +8957,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.751,
+       "sashi": 0.077,
+       "makuri": 0.087,
+       "makurisashi": 0.063,
+       "nuki": 0.015,
+       "megumare": 0.007,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -9331,6 +9523,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.415,
+       "sashi": 0.277,
+       "makuri": 0.13,
+       "makurisashi": 0.094,
+       "nuki": 0.067,
+       "megumare": 0.017,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -9883,6 +10087,18 @@
         "odds3t"
        ],
        "status": "partial"
+      },
+      "tenkai": {
+       "nige": 0.337,
+       "sashi": 0.195,
+       "makuri": 0.232,
+       "makurisashi": 0.157,
+       "nuki": 0.053,
+       "megumare": 0.026,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -10401,6 +10617,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.341,
+       "sashi": 0.176,
+       "makuri": 0.22,
+       "makurisashi": 0.187,
+       "nuki": 0.052,
+       "megumare": 0.024,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -10955,6 +11183,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.531,
+       "sashi": 0.141,
+       "makuri": 0.101,
+       "makurisashi": 0.165,
+       "nuki": 0.049,
+       "megumare": 0.013,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -11509,6 +11749,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.472,
+       "sashi": 0.157,
+       "makuri": 0.154,
+       "makurisashi": 0.162,
+       "nuki": 0.041,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T14:17:00+09:00"
       }
      },
      "preview_info": {
@@ -12106,6 +12358,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.551,
+       "sashi": 0.145,
+       "makuri": 0.105,
+       "makurisashi": 0.147,
+       "nuki": 0.031,
+       "megumare": 0.021,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T14:45:00+09:00"
       }
      },
      "preview_info": {
@@ -12653,7 +12917,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.683,
+       "sashi": 0.144,
+       "makuri": 0.101,
+       "makurisashi": 0.048,
+       "nuki": 0.017,
+       "megumare": 0.007,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:13:00+09:00"
+      }
      },
      "preview_info": {
       "boats": [
@@ -13165,7 +13441,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.851,
+       "sashi": 0.052,
+       "makuri": 0.051,
+       "makurisashi": 0.033,
+       "nuki": 0.01,
+       "megumare": 0.003,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -13693,6 +13981,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.773,
+       "sashi": 0.056,
+       "makuri": 0.073,
+       "makurisashi": 0.068,
+       "nuki": 0.024,
+       "megumare": 0.006,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -14247,6 +14547,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.716,
+       "sashi": 0.079,
+       "makuri": 0.101,
+       "makurisashi": 0.066,
+       "nuki": 0.032,
+       "megumare": 0.006,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -14765,6 +15077,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.178,
+       "sashi": 0.209,
+       "makuri": 0.296,
+       "makurisashi": 0.215,
+       "nuki": 0.077,
+       "megumare": 0.025,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -15283,6 +15607,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.359,
+       "sashi": 0.251,
+       "makuri": 0.184,
+       "makurisashi": 0.13,
+       "nuki": 0.055,
+       "megumare": 0.021,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -15801,6 +16137,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.139,
+       "sashi": 0.233,
+       "makuri": 0.355,
+       "makurisashi": 0.186,
+       "nuki": 0.055,
+       "megumare": 0.032,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -16355,6 +16703,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.637,
+       "sashi": 0.143,
+       "makuri": 0.092,
+       "makurisashi": 0.081,
+       "nuki": 0.035,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -16859,7 +17219,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.646,
+       "sashi": 0.11,
+       "makuri": 0.124,
+       "makurisashi": 0.058,
+       "nuki": 0.046,
+       "megumare": 0.016,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -17328,7 +17700,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.549,
+       "sashi": 0.135,
+       "makuri": 0.147,
+       "makurisashi": 0.121,
+       "nuki": 0.037,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -17797,7 +18181,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.547,
+       "sashi": 0.191,
+       "makuri": 0.088,
+       "makurisashi": 0.111,
+       "nuki": 0.049,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -18266,7 +18662,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.324,
+       "sashi": 0.306,
+       "makuri": 0.2,
+       "makurisashi": 0.111,
+       "nuki": 0.036,
+       "megumare": 0.023,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -18735,7 +19143,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.533,
+       "sashi": 0.155,
+       "makuri": 0.166,
+       "makurisashi": 0.106,
+       "nuki": 0.029,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -19204,7 +19624,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.492,
+       "sashi": 0.232,
+       "makuri": 0.108,
+       "makurisashi": 0.097,
+       "nuki": 0.06,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -19732,6 +20164,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.427,
+       "sashi": 0.239,
+       "makuri": 0.105,
+       "makurisashi": 0.146,
+       "nuki": 0.066,
+       "megumare": 0.017,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -20286,6 +20730,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.441,
+       "sashi": 0.186,
+       "makuri": 0.177,
+       "makurisashi": 0.126,
+       "nuki": 0.056,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -20840,6 +21296,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.13,
+       "sashi": 0.298,
+       "makuri": 0.25,
+       "makurisashi": 0.224,
+       "nuki": 0.066,
+       "megumare": 0.032,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -21434,6 +21902,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.607,
+       "sashi": 0.158,
+       "makuri": 0.121,
+       "makurisashi": 0.076,
+       "nuki": 0.025,
+       "megumare": 0.013,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -21988,6 +22468,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.418,
+       "sashi": 0.234,
+       "makuri": 0.199,
+       "makurisashi": 0.088,
+       "nuki": 0.041,
+       "megumare": 0.02,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -22542,6 +23034,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.745,
+       "sashi": 0.097,
+       "makuri": 0.065,
+       "makurisashi": 0.047,
+       "nuki": 0.033,
+       "megumare": 0.013,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -23096,6 +23600,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.583,
+       "sashi": 0.149,
+       "makuri": 0.122,
+       "makurisashi": 0.098,
+       "nuki": 0.036,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -23605,6 +24121,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "late"
+      },
+      "tenkai": {
+       "nige": 0.592,
+       "sashi": 0.13,
+       "makuri": 0.178,
+       "makurisashi": 0.065,
+       "nuki": 0.027,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T14:17:00+09:00"
       }
      },
      "preview_info": {
@@ -24202,6 +24730,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.588,
+       "sashi": 0.133,
+       "makuri": 0.128,
+       "makurisashi": 0.1,
+       "nuki": 0.039,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T14:45:00+09:00"
       }
      },
      "preview_info": {
@@ -24749,7 +25289,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.648,
+       "sashi": 0.13,
+       "makuri": 0.104,
+       "makurisashi": 0.076,
+       "nuki": 0.035,
+       "megumare": 0.007,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:13:00+09:00"
+      }
      },
      "preview_info": {
       "boats": [
@@ -25261,7 +25813,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.738,
+       "sashi": 0.111,
+       "makuri": 0.078,
+       "makurisashi": 0.04,
+       "nuki": 0.029,
+       "megumare": 0.004,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -25789,6 +26353,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.63,
+       "sashi": 0.093,
+       "makuri": 0.136,
+       "makurisashi": 0.093,
+       "nuki": 0.041,
+       "megumare": 0.007,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:03:00+09:00"
       }
      },
      "preview_info": {
@@ -26301,7 +26877,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.583,
+       "sashi": 0.143,
+       "makuri": 0.124,
+       "makurisashi": 0.099,
+       "nuki": 0.036,
+       "megumare": 0.015,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:31:00+09:00"
+      }
      },
      "preview_info": {
       "boats": [
@@ -26782,7 +27370,19 @@
       },
       "recommended": [],
       "skip_reason": "low_confidence",
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.32,
+       "sashi": 0.305,
+       "makuri": 0.164,
+       "makurisashi": 0.122,
+       "nuki": 0.07,
+       "megumare": 0.019,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -27251,7 +27851,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.398,
+       "sashi": 0.285,
+       "makuri": 0.132,
+       "makurisashi": 0.111,
+       "nuki": 0.061,
+       "megumare": 0.013,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -27720,7 +28332,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.611,
+       "sashi": 0.111,
+       "makuri": 0.134,
+       "makurisashi": 0.095,
+       "nuki": 0.035,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -28189,7 +28813,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.562,
+       "sashi": 0.142,
+       "makuri": 0.178,
+       "makurisashi": 0.061,
+       "nuki": 0.04,
+       "megumare": 0.017,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -28658,7 +29294,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.565,
+       "sashi": 0.167,
+       "makuri": 0.15,
+       "makurisashi": 0.079,
+       "nuki": 0.031,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -29127,7 +29775,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.538,
+       "sashi": 0.123,
+       "makuri": 0.203,
+       "makurisashi": 0.066,
+       "nuki": 0.058,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -29596,7 +30256,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.414,
+       "sashi": 0.166,
+       "makuri": 0.203,
+       "makurisashi": 0.133,
+       "nuki": 0.061,
+       "megumare": 0.023,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -30034,7 +30706,19 @@
       },
       "recommended": [],
       "skip_reason": "low_confidence",
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.302,
+       "sashi": 0.325,
+       "makuri": 0.176,
+       "makurisashi": 0.104,
+       "nuki": 0.065,
+       "megumare": 0.028,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -30503,7 +31187,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.689,
+       "sashi": 0.105,
+       "makuri": 0.106,
+       "makurisashi": 0.065,
+       "nuki": 0.03,
+       "megumare": 0.005,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -30972,7 +31668,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.526,
+       "sashi": 0.146,
+       "makuri": 0.131,
+       "makurisashi": 0.13,
+       "nuki": 0.049,
+       "megumare": 0.018,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -31500,6 +32208,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.681,
+       "sashi": 0.115,
+       "makuri": 0.113,
+       "makurisashi": 0.054,
+       "nuki": 0.025,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:03:00+09:00"
       }
      },
      "preview_info": {
@@ -32012,7 +32732,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.814,
+       "sashi": 0.062,
+       "makuri": 0.044,
+       "makurisashi": 0.048,
+       "nuki": 0.028,
+       "megumare": 0.004,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:31:00+09:00"
+      }
      },
      "preview_info": {
       "boats": [
@@ -32524,7 +33256,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.53,
+       "sashi": 0.251,
+       "makuri": 0.096,
+       "makurisashi": 0.074,
+       "nuki": 0.034,
+       "megumare": 0.015,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -32993,7 +33737,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.626,
+       "sashi": 0.095,
+       "makuri": 0.138,
+       "makurisashi": 0.097,
+       "nuki": 0.036,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -33462,7 +34218,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.28,
+       "sashi": 0.211,
+       "makuri": 0.209,
+       "makurisashi": 0.198,
+       "nuki": 0.07,
+       "megumare": 0.032,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -33931,7 +34699,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.544,
+       "sashi": 0.167,
+       "makuri": 0.14,
+       "makurisashi": 0.102,
+       "nuki": 0.033,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -34400,7 +35180,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.471,
+       "sashi": 0.219,
+       "makuri": 0.139,
+       "makurisashi": 0.124,
+       "nuki": 0.032,
+       "megumare": 0.015,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -34869,7 +35661,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.456,
+       "sashi": 0.239,
+       "makuri": 0.127,
+       "makurisashi": 0.097,
+       "nuki": 0.06,
+       "megumare": 0.021,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -35338,7 +36142,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.631,
+       "sashi": 0.159,
+       "makuri": 0.079,
+       "makurisashi": 0.098,
+       "nuki": 0.025,
+       "megumare": 0.008,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -35807,7 +36623,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.638,
+       "sashi": 0.142,
+       "makuri": 0.13,
+       "makurisashi": 0.046,
+       "nuki": 0.033,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -36276,7 +37104,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.338,
+       "sashi": 0.278,
+       "makuri": 0.159,
+       "makurisashi": 0.116,
+       "nuki": 0.084,
+       "megumare": 0.025,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -36745,7 +37585,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.51,
+       "sashi": 0.189,
+       "makuri": 0.171,
+       "makurisashi": 0.08,
+       "nuki": 0.032,
+       "megumare": 0.018,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -37228,6 +38080,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.445,
+       "sashi": 0.189,
+       "makuri": 0.128,
+       "makurisashi": 0.147,
+       "nuki": 0.068,
+       "megumare": 0.023,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -37737,6 +38601,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.465,
+       "sashi": 0.233,
+       "makuri": 0.145,
+       "makurisashi": 0.095,
+       "nuki": 0.051,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -38246,6 +39122,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.54,
+       "sashi": 0.168,
+       "makuri": 0.17,
+       "makurisashi": 0.082,
+       "nuki": 0.026,
+       "megumare": 0.014,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -38755,6 +39643,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.374,
+       "sashi": 0.192,
+       "makuri": 0.15,
+       "makurisashi": 0.196,
+       "nuki": 0.069,
+       "megumare": 0.019,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -39264,6 +40164,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.387,
+       "sashi": 0.183,
+       "makuri": 0.192,
+       "makurisashi": 0.162,
+       "nuki": 0.055,
+       "megumare": 0.021,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -39776,6 +40688,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.444,
+       "sashi": 0.193,
+       "makuri": 0.177,
+       "makurisashi": 0.131,
+       "nuki": 0.042,
+       "megumare": 0.013,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -40254,6 +41178,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.345,
+       "sashi": 0.209,
+       "makuri": 0.228,
+       "makurisashi": 0.113,
+       "nuki": 0.078,
+       "megumare": 0.027,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -40763,6 +41699,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.503,
+       "sashi": 0.168,
+       "makuri": 0.131,
+       "makurisashi": 0.137,
+       "nuki": 0.046,
+       "megumare": 0.015,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -41241,6 +42189,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.331,
+       "sashi": 0.212,
+       "makuri": 0.238,
+       "makurisashi": 0.117,
+       "nuki": 0.082,
+       "megumare": 0.02,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -41719,6 +42679,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.318,
+       "sashi": 0.228,
+       "makuri": 0.15,
+       "makurisashi": 0.201,
+       "nuki": 0.076,
+       "megumare": 0.027,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -42197,6 +43169,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.259,
+       "sashi": 0.213,
+       "makuri": 0.21,
+       "makurisashi": 0.191,
+       "nuki": 0.108,
+       "megumare": 0.019,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -42706,6 +43690,18 @@
        "minutes_before_close": null,
        "pages": [],
        "status": "not_targeted"
+      },
+      "tenkai": {
+       "nige": 0.613,
+       "sashi": 0.133,
+       "makuri": 0.09,
+       "makurisashi": 0.124,
+       "nuki": 0.029,
+       "megumare": 0.011,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
       }
      },
      "preview_info": null,
@@ -43269,6 +44265,18 @@
         "oddstf"
        ],
        "status": "ok"
+      },
+      "tenkai": {
+       "nige": 0.671,
+       "sashi": 0.145,
+       "makuri": 0.066,
+       "makurisashi": 0.087,
+       "nuki": 0.021,
+       "megumare": 0.01,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:03:00+09:00"
       }
      },
      "preview_info": {
@@ -43781,7 +44789,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.675,
+       "sashi": 0.143,
+       "makuri": 0.103,
+       "makurisashi": 0.044,
+       "nuki": 0.025,
+       "megumare": 0.01,
+       "course1_entry": 1,
+       "version": "preview",
+       "model_id": "preview_20261001_sample",
+       "locked_at": "2026-11-02T15:31:00+09:00"
+      }
      },
      "preview_info": {
       "boats": [
@@ -44293,7 +45313,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.644,
+       "sashi": 0.115,
+       "makuri": 0.136,
+       "makurisashi": 0.05,
+       "nuki": 0.043,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -44762,7 +45794,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.665,
+       "sashi": 0.125,
+       "makuri": 0.114,
+       "makurisashi": 0.046,
+       "nuki": 0.038,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -45231,7 +46275,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.601,
+       "sashi": 0.176,
+       "makuri": 0.084,
+       "makurisashi": 0.078,
+       "nuki": 0.049,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -45700,7 +46756,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.392,
+       "sashi": 0.142,
+       "makuri": 0.224,
+       "makurisashi": 0.151,
+       "nuki": 0.071,
+       "megumare": 0.02,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -46169,7 +47237,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.629,
+       "sashi": 0.117,
+       "makuri": 0.138,
+       "makurisashi": 0.067,
+       "nuki": 0.03,
+       "megumare": 0.019,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -46638,7 +47718,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.562,
+       "sashi": 0.141,
+       "makuri": 0.103,
+       "makurisashi": 0.115,
+       "nuki": 0.061,
+       "megumare": 0.018,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -47107,7 +48199,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.141,
+       "sashi": 0.351,
+       "makuri": 0.196,
+       "makurisashi": 0.233,
+       "nuki": 0.054,
+       "megumare": 0.025,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -47586,7 +48690,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.622,
+       "sashi": 0.15,
+       "makuri": 0.119,
+       "makurisashi": 0.055,
+       "nuki": 0.042,
+       "megumare": 0.012,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null
@@ -48055,7 +49171,19 @@
        }
       ],
       "skip_reason": null,
-      "odds_snapshot": null
+      "odds_snapshot": null,
+      "tenkai": {
+       "nige": 0.635,
+       "sashi": 0.153,
+       "makuri": 0.098,
+       "makurisashi": 0.071,
+       "nuki": 0.027,
+       "megumare": 0.016,
+       "course1_entry": 1,
+       "version": "pre",
+       "model_id": "pre_20261001_sample",
+       "locked_at": "2026-11-02T07:30:00+09:00"
+      }
      },
      "preview_info": null,
      "result": null

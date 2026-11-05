@@ -81,6 +81,8 @@ morning() {
   tenkai_and_cards pre
   run "$PY" -m src.export.export_day --date "$D"
   run "$PY" -m src.export.export_index
+  run "$PY" -m src.export.phase3b racers --date "$D"
+  run "$PY" -m src.export.phase3b models
 }
 
 case "$MODE" in
@@ -106,6 +108,7 @@ case "$MODE" in
     tenkai_and_cards preview
     run "$PY" -m src.export.export_day --date "$D"
     run "$PY" -m src.export.export_index
+    run "$PY" -m src.export.phase3b racers --date "$D"
     ;;
   finalize)
     # openapi の前日ファイルは 0:00 ごろに更新され、fetch は翌日1時以降の取得を「確定」とみなす

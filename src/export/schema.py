@@ -49,6 +49,7 @@ FORBIDDEN_KEYS = {
     "remarks", "refunds",
     # 寄与の生の数値(04 8.3)と、端末内だけに置く個人の記録(購入・印・メモ・予算。08 5.4)
     "contribution", "contrib", "contributions", "shap",
+    "motor_number", "boat_number", "racer_age", "birthplace_name",
     "purchases", "purchase", "bought_at", "marks", "mark", "memo", "memos", "notes", "note", "budget",
 }
 # オッズ・期待値の数値のキー(spec 07 3.3)。公開JSONではどこにも出さない。
@@ -327,6 +328,18 @@ def _check_prediction(c: _Checker, pr: Any, path: str, local: bool = False) -> N
         c.string(pr["model_id"], f"{path}.model_id", nullable=True)
     if "locked_at" in pr:
         c.string(pr["locked_at"], f"{path}.locked_at", pattern=DATETIME_RE)
+    if pr.get("tenkai") is not None:
+        t = pr["tenkai"]
+        q = f"{path}.tenkai"
+        keys = ("nige", "sashi", "makuri", "makurisashi", "nuki", "megumare")
+        if c.obj(t, q, keys + ("course1_entry", "version", "model_id")):
+            for k in keys:
+                c.prob(t[k], f"{q}.{k}")
+            if all(isinstance(t[k], (int, float)) for k in keys) and abs(sum(t[k] for k in keys) - 1) > 1e-9:
+                c.err(q, "合計が1になっていません")
+            c.integer(t["course1_entry"], f"{q}.course1_entry", lo=1, hi=6)
+            c.string(t["version"], f"{q}.version", choices=VARIANTS)
+            c.string(t["model_id"], f"{q}.model_id", nullable=True)
     if "skip_reason" in pr:
         c.string(pr["skip_reason"], f"{path}.skip_reason", nullable=True, choices=SKIP_REASONS)
         if pr["skip_reason"] is not None and pr.get("recommended"):
@@ -785,7 +798,64 @@ def check_forbidden(obj: Any, local: bool = False) -> list[str]:
 # 入口
 # ---------------------------------------------------------------------------
 
+def validate_racers(obj: Any) -> list[str]:
+    """docs/data/racers/YYYYMMDD.json(spec 10 4章)。"""
+    c = _Checker()
+    if not c.obj(obj, "$", ("schema_version", "date", "generated_at", "keys", "techniques", "racers")):
+        return c.errors
+    c.string(obj["date"], "$.date", pattern=DATE_RE)
+    c.string(obj["generated_at"], "$.generated_at", pattern=DATETIME_RE)
+    allowed = {"name", "rank", "branch", "stadium", "nat", "loc", "avg_st", "f", "l", "l365", "course", "rates",
+               "series", "recent"}
+    if c.obj(obj["racers"], "$.racers", ()):
+        for num, r in obj["racers"].items():
+            p = f"$.racers.{num}"
+            if not num.isdigit():
+                c.err(p, "キーは登録番号にします")
+            if not c.obj(r, p, tuple(sorted(allowed))):
+                continue
+            extra = set(r) - allowed
+            if extra:
+                c.err(p, f"選手カードに無い項目があります: {sorted(extra)}")
+            c.string(r["rank"], f"{p}.rank", nullable=True, choices=RANKS)
+            if c.arr(r["course"], f"{p}.course") and len(r["course"]) != 6:
+                c.err(f"{p}.course", "コース1〜6の6要素にします")
+            if c.arr(r["recent"], f"{p}.recent") and len(r["recent"]) > 10:
+                c.err(f"{p}.recent", "直近10走までにします")
+    c.errors.extend(check_forbidden(obj))
+    return c.errors
+
+
+def validate_models(obj: Any) -> list[str]:
+    """docs/data/models.json(モデルの更新履歴。spec 10 2章)。"""
+    c = _Checker()
+    if not c.obj(obj, "$", ("schema_version", "generated_at", "history")):
+        return c.errors
+    c.string(obj["generated_at"], "$.generated_at", pattern=DATETIME_RE)
+    if c.arr(obj["history"], "$.history"):
+        for i, h in enumerate(obj["history"]):
+            p = f"$.history[{i}]"
+            if not c.obj(h, p, ("date", "variant", "candidate", "adopted", "train_to", "valid", "metrics", "reason")):
+                continue
+            c.string(h["date"], f"{p}.date", pattern=DATE_RE)
+            c.string(h["variant"], f"{p}.variant")
+            if not isinstance(h["adopted"], bool):
+                c.err(f"{p}.adopted", "真偽値にします")
+            extra = set(h) - {"date", "variant", "candidate", "adopted", "train_to", "valid", "metrics", "reason"}
+            if extra:
+                c.err(p, f"公開しない項目があります: {sorted(extra)}")
+            if c.obj(h["metrics"], f"{p}.metrics", ()):
+                for k, v in h["metrics"].items():
+                    if c.obj(v, f"{p}.metrics.{k}", ()):
+                        for kk, x in v.items():
+                            c.number(x, f"{p}.metrics.{k}.{kk}", nullable=True)
+    c.errors.extend(check_forbidden(obj))
+    return c.errors
+
+
 VALIDATORS: dict[str, Callable[[Any], list[str]]] = {
+    "racers": validate_racers,
+    "models": validate_models,
     "index": validate_index,
     "day": validate_day,
     "performance": validate_performance,

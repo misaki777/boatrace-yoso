@@ -42,6 +42,7 @@ from src.export.build import (
     strip_numeric_odds, summarize, to_jst_iso, with_short_label,
 )
 from src.export.io_util import read_json, write_json
+from src.export.phase3b import load_tenkai, tenkai_for_race
 from src.export.official_odds_input import OFFICIAL_ODDS_DIR, load_day_snapshots, load_stopped
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -73,6 +74,7 @@ class DayInputs:
     # 根拠トップ3(M-10 の YYYYMMDD_{variant}_contrib.parquet を縦に積んだもの。列: race_id, entry_number,
     # rank, feature, contribution と、どの版のものかを表す variant)
     contribs: pd.DataFrame = field(default_factory=pd.DataFrame)
+    tenkai: pd.DataFrame = field(default_factory=pd.DataFrame)   # 展開予想(spec 10 3章)。無い日は空
 
 
 def _read_month_table(base: Path, table: str, d: Date) -> pd.DataFrame:
@@ -117,6 +119,7 @@ def load_inputs(d: Date, interim_dir: Path = INTERIM_DIR, predictions_dir: Path 
         entries=_read_month_table(interim_dir, "entries", d),
         predictions=predictions,
         contribs=pd.concat(contribs, ignore_index=True) if contribs else pd.DataFrame(),
+        tenkai=load_tenkai(d, predictions_dir),
         payouts=_read_month_table(interim_dir, "payouts", d),
         odds=_read_month_table(interim_dir, "odds", d),
         model_meta=meta,
@@ -421,6 +424,8 @@ def build_day(d: Date, inputs: DayInputs, *, generated_at: str,
                 model_id=model_id, locked_at=locked_at or predicted_at,
                 reasons=reasons_for_race(contrib_by_race.get((race_id, variant)), ent_map)
                 if contrib_by_race else None)
+            if not inputs.tenkai.empty:
+                prediction["tenkai"] = tenkai_for_race(inputs.tenkai, race_id)
             apply_odds(prediction, snapshot_for_race(race_id, race.get("closed_at"), inputs.odds_snapshots,
                                                      inputs.odds_stopped))
         canceled = _is_canceled(race)

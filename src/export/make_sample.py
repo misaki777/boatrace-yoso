@@ -247,6 +247,80 @@ def make_preview_info(race_id: str, boats: list[dict[str, Any]]) -> dict[str, An
     }
 
 
+def make_fake_tenkai(race_id: str, p_win: list[float], variant: str, locked_at: str, model_id: str,
+                     boats: list[dict[str, Any]]) -> dict[str, Any]:
+    """架空の展開予想(spec 10 3.2)。逃げは1号艇の1着確率に近い値にする。"""
+    from src.export.phase3b import TENKAI_KEYS, round_to_one
+
+    rng = random.Random(int(race_id.replace("-", "")) * 13)
+    nige = min(0.9, p_win[0] * rng.uniform(0.9, 1.05))
+    rest = [rng.uniform(0.6, 1.4) * w for w in (0.36, 0.30, 0.22, 0.09, 0.03)]
+    vals = round_to_one([nige] + [(1 - nige) * x / sum(rest) for x in rest])
+    c1 = next((b["entry"] for b in boats if b.get("exhibition_course") == 1), 1)
+    return {**dict(zip(TENKAI_KEYS, vals)), "course1_entry": c1, "version": variant, "model_id": model_id,
+            "locked_at": locked_at}
+
+
+SAMPLE_MODEL_HISTORY = [
+    {"date": "2026-11-01", "variant": "pre", "candidate": "pre_20261101_sample", "adopted": True,
+     "train_to": "2026-09-30", "valid": "2026-10",
+     "metrics": {"win_logloss": {"candidate": 1.2041, "latest": 1.2102}, "top1_acc": {"candidate": 0.561, "latest": 0.557}},
+     "reason": "基準 a〜e を満たした", "features": ["(公開しない)"]},
+    {"date": "2026-10-01", "variant": "pre", "candidate": "pre_20261001_cand", "adopted": False,
+     "train_to": "2026-08-31", "valid": "2026-09",
+     "metrics": {"win_logloss": {"candidate": 1.2155, "latest": 1.2101}},
+     "reason": "基準 a(logloss の改善)を満たさない"},
+]
+
+
+def make_sample_racers(day: dict[str, Any], pool: list[dict[str, Any]], generated_at: str) -> dict[str, Any]:
+    """その日の出走選手の架空カード(build_racers に、F-10 と同じ列の表を渡して作る)。"""
+    import pandas as pd
+
+    from src.export.phase3b import build_racers
+
+    by_num = {r["racer_number"]: r for r in pool}
+    seen: dict[int, int] = {}
+    for st in day["stadiums"]:
+        for race in st["races"]:
+            for b in (race["prediction"] or {}).get("boats", []):
+                seen.setdefault(b["racer_number"], st["stadium_number"])
+    rows, res = [], []
+    for num, stn in sorted(seen.items()):
+        r = by_num[num]
+        rng = random.Random(num)
+        row = {"racer_number": num, "racer_name": r["racer_name"], "rank_number": ["A1", "A2", "B1", "B2"].index(r["rank"]) + 1,
+               "branch_number": None, "branch_name": r["branch"], "stadium_number": stn,
+               "national_win_rate": r["national_win_rate"], "national_top_2_percent": rng.uniform(15, 60),
+               "national_top_3_percent": rng.uniform(30, 75), "local_win_rate": r["national_win_rate"] + rng.uniform(-1, 1),
+               "local_top_2_percent": rng.uniform(10, 60), "local_top_3_percent": rng.uniform(25, 75),
+               "average_start_timing": r["avg_st"], "flying_count": r["flying_count"], "late_count": 0,
+               "local365_n": rng.randint(0, 30), "local365_win_rate": rng.uniform(0, 0.4),
+               "local365_top2_rate": rng.uniform(0.1, 0.6), "local365_top3_rate": rng.uniform(0.2, 0.8),
+               "f_rate": rng.uniform(0, 0.02), "late_rate": rng.uniform(0, 0.005), "maeduke_rate": rng.uniform(0, 0.2),
+               # 入力にあっても出さない列(テストで確かめる)
+               "age": 30, "weight": 52.0, "motor_number": 11}
+        for k in range(1, 7):
+            win = rng.uniform(0.0, 0.6 if k == 1 else 0.2)
+            row.update({f"c{k}_n": rng.randint(0, 40), f"c{k}_win_rate": win, f"c{k}_nige": win * 0.9 if k == 1 else 0.0,
+                        f"c{k}_sashi": 0.0 if k == 1 else win * 0.4, f"c{k}_makuri": 0.0 if k == 1 else win * 0.3,
+                        f"c{k}_makurisashi": 0.0 if k <= 2 else win * 0.2, f"c{k}_second": rng.uniform(0.05, 0.3),
+                        f"c{k}_third": rng.uniform(0.05, 0.3), f"c{k}_st_mean": rng.uniform(0.13, 0.21)})
+        rows.append(row)
+        for i in range(10):
+            res.append({"racer_number": num, "kind": "recent", "date": datetime(2026, 10, 20 + i).date(),
+                        "stadium_number": rng.randint(1, 24), "race_number": rng.randint(1, 12),
+                        "course_number": rng.randint(1, 6), "place_number": rng.choice([1, 2, 3, 4, 5, 6, 6, 17]),
+                        "finish_position": None, "technique_number": None})
+        for i in range(2):
+            res.append({"racer_number": num, "kind": "series", "date": datetime(2026, 10, 31 + i).date()
+                        if i == 0 else datetime(2026, 11, 1).date(), "stadium_number": stn,
+                        "race_number": rng.randint(1, 12), "course_number": rng.randint(1, 6),
+                        "place_number": rng.randint(1, 6), "finish_position": None,
+                        "technique_number": rng.choice([None, 1, 2, 3])})
+    return build_racers(datetime(2026, 11, 2).date(), pd.DataFrame(rows), pd.DataFrame(res), generated_at)
+
+
 def make_odds_snapshot(date: str, key: tuple[int, int], race_id: str, closed: datetime,
                        p_win: list[float], gen_dt: datetime) -> dict[str, Any] | None:
     """架空の締切前オッズ(spec 07 2.6 の解析JSONの形)。乱数はレースごとに別にして、他のデータに影響させない。"""
@@ -336,6 +410,9 @@ def make_day(date: str, pool: list[dict[str, Any]], seed: int) -> dict[str, Any]
                     use_model_combinations=False,
                     model_id=MODEL["model_id"] if variant == "pre" else PREVIEW_MODEL_ID,
                     locked_at=predicted_at, reasons=make_fake_reasons(race_id, boats))
+                if date == "2026-11-02":   # 展開予想は Phase 3b から(過去日のファイルには無い)
+                    prediction["tenkai"] = make_fake_tenkai(race_id, p_win, variant, predicted_at,
+                                                            prediction["model_id"], boats)
                 if not canceled:
                     apply_odds(prediction, make_odds_snapshot(date, key, race_id, closed, p_win, gen_dt))
             result = None
@@ -501,8 +578,16 @@ def make_all(out_dir: Path, local_out_dir: Path | None = None) -> dict[str, Any]
         write_json(base / "performance.json", performance, kind="performance", pretty=True)
         write_json(base / "index.json", index, kind="index", pretty=True)   # index は最後
     write_json(Path(out_dir) / "strategy_cases.json", cases, pretty=True)
+    # Phase 3b: 選手カード(当日分だけ)とモデルの更新履歴
+    from src.export.phase3b import build_models
+
+    racers = make_sample_racers(local_days["2026-11-02"], pool, generated_at)
+    models = build_models(SAMPLE_MODEL_HISTORY, generated_at)
+    for base, _, _ in targets:
+        write_json(base / "racers" / "20261102.json", racers, kind="racers")
+        write_json(base / "models.json", models, kind="models", pretty=True)
     return {"index": index, "performance": performance, "days": days, "local_days": local_days,
-            "strategy_cases": cases}
+            "strategy_cases": cases, "racers": racers, "models": models}
 
 
 def main(argv: list[str] | None = None) -> None:
