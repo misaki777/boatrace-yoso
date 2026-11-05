@@ -94,6 +94,10 @@ jobs:
       - name: 収集・予想・export
         run: bash scripts/ci_run.sh "${{ steps.mode.outputs.mode }}" ${{ steps.mode.outputs.date }}
 
+      # 成功したときだけ status.json を書いて公開に含める(git にはコミットしない)
+      - name: 状態ファイル(docs/data/status.json)
+        run: python -m scripts.ci_status --job "${{ steps.mode.outputs.mode }}"
+
       - name: 公開(Cloudflare Workers)
         if: steps.mode.outputs.deploy != 'false'
         run: bash scripts/deploy_pages.sh
@@ -105,7 +109,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- docs/data
+          git add -- docs/data ':!docs/data/status.json'
           if git diff --cached --quiet; then
             echo "docs/data に変更はありません"
             exit 0

@@ -4,7 +4,7 @@ import { html, toHtmlString } from './html.js';
 import { initClock, todayJst, fmtUpdated, fmtMonthDay, isClockFixed } from './time.js';
 import { fmtRoi } from './format.js';
 import {
-  peek, loadIndex, loadDay, loadPerformance, describeError, onProvisional, lastFetchedAt, isLocalData, isLocalMode,
+  peek, loadIndex, loadDay, loadPerformance, describeError, onProvisional, lastFetchedAt, isLocalData, isLocalMode, dataBase,
 } from './data.js';
 import {
   getSettings, saveSettings, resetSettings, isCustomSettings, takeResetNotice, getDisplay, saveDisplay, applyTheme,
@@ -21,7 +21,7 @@ import { copyText, ALLOCATION_METHODS } from './betsum.js';
 import { currentAllocation } from './views/race.js';
 import { t, WORDING } from './wording.js';
 import { betTypeLabel } from './format.js';
-import { jstDateString, parseIso } from './time.js';
+import { jstDateString, parseIso, nowMs } from './time.js';
 import { getPref, setPref, session } from './store.js';
 import { emptyBox } from './parts.js';
 import { parseRaceId, findRace } from './model.js';
@@ -138,6 +138,7 @@ async function refresh() {
   const again = pathsForRoute(route).filter((p) => !paths.includes(p));
   await Promise.allSettled(again.map((p) => loadDay(p, { force: true }).catch((e) => state.errors.set(p, e))));
   state.busy = false;
+  loadStatus();
   render();
 }
 
@@ -520,6 +521,7 @@ function afterRender(route) {
     }
   }
   insertGentle();
+  insertStale();
   // S2: 自動取得(設定がオンで条件を満たすとき)
   if (route.name === 'race') maybeAutoFetch(route);
   if (route.name === 'settings' && route.focus === 'worker' && !state.workerFocused) {
@@ -769,6 +771,11 @@ document.addEventListener('click', (e) => {
       break;
     case 'help-close':
       closeHelp();
+      break;
+    case 'stale-close':
+      // 閉じても、次に開いたときにまだ古ければまた出す(このページを開いている間だけ閉じる)
+      stale.dismissedFor = el.dataset.last;
+      render();
       break;
     case 'gentle-close':
       dismissGentle(el.dataset.kind);
@@ -1297,11 +1304,61 @@ function saveAlloc(a) {
   try { localStorage.setItem(ALLOC_KEY, JSON.stringify({ budget: a.budget, method: a.method })); } catch (e) { /* 保存できなくても表示は続ける */ }
 }
 
+// ---------------------------------------------------------------- 自動更新が止まったときの帯(spec/10 1章、W-14)
+// status.json の last_success_at(無ければ index.json の generated_at)から90分以上たっていて、
+// 今が当日の開催時間(最初の締切 − 60分 〜 最後の締切 + 60分)の中なら出す。夜間・開催の無い日は出さない。
+const STALE_MINUTES = 90;
+const stale = { lastSuccessAt: null, checkedAt: 0, dismissedFor: null };
+
+async function loadStatus() {
+  try {
+    const res = await fetch(`${dataBase()}status.json`, { cache: 'no-cache' });
+    const j = res.ok ? await res.json() : null;
+    stale.lastSuccessAt = j && typeof j.last_success_at === 'string' ? j.last_success_at : null;
+  } catch (e) {
+    stale.lastSuccessAt = null;
+  }
+  stale.checkedAt = Date.now();
+  render();
+}
+
+/** 帯を出すか。出すときは { last, min } */
+function staleState() {
+  const idx = peek('index.json');
+  const last = stale.lastSuccessAt || (idx && idx.json.generated_at);
+  if (!last || !idx) return null;
+  const today = todayJst();
+  const info = idx.json.dates.find((d) => d.date === today);
+  const entry = info && peek(info.file);
+  if (!entry) { if (info && !state.errors.has(info.file)) requestDay(info.file); return null; }
+  const closes = entry.json.stadiums.flatMap((st) => st.races.map((r) => parseIso(r.closed_at))).filter((x) => !Number.isNaN(x));
+  if (!closes.length) return null;
+  const now = nowMs();
+  if (now < Math.min(...closes) - 3600000 || now > Math.max(...closes) + 3600000) return null;
+  const min = Math.floor((now - parseIso(last)) / 60000);
+  if (!(min >= STALE_MINUTES)) return null;
+  return { last, min };
+}
+
+function insertStale() {
+  const s = staleState();
+  if (!s || stale.dismissedFor === s.last) return;
+  const bar = appEl.querySelector('.appbar');
+  if (!bar) return;
+  const host = document.createElement('div');
+  host.className = 'stale-host';
+  host.innerHTML = toHtmlString(html`<div class="banner banner--warn banner--stack" role="status"><span class="banner__icon" aria-hidden="true">!</span>
+    <div class="banner__body"><b class="banner__title">${t('stale.banner', { time: fmtUpdated(s.last, todayJst()) })}</b><span class="banner__text">${t('stale.detail', { min: s.min })}</span></div>
+    <button class="banner__close" data-action="stale-close" data-last="${s.last}" aria-label="閉じる">閉じる</button></div>`);
+  bar.after(host);
+}
+
 // ---------------------------------------------------------------- 起動
 
 if (isClockFixed()) console.info('現在時刻を URL の now パラメータで固定しています');
 state.lastHash = location.hash || '#/';
 render();
 loadLocal();
+loadStatus();
 scheduleTicks();
 registerServiceWorker();

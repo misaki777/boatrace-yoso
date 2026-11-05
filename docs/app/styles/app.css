@@ -683,3 +683,4 @@ details.fold.fold--flow > .flow { padding: 0 var(--sp-3) var(--sp-3); }
 .betsum__alloc tr.is-zero td { color: var(--c-text-3); }
 .racebetsum .betsum__alloc td, .racebetsum .betsum__alloc th { white-space: nowrap; padding-left: 8px; padding-right: 8px; }
 .racebetsum .betsum__alloc td:first-child { white-space: normal; }
+.stale-host .banner { margin: var(--sp-2) var(--gutter) 0; }

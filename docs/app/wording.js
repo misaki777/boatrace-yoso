@@ -77,7 +77,21 @@ export const WORDING = Object.freeze({
   "label.record_bet": "購入を記録",
   "label.copy_bets": "買い目をコピー",
   "label.backup_export": "バックアップを書き出す",
-  "label.backup_import": "バックアップを読み込む"
+  "label.backup_import": "バックアップを読み込む",
+  "stale.banner": "データの更新が止まっているようです(最終更新 {time})。表示中の予想・結果は古い可能性があります。",
+  "stale.detail": "自動の更新が{min}分以上行われていません。しばらくしても直らない場合は、GitHub の Actions の実行結果を確認してください。",
+  "tenkai.heading": "展開予想",
+  "tenkai.nige": "1コース({entry}号艇)が逃げる確率 {pct}%",
+  "tenkai.others": "差し {sashi}%・まくり {makuri}%・まくり差し {msashi}%・その他 {other}%",
+  "tenkai.note": "決まり手の確率は、着順の確率とは別のモデルで計算しています。数字が一致しないことがあります。",
+  "help.tenkai": "レースがどの決まり手で決まるかの見込みです。過去の決まり手の傾向と、各選手のレース運び(コース別の逃げ・差し・まくりの率など)から計算しています。",
+  "card.heading": "選手カード",
+  "card.note": "コース別・当地などの率は、本ツールが過去の結果から集計したもので、公式の成績とは計算の仕方が違います。件数が少ない率は薄く表示しています。",
+  "card.unavailable": "この日の選手カードはありません(当日と前日の分だけ表示できます)。",
+  "card.load_failed": "選手カードを読み込めませんでした。通信の状態を確かめて、もう一度開いてください。",
+  "models.heading": "モデルの更新履歴",
+  "models.note": "毎月、新しいデータで学び直した候補を、前月のデータで今のモデルと比べ、決めた基準をすべて満たしたときだけ切り替えています。確定した予想は、切り替えの後も書き換えません。",
+  "models.not_adopted": "候補は基準を満たさなかったため、切り替えていません。"
 });
 
 /** 表の文言以外の列(help.* は見出し、warn.* は表示条件、helpline.* は名称と URL) */

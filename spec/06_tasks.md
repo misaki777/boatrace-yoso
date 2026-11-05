@@ -176,6 +176,10 @@ DA-3 → DA-4、DB-3 → DB-4 ─→ W-10 の見た目
 | F-6 | F | レース運びの特徴量(`src/features/style.py`、`STYLE_H_FEATURES` 28列・`STYLE_R_FEATURES` 4列)と variant `pre_v2` / `preview_v2` | F-2 | **完了(2026-11-05)** |
 | M-12 | M | v2 の学習と比較(`pre` vs `pre_v2`、`preview` vs `preview_v2`。valid/test の logloss・較正・回収率と区間)。採用する場合は `models/latest` の切り替えを PM に相談(確定版の予想は書き換えない。`08` 5.1) | F-6、M-11 | **進行中**。比較表を `reports/` に出し、採用の判断材料を報告する |
 
+### Phase 3b(2026-11-05 追加)
+
+仕様・タスク一覧・順番は `10_phase3b.md` 5章を参照(CI-1〜3、W-14〜17、C-7、F-7〜10、M-13・M-14、E-13・E-14、DA-6・DB-6、P-5)。CI の担当範囲は `.github/**` と `scripts/ci_*`・`scripts/deploy_pages.sh`。確認事項は U14(`10` 6章 Q13・Q14)。
+
 ### Phase 3〜4(概要のみ。着手前に仕様を詳しくする)
 
 - P-3: GitHub Actions(収集→予想→export→docs/data の commit)。実行の頻度と、外部へのアクセス回数の上限を決める
@@ -222,6 +226,7 @@ DA-3 → DA-4、DB-3 → DB-4 ─→ W-10 の見た目
 | U11 | アプリ名(manifest の `name` / `short_name`) | **利用者が決める**。決まるまでは仮の名前「ボートレース予想」/「BR予想」(`design/visual/README.md`)を使う | W-5 の完了前 |
 | U12 | 中継 Worker 関連(`07` 9.11 の Q6〜Q9: LANのオリジンの許可、Node 18 以上の導入、1日の上限とキャッシュ時間、Cloudflare から公式に接続できない場合) | 07 9.11 の案のとおり | R-1 の完了まで |
 | U13 | Phase 3a の確認事項(`08` 7章 Q10〜Q12: 購入記録は端末内のみ、予算・連敗の警告の既定、予想の確定の既定と過去日の扱い) | 08 7章の案 | E-11・W-11 の着手前 |
+| U14 | Phase 3b の確認事項(`10` 6章: 旧APIの取得を PC で3晩、毎月のモデルの自動切り替え) | 10 6章の案 | C-7・M-13 の着手前 |
 | U10 | 取得元が使えなくなった場合(どちらも非公式・個人運営) | turnmark が止まったら openapi だけで動かす(オッズの評価ができなくなる)。両方止まった場合の代わりは未定 | 随時 |
 
 ## 7. 追加ライブラリの候補
