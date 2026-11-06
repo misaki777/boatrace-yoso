@@ -3,16 +3,12 @@
 # 公式サイト(boatrace.jp)へはアクセスしない(締切前オッズは取らない)。
 # git 管理外の状態は R2 の state/(履歴の集計の状態・当月と前月の raw と interim・予想・採用中のモデル)。
 # 生データの全履歴は落とさない。features はジョブ内で状態から作り直す。前日確定ジョブはその月を archive/ にも保存するは R2 の非公開バケット br-yoso-data に置き、最初に取得・最後に保存する。
-# cron は UTC。JST = UTC + 9 時間。毎時0分を避けて数分ずらしている(実際の起動は数分〜数十分遅れることがある)。
+# 起動は Cloudflare Worker(workers/dispatcher)の Cron Trigger から workflow_dispatch で行う。
+# GitHub の schedule は遅れや取りこぼしが大きかったため使わない(二重起動も防ぐ)。
+# 時刻: 朝 JST 7:41、日中 8:04〜23:34 の30分ごと、前日分の確定 1:12、週の分析 月曜 3:00。
 name: daily
 
 on:
-  schedule:
-    - cron: "41 22 * * *"      # 朝:     JST 7:41
-    - cron: "4,34 23 * * *"    # 日中:   JST 8:04, 8:34
-    - cron: "4,34 0-14 * * *"  # 日中:   JST 9:04 〜 23:34(30分ごと)
-    - cron: "12 16 * * *"      # 前日分の確定: JST 1:12
-    - cron: "0 18 * * 0"       # 週の分析: 月曜 JST 3:00(利用者の決定)
   workflow_dispatch:
     inputs:
       mode:

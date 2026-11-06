@@ -1,0 +1,13 @@
+# 定刻に GitHub Actions(daily)を起動する Worker。秘密の値(GH_TOKEN)はここに書かない。
+#   npx wrangler secret put GH_TOKEN   で設定する
+name = "br-yoso-dispatcher"
+main = "src/index.mjs"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[triggers]
+# UTC。JST = UTC + 9 時間。src/index.mjs の CRON_MODES と同じ文字列にする(テストで確認)
+crons = ["41 22 * * *", "4,34 23,0-14 * * *", "12 16 * * *", "0 18 * * SUN"]
+
+[observability]
+enabled = true

@@ -243,3 +243,13 @@ GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / dayt
 | `docs/` | PWA 本体(`docs/data/` は公開用 JSON、`docs/data-local/` はローカル専用で git 管理外) |
 | `data/` | 生データ・中間データ(git 管理外) |
 | `design/` | 画面デザイン・ビジュアルの資料 |
+
+## 定刻の起動(Cloudflare Worker)
+
+GitHub の定期実行(schedule)は遅れや取りこぼしが大きかったため、`workers/dispatcher`(br-yoso-dispatcher)の Cron Trigger から `daily` ワークフローを `workflow_dispatch` で起動しています。
+
+- 時刻(JST): 朝 7:41、日中 8:04〜23:34 の30分ごと、前日分の確定 1:12、週の分析 月曜 3:00
+- 鍵: GitHub の fine-grained token(このリポジトリの Actions: Read and write だけ)を、Worker の Secret `GH_TOKEN` に登録する(Cloudflare の管理画面 → br-yoso-dispatcher → Settings → Variables and Secrets)
+- 動作確認: `https://br-yoso-dispatcher.boatrace-yoso.workers.dev/` が `has_token: true` を返すこと。起動の記録は Worker の Logs(Observability)
+- デプロイ: `cd workers/dispatcher && npx wrangler deploy`(Secret はデプロイしても消えない)
+- 鍵の有効期限が切れると起動しなくなる。アプリの「更新が止まっています」の帯で気づける
