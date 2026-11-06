@@ -190,21 +190,72 @@ def simulate_grid(preds: pd.DataFrame, payouts: pd.DataFrame, budget: int = SIM_
 # ---------------------------------------------------------------------------
 
 
-def validation_predictions(model_id: str = "latest", variant: str = "pre", models_dir=MODELS_DIR) -> tuple[pd.DataFrame, dict]:
-    """検証用の予想: モデルが学習にも選択にも使っていない期間(meta の test 期間)。
+VALIDATION_CACHE = "validation_predictions.parquet"
 
-    毎月の作り直し(10 2.5)の記録が貯まったら、各月の valid を月ごとにつなぐ形に置き換える。
+
+def _honest_eval_model(meta: dict, variant: str, models_dir) -> str:
+    """検証期間(test)を学習に使っていないモデルの ID を返す。
+
+    latest が test 期間まで学習している(毎月の作り直しの候補など)ときは、同じ variant の中から
+    train_to < test_from のモデルのうち最も新しいものを使う。見つからなければ latest のまま(注記で示す)。
     """
-    from src.model.data import features_path, filter_period, load_features
+    from pathlib import Path
+
+    p = meta["periods"]
+    if p.get("train_to", "") < p.get("test_from", ""):
+        return meta["model_id"]
+    best = None
+    for d in sorted(Path(models_dir, variant).glob(f"{variant}_*")):
+        mp = d / "meta.json"
+        if not mp.exists():
+            continue
+        import json
+        m = json.loads(mp.read_text(encoding="utf-8"))
+        pp = m.get("periods", {})
+        if pp.get("test_from") == p.get("test_from") and pp.get("train_to", "9") < pp.get("test_from", ""):
+            if m.get("calibration") or m.get("harville_gamma") is not None:
+                best = m["model_id"]
+    return best or meta["model_id"]
+
+
+def validation_predictions(model_id: str = "latest", variant: str = "pre", models_dir=MODELS_DIR) -> tuple[pd.DataFrame, dict]:
+    """検証用の予想: 学習にも選択にも使っていない期間(meta の test 期間)の予想。
+
+    GitHub Actions には学習用の特徴量ファイルが無いので、手元で一度計算した結果を
+    latest のモデルのフォルダ(validation_predictions.parquet)に保存し、それを読む。
+    latest が test 期間まで学習している場合は、その期間を学習していないモデルで予想する。
+    """
+    import json
+
     from src.model.lgbm import load_model
-    from src.model.report import predict_p
 
     booster, meta = load_model(model_id, models_dir, variant)
+    folder = Path(models_dir) / variant / meta["model_id"]
+    cache = folder / VALIDATION_CACHE
+    info_path = folder / "validation_info.json"
+    if cache.exists() and info_path.exists():
+        return pd.read_parquet(cache), json.loads(info_path.read_text(encoding="utf-8"))
+
+    from src.model.data import features_path, filter_period, load_features
+    from src.model.report import predict_p
+
     periods = meta["periods"]
-    part = filter_period(load_features(features_path(meta["variant"])), periods["test_from"], periods["test_to"])
+    eval_id = _honest_eval_model(meta, variant, models_dir)
+    eb, em = load_model(eval_id, models_dir, variant) if eval_id != meta["model_id"] else (booster, meta)
+    fpath = features_path(em["variant"])
+    if not Path(fpath).exists():
+        raise FileNotFoundError(
+            f"{fpath} がありません。検証用の予想({cache})を手元で作ってから R2 に上げてください: "
+            "python -m src.model.simulator --build-validation-cache")
+    part = filter_period(load_features(fpath), periods["test_from"], periods["test_to"])
     preds = part[["race_id", "entry_number", "is_valid_result", "is_absent"]].assign(
-        p_win=predict_p(part, booster, meta), model_id=meta["model_id"])
-    return preds, {"from": periods["test_from"], "to": periods["test_to"], "model_id": meta["model_id"]}
+        p_win=predict_p(part, eb, em), model_id=em["model_id"])
+    info = {"from": periods["test_from"], "to": periods["test_to"], "model_id": em["model_id"],
+            "latest_model_id": meta["model_id"], "in_sample": em["periods"].get("train_to", "") >= periods["test_from"]}
+    folder.mkdir(parents=True, exist_ok=True)
+    preds.to_parquet(cache, index=False)
+    info_path.write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
+    return preds, info
 
 
 def build_simulator(live_from, live_to, budget: int = SIM_BUDGET_PER_RACE_YEN, models_dir=MODELS_DIR,
@@ -232,3 +283,20 @@ def build_simulator(live_from, live_to, budget: int = SIM_BUDGET_PER_RACE_YEN, m
         out["live"][v] = {"period": {"from": str(pd.Timestamp(live_from).date()), "to": str(pd.Timestamp(live_to).date())},
                           "rows": simulate_grid(d, lpay, budget, models_dir) if len(d) else []}
     return out
+
+
+def main(argv=None) -> int:
+    """検証用の予想のキャッシュを作る(学習用の特徴量がある手元で実行する)。"""
+    import argparse
+
+    ap = argparse.ArgumentParser(description="シミュレーターの検証用の予想のキャッシュを作る")
+    ap.add_argument("--build-validation-cache", action="store_true")
+    a = ap.parse_args(argv)
+    if a.build_validation_cache:
+        preds, info = validation_predictions()
+        print(f"検証用の予想: {len(preds)} 行、評価モデル {info['model_id']}(latest {info.get('latest_model_id')})")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
