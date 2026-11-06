@@ -1,0 +1,109 @@
+{
+ "status": "ok",
+ "weather": {
+  "weather_number": 2,
+  "wind_direction_number": 17,
+  "wind_speed": 0,
+  "wave_height": 1,
+  "air_temperature": 17.0,
+  "water_temperature": 18.0,
+  "as_of": "10:31現在"
+ },
+ "boats": {
+  "1": {
+   "racer_number": 9001,
+   "exhibition_time": 6.71,
+   "tilt_adjustment": -0.5,
+   "weight": 52.1,
+   "weight_adjustment": 0.0,
+   "propeller_new": false,
+   "parts": [],
+   "start_course": 1,
+   "start_timing": 0.08,
+   "start_flying": false,
+   "absent": false
+  },
+  "2": {
+   "racer_number": 9002,
+   "exhibition_time": 6.82,
+   "tilt_adjustment": 0.0,
+   "weight": 53.2,
+   "weight_adjustment": 0.5,
+   "propeller_new": true,
+   "parts": [],
+   "start_course": 2,
+   "start_timing": 0.05,
+   "start_flying": false,
+   "absent": false
+  },
+  "3": {
+   "racer_number": 9003,
+   "exhibition_time": 6.93,
+   "tilt_adjustment": 0.5,
+   "weight": 54.3,
+   "weight_adjustment": 0.0,
+   "propeller_new": false,
+   "parts": [
+    {
+     "number_source": "リング",
+     "number": 2,
+     "quantity": null
+    },
+    {
+     "number_source": "ピストン",
+     "number": 1,
+     "quantity": null
+    }
+   ],
+   "start_course": 3,
+   "start_timing": -0.02,
+   "start_flying": true,
+   "absent": false
+  },
+  "4": {
+   "racer_number": 9004,
+   "exhibition_time": 6.64,
+   "tilt_adjustment": -0.5,
+   "weight": 51.4,
+   "weight_adjustment": 1.0,
+   "propeller_new": false,
+   "parts": [],
+   "start_course": 4,
+   "start_timing": 0.0,
+   "start_flying": false,
+   "absent": false
+  },
+  "5": {
+   "racer_number": 9005,
+   "exhibition_time": 6.75,
+   "tilt_adjustment": 1.0,
+   "weight": 50.5,
+   "weight_adjustment": 2.0,
+   "propeller_new": false,
+   "parts": [
+    {
+     "number_source": "キャブ",
+     "number": 4,
+     "quantity": null
+    }
+   ],
+   "start_course": 5,
+   "start_timing": -0.01,
+   "start_flying": true,
+   "absent": false
+  },
+  "6": {
+   "racer_number": 9006,
+   "exhibition_time": 6.86,
+   "tilt_adjustment": 0.0,
+   "weight": 55.6,
+   "weight_adjustment": 0.0,
+   "propeller_new": false,
+   "parts": [],
+   "start_course": 6,
+   "start_timing": 0.1,
+   "start_flying": false,
+   "absent": false
+  }
+ }
+}

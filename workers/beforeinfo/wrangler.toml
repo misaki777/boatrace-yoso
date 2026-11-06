@@ -1,0 +1,30 @@
+# 直前情報の取得 Worker の設定の雛形。wrangler.toml にコピーして使う(README.md)。
+#   cp wrangler.toml.example wrangler.toml
+# 秘密の値(GH_TOKEN)はここに書かない。`npx wrangler secret put GH_TOKEN` で設定する。
+
+name = "br-yoso-beforeinfo"
+main = "src/index.mjs"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[triggers]
+# UTC。JST 8:00〜23:55 の5分ごと(UTC 23時台と 0〜14時台)。無料プランの Cron Trigger はアカウントで5つまで。
+# dispatcher が4つ使っているので、これで5つ目(上限ちょうど)。
+crons = ["*/5 23,0-14 * * *"]
+
+# R2: schedule/YYYYMMDD.json を読み、beforeinfo/YYYYMMDD/ に書く(非公開のバケット)
+[[r2_buckets]]
+binding = "DATA"
+bucket_name = "br-yoso-data"
+
+[vars]
+DAILY_LIMIT = "300"        # 1日に公式サイトから取るページ数の上限。達したらその日は止める
+WINDOW_START_MIN = "15"    # 取得の時間帯: 締切の何分前から
+WINDOW_END_MIN = "10"      #               何分前まで(Cron が5分ごとなので、幅は5分以上に)
+LAST_CHANCE_MIN = "5"      # 1回の起動の上限(3ページ)で回されたレースを、何分前まで取るか(5以上)
+GITHUB_REPO = "misaki777/boatrace-yoso"
+GITHUB_WORKFLOW = "daily.yml"
+DISPATCH_MODE = "lock"
+
+[observability]
+enabled = true

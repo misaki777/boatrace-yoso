@@ -36,8 +36,9 @@ def test_columns_follow_contract(interim_dir):
                           ("payouts", parse.PAYOUTS_DTYPES), ("odds", parse.ODDS_DTYPES)):
         df = read_interim(table, interim_dir=interim_dir)
         assert list(df.columns) == list(dtypes)
-        # _source で終わる列は day_number_source だけ
-        assert [c for c in df.columns if c.endswith("_source")] in ([], ["day_number_source"])
+        # 生データの *_source(表記の文字列)は捨てる。残すのは day_number_source と、
+        # 直前情報の出どころの pv_source(F-12b で追加した列。生データの文字列ではない)だけ
+        assert set(c for c in df.columns if c.endswith("_source")) <= {"day_number_source", "pv_source"}
     races = read_interim("races", interim_dir=interim_dir)
     assert str(races["closed_at"].dt.tz) == "Asia/Tokyo"
     assert races.loc[0, "race_id"] == "20261101-02-01"

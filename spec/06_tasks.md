@@ -22,7 +22,7 @@
 |---|---|---|
 | P | `spec/**`、`.gitignore`、`requirements.txt`、`README.md`、`src/__init__.py`、`src/common/**`、`tests/common/**`、`scripts/**`(Phase 2 の統合スクリプトから)、(Phase 3)`.github/**` | 全体 |
 | C | `src/collect/**`、`tests/collect/**`、`data/raw/**`、`tests/fixtures/official_odds/**`(Python と JS で共通の合成HTMLと期待値) | `src/common/**` |
-| R | `workers/odds-proxy/**` | `spec/**`、`tests/fixtures/official_odds/**`、`src/collect/official_odds.py`(解析の参考) |
+| R | `workers/odds-proxy/**`、`workers/beforeinfo/**` | `spec/**`、`tests/fixtures/official_odds/**`、`src/collect/official_odds.py`(解析の参考) |
 | F | `src/features/**`、`tests/features/**`、`data/interim/**`、`data/features/**` | `src/common/**`、`src/collect/raw_io.py`、`data/raw/**` |
 | M | `src/model/**`、`tests/model/**`、`models/**`、`data/predictions/**`、`reports/**` | `src/common/**`、`src/features/feature_sets.py`、`data/interim/**`、`data/features/**` |
 | E | `src/export/**`、`tests/export/**`、`docs/data/**`、`docs/data-local/**`(git管理外のローカルJSON) | `src/common/**`、`src/model/combinations.py`、`data/interim/**`、`data/predictions/**`、`reports/**`、`models/latest` |
@@ -184,6 +184,10 @@ DA-3 → DA-4、DB-3 → DB-4 ─→ W-10 の見た目
 
 仕様・タスク・順番は `11_analytics.md` 4章(P-6、F-11〜13、M-15〜17、E-15、CI-4、DA-7・DB-7、W-18〜21)。確認事項は U15(`11` 5章 Q15・Q16)。
 
+### 直前情報を時間を決めて取る(2026-11-06 追加)
+
+仕様・タスク・順番は `12_beforeinfo.md` 4章(C-8、R-4、CI-5(**完了**)、F-12b、M-18、P-7)。中継担当(R)の範囲に `workers/beforeinfo/**`、収集担当(C)の範囲に `tests/fixtures/beforeinfo/**` を加える。確認事項は U16(`12` 5章 Q17・Q18)。
+
 ### Phase 3〜4(概要のみ。着手前に仕様を詳しくする)
 
 - P-3: GitHub Actions(収集→予想→export→docs/data の commit)。実行の頻度と、外部へのアクセス回数の上限を決める
@@ -232,6 +236,7 @@ DA-3 → DA-4、DB-3 → DB-4 ─→ W-10 の見た目
 | U13 | Phase 3a の確認事項(`08` 7章 Q10〜Q12: 購入記録は端末内のみ、予算・連敗の警告の既定、予想の確定の既定と過去日の扱い) | 08 7章の案 | E-11・W-11 の着手前 |
 | U14 | Phase 3b の確認事項(`10` 6章: 旧APIの取得を PC で3晩、毎月のモデルの自動切り替え) | 10 6章の案 | C-7・M-13 の着手前 |
 | U15 | データ分析の確認事項(`11` 5章) | **決定(2026-11-05)**: 週1ジョブは月曜 3:00 JST(cron `0 18 * * 0`。毎時0分は GitHub の定期実行が混み、数分〜数十分遅れることがある)。シミュレーターの最大損失は1レース1,000円の想定(実際の予算・収支は使わない) | 決定済み |
+| U16 | 直前情報の取得の確認事項(`12` 5章) | **決定(2026-11-06)**: GitHub の鍵は dispatcher と同じものを使う。取得は締切15〜10分前に1回だけ(取り直しなし)、1日 約150〜300ページ、上限300。スマホでの再予想は定刻取得の稼働後のおまけ(`12` 6章) | 決定済み |
 | U10 | 取得元が使えなくなった場合(どちらも非公式・個人運営) | turnmark が止まったら openapi だけで動かす(オッズの評価ができなくなる)。両方止まった場合の代わりは未定 | 随時 |
 
 ## 7. 追加ライブラリの候補

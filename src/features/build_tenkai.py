@@ -27,13 +27,15 @@ from src.features import feature_sets as fs
 from src.features import parse
 from src.features.build_features import FEATURES_DIR, _write_parquet, make_feature_frame
 from src.features.build_interim import INTERIM_DIR, read_interim
+from src.features.beforeinfo import load_day_tables
 from src.features.raw_source import LoadRaw, load_day, make_loader
 
 
 def boat_variant(variant: str) -> str:
     if variant not in fs.TENKAI_VARIANTS:
         raise ValueError(f"未知の variant です: {variant}")
-    return f"{variant}_v2"
+    # 展開予想の preview_v3 は、艇ごとの preview_v3(v2 + 展示の相対値)から作る
+    return "preview_v3" if variant == "preview_v3" else f"{variant}_v2"
 
 
 def to_race_rows(boats: pd.DataFrame, races: pd.DataFrame, variant: str,
@@ -41,7 +43,7 @@ def to_race_rows(boats: pd.DataFrame, races: pd.DataFrame, variant: str,
     """艇ごとの v2 特徴量(1行=1艇)を、1行=1レースに並べ直す。"""
     b = boats.copy()
     planned = b["entry_number"].astype("float32")
-    if variant == "preview":
+    if variant.startswith("preview"):
         planned = b["pv_course_number"].fillna(planned)
     b["_course"] = planned.astype(int)
     b = (b[b["_course"].between(1, 6)]
@@ -90,13 +92,10 @@ def build_training(variant: str, d_from: date, d_to: date, interim_dir: Path = I
 
 
 def build_today(variant: str, target: date, interim_dir: Path = INTERIM_DIR,
-                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None,
+                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None, load_beforeinfo=None,
                 state=None) -> pd.DataFrame:
-    loaded = load_day(target, load_raw or make_loader(), sources=("openapi", "turnmark"))
-    if loaded is None:
-        raise FileNotFoundError(f"{target} の生データがありません")
-    source, raw = loaded
-    t = parse.parse_day(raw, source, target)
+    # 公式の直前情報(F-12b)があれば、Open API より優先して合流する
+    t = load_day_tables(target, load_raw, load_beforeinfo)
     if state is not None:
         from src.features.history_state import load_state
         if not hasattr(state, "h_starts"):

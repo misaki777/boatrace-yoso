@@ -25,7 +25,9 @@ from src.features import feature_sets as fs
 from src.features import parse
 from src.features.build_interim import INTERIM_DIR, read_interim
 from src.features.history import assign_series, compute_h_features
+from src.features.exhibition import compute_ex_features
 from src.features.style import compute_style_h, compute_style_r
+from src.features.beforeinfo import load_day_tables
 from src.features.raw_source import LoadRaw, load_day, make_loader
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -183,7 +185,7 @@ def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
     parts = [p, r, h]
     if variant.startswith("preview"):
         parts.append(compute_v_features(df))
-    if variant.endswith("_v2"):
+    if variant.endswith(("_v2", "_v3")):
         # 予定コース: 前日版は枠番、直前版はスタート展示の進入(無ければ枠番)
         planned = df["entry_number"].astype("Float64")
         if variant.startswith("preview"):
@@ -191,6 +193,8 @@ def make_feature_frame(target_entries: pd.DataFrame, target_races: pd.DataFrame,
         sh = compute_style_h(df, planned, hist_entries, hist_races,
                              starts=state.style_starts if state is not None else None)
         parts += [sh, compute_style_r(df, planned, sh)]
+        if variant.endswith("_v3"):
+            parts.append(compute_ex_features(df, planned))
     f = pd.concat(parts, axis=1)
 
     out = pd.DataFrame({
@@ -266,17 +270,14 @@ def build_training(variant: str, d_from: date, d_to: date, interim_dir: Path = I
 
 
 def build_today(variant: str, target: date, interim_dir: Path = INTERIM_DIR,
-                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None,
+                out_dir: Path = FEATURES_DIR, load_raw: LoadRaw | None = None, load_beforeinfo=None,
                 state=None) -> pd.DataFrame:
     """当日用: 当日の出走表(生JSON)と、前日までの interim から特徴量を作る。目的変数は null。
 
     state(HistoryState、または状態ファイルのパス)を渡すと、interim の代わりに履歴の状態を使う(F-8)。
     """
-    loaded = load_day(target, load_raw or make_loader(), sources=("openapi", "turnmark"))
-    if loaded is None:
-        raise FileNotFoundError(f"{target} の生データがありません")
-    source, raw = loaded
-    t = parse.parse_day(raw, source, target)
+    # 公式の直前情報(F-12b)があれば、Open API より優先して合流する
+    t = load_day_tables(target, load_raw, load_beforeinfo)
     if state is not None:
         from src.features.history_state import load_state
         if not hasattr(state, "h_starts"):

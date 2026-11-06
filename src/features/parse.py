@@ -59,6 +59,8 @@ RACES_DTYPES: dict[str, str] = {
     "is_canceled": "boolean",
     "has_refund": "boolean",
     "source": "string",
+    # 直前情報の出どころ(F-12b): official(公式の直前情報) / openapi(Open API・turnmark・旧API) / none
+    "pv_source": "string",
 }
 # 気象のうちコード値は整数にする
 for _k in ("wind_direction_number", "weather_number"):
@@ -107,6 +109,7 @@ ENTRIES_DTYPES: dict[str, str] = {
     "finish_position": "Int8",
     "is_absent": "boolean",
     "is_disqualified": "boolean",
+    "pv_source": "string",
 }
 
 PAYOUTS_DTYPES: dict[str, str] = {
@@ -308,6 +311,7 @@ def parse_day(raw: dict, source: str, target: date | None = None,
                 "finish_position": codes.finish_position(place),
                 "is_absent": codes.is_absent(place) or en in refund_entries,
                 "is_disqualified": codes.is_disqualified(place),
+                "pv_source": "openapi" if pv_has else "none",
             }
             entry_rows.append(row)
 
@@ -351,6 +355,10 @@ def parse_day(raw: dict, source: str, target: date | None = None,
             "is_canceled": is_canceled,
             "has_refund": len(refund_entries) > 0,
             "source": source,
+            "pv_source": "openapi" if any(
+                (pv_racers.get(en) or {}).get("exhibition_time") is not None
+                or (pv_racers.get(en) or {}).get("course_number") is not None for en in program_racers)
+            else "none",
         })
 
         payouts = _get(result, "payouts") or {}

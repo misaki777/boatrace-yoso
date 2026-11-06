@@ -151,7 +151,21 @@ STYLE_R_FEATURES: list[str] = [
 PRE_V2_FEATURES: list[str] = PRE_FEATURES + STYLE_H_FEATURES + STYLE_R_FEATURES
 PREVIEW_V2_FEATURES: list[str] = PREVIEW_FEATURES + STYLE_H_FEATURES + STYLE_R_FEATURES
 
-VARIANTS: tuple[str, ...] = ("pre", "preview", "pre_v2", "preview_v2")
+# --- 展示の相対値(v3。2026-11-06 追加。直前版だけ) ---
+# 予定コース(展示の進入、無ければ枠番)で外側(4〜6)・内側(1〜3)に分けた展示ST・展示タイムの順位など。
+# 展示ST の F(負)は、順位では最速、差では 0.00 として扱い、pv_st_flying に F かどうかを持つ
+EX_FEATURES: list[str] = [
+    "r_pv_st_rank",
+    "pv_st_flying",
+    "r_pv_st_rank_group",
+    "r_pv_st_diff_best",
+    "r_pv_st_diff_inner",
+    "r_pv_exhibition_rank_group",
+    "pv_outer_both_top",
+]
+PREVIEW_V3_FEATURES: list[str] = PREVIEW_V2_FEATURES + EX_FEATURES
+
+VARIANTS: tuple[str, ...] = ("pre", "preview", "pre_v2", "preview_v2", "preview_v3")
 
 # 特徴量の列名に含まれてはいけない文字列(リーク防止。02_features.md 3章2項)
 FORBIDDEN_SUBSTRINGS: tuple[str, ...] = ("rs_", "place", "odds", "payout", "technique")
@@ -167,6 +181,8 @@ def features_for(variant: str) -> list[str]:
         return list(PRE_V2_FEATURES)
     if variant == "preview_v2":
         return list(PREVIEW_V2_FEATURES)
+    if variant == "preview_v3":
+        return list(PREVIEW_V3_FEATURES)
     raise ValueError(f"未知の variant です: {variant}")
 
 
@@ -181,7 +197,7 @@ def categorical_features(variant: str) -> list[str]:
 # 予定コース順に並べ直した各艇の値は c1_〜c6_ の接頭辞付き(c1 = 予定1コースの艇)
 # ---------------------------------------------------------------------------
 
-TENKAI_VARIANTS: tuple[str, ...] = ("pre", "preview")
+TENKAI_VARIANTS: tuple[str, ...] = ("pre", "preview", "preview_v3")
 TENKAI_KEY_COLUMNS: list[str] = ["race_id", "date", "stadium_number", "race_number"]
 # 目的変数 technique_number(1 逃げ 2 差し 3 まくり 4 まくり差し 5 抜き 6 恵まれ)。当日用は null
 TENKAI_TARGET_COLUMNS: list[str] = ["technique_number", "is_valid_result"]
@@ -207,13 +223,15 @@ def tenkai_boat_columns(variant: str) -> list[str]:
         return list(_TENKAI_BOAT_PRE)
     if variant == "preview":
         return _TENKAI_BOAT_PRE + _TENKAI_BOAT_PREVIEW_EXTRA
+    if variant == "preview_v3":  # 展開予想の直前版 + 展示の相対値(v3)
+        return _TENKAI_BOAT_PRE + _TENKAI_BOAT_PREVIEW_EXTRA + EX_FEATURES
     raise ValueError(f"未知の variant です: {variant}")
 
 
 def tenkai_race_columns(variant: str) -> list[str]:
     if variant == "pre":
         return list(_TENKAI_RACE_PRE)
-    if variant == "preview":
+    if variant in ("preview", "preview_v3"):
         return _TENKAI_RACE_PRE + _TENKAI_RACE_PREVIEW_EXTRA
     raise ValueError(f"未知の variant です: {variant}")
 
@@ -226,6 +244,6 @@ def tenkai_features_for(variant: str) -> list[str]:
 
 def tenkai_categorical_features(variant: str) -> list[str]:
     cats = ["stadium_number", "grade_number", "race_kind"]
-    if variant == "preview":
+    if variant.startswith("preview"):
         cats.append("pv_wind_class")
     return cats

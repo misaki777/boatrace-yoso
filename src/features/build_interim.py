@@ -19,6 +19,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.features import parse
+from src.features.beforeinfo import make_beforeinfo_loader, merge_official
 from src.features.legacy import fill_final_day_number
 from src.features.raw_source import LoadRaw, load_day, make_final_checker, make_loader
 
@@ -72,9 +73,11 @@ def iter_dates(d_from: date, d_to: date):
 
 
 def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
-                is_final=None, previous_races: pd.DataFrame | None = None
-                ) -> tuple[dict[str, pd.DataFrame], dict]:
+                is_final=None, previous_races: pd.DataFrame | None = None,
+                load_beforeinfo=None) -> tuple[dict[str, pd.DataFrame], dict]:
     """1か月分の interim と品質レポートを作る(書き込みはしない)。
+
+    load_beforeinfo: date -> {race_id: 公式の直前情報}。openapi の日だけ、Open API より優先して合流する(F-12b)。
 
     is_final: (source, date) -> bool。None なら turnmark=確定、openapi=未確定。
     """
@@ -85,6 +88,7 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
     day_sources: dict[str, str] = {}
     missing_days: list[str] = []
     errors: list[str] = []
+    beforeinfo_stats: dict[str, dict] = {}
     for d in iter_dates(first, last):
         loaded = load_day(d, load_raw)
         if loaded is None:
@@ -94,6 +98,10 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
         try:
             final = is_final(source, d) if is_final is not None else None
             tables = parse.parse_day(raw, source, d, is_final=final)
+            if source == "openapi" and load_beforeinfo is not None:
+                tables, bstats = merge_official(tables, load_beforeinfo(d))
+                if bstats["files"]:
+                    beforeinfo_stats[d.isoformat()] = bstats
         except Exception as e:  # 1日分の異常で全体を止めない。レポートに残す
             errors.append(f"{d.isoformat()}: {type(e).__name__}: {e}")
             continue
@@ -114,6 +122,9 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
         out["races"] = parse.cast_frame(fill_final_day_number(out["races"], previous_races), parse.RACES_DTYPES)
 
     report = quality_report(key, out, day_sources, missing_days, errors)
+    report["beforeinfo"] = beforeinfo_stats
+    report["entries"]["pv_source"] = out["entries"]["pv_source"].value_counts(dropna=False).to_dict() \
+        if len(out["entries"]) else {}
     return out, report
 
 
@@ -209,7 +220,7 @@ def write_month(key: str, tables: dict[str, pd.DataFrame], report: dict,
 
 def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
                   out_dir: Path = INTERIM_DIR, verbose: bool = True,
-                  is_final=None) -> list[dict]:
+                  is_final=None, load_beforeinfo=None) -> list[dict]:
     """指定範囲にかかる月を作り直す。月ごとの品質レポートのリストを返す。
 
     load_raw を省略したときは data/raw と、その取得ログで確定判定をする。
@@ -217,6 +228,7 @@ def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
     if load_raw is None:
         load_raw = make_loader()
         is_final = is_final or make_final_checker()
+        load_beforeinfo = load_beforeinfo or make_beforeinfo_loader()
     # 未来の日は読まない(品質レポートの「欠けた日」に入れないため)
     until = max(d_to, datetime.now(JST).date())
     reports = []
@@ -227,7 +239,7 @@ def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
         prev_path = out_dir / "races" / f"{prev_key}.parquet"
         previous = pd.read_parquet(prev_path) if prev_path.exists() else None
         tables, report = build_month(key, load_raw, until=until, is_final=is_final,
-                                     previous_races=previous)
+                                     previous_races=previous, load_beforeinfo=load_beforeinfo)
         write_month(key, tables, report, out_dir)
         reports.append(report)
         if verbose:

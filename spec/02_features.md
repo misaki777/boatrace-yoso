@@ -12,7 +12,7 @@ CLI: `python -m src.features.build_interim --from 2026-01-01 --to 2026-11-01`
 
 - 日付ごとに読むソースは「turnmark が final であれば turnmark、なければ openapi」。どちらを使ったかを `source` 列に残す。
 - 出力は月ごとのパーティション(`data/interim/entries/2026-10.parquet` など)。再実行したときは、その月のファイルを丸ごと作り直す(冪等にする)。
-- `_source` で終わる文字列フィールドは捨てる。ただし `day_number_source`(中止・順延の判定)と `subtitle` は残す。
+- `_source` で終わる文字列フィールドは捨てる。ただし `day_number_source`(中止・順延の判定)と `subtitle` は残す。**例外: `pv_source`**(2026-11-06 追加。生データの表記の文字列ではなく、直前情報の出所を表す本ツールの列。1.5 参照)は `_source` で終わるが残す。
 
 ### 1.1 races(1行=1レース)
 
@@ -202,3 +202,22 @@ CLI: `python -m src.features.build_features --variant pre|preview --from ... --t
 | 決まり手 | 使わない | **出走あたりの率**(決まり手別の勝ち数 ÷ 出走数。1着数で割らない) |
 | 期間 | 90日・365日・累計 | 累計と180日 |
 | 予定コース | 前日版は枠番=コース | 前日版は枠番、直前版は展示の進入コース |
+
+---
+
+## 8. 公式の直前情報の合流と `pv_source`(F-12b。2026-11-06 完了)
+
+`12_beforeinfo.md` の Worker が R2 に保存した公式の直前情報(beforeinfo)を、interim の `pv_*` 列に合流する。
+
+| 列 | テーブル | 値 |
+|---|---|---|
+| `pv_source` | entries | `official` = 展示タイムかスタート展示(進入・ST)を公式から取った艇、`openapi` = Open API の preview だけの艇、`none` = 直前情報の無い艇 |
+| `pv_source` | races | `official` = 1艇でも `official` の艇があるレース、`openapi`、`none` |
+
+規則:
+1. **合流するのは、確定していない当日の openapi の日だけ**。確定済みの turnmark の日・旧API(legacy)の日は合流しない(過去日は確定値を使う。02 3章4項。統括承認 2026-11-06)。
+2. 公式の値は **項目ごとに優先**する(公式にある項目は公式、無い項目は Open API の値)。
+3. 欠場の艇は空(null)にする。
+4. 公式のデータの登録番号が出走表と一致しない艇は、公式の値を使わない(取り違えの防止)。
+5. 単位・コード値は Open API の preview と同じ(風向・天候のコードは `codes.py`、フライングの ST は負の値)。
+6. **確定する予想ファイル**(`data/predictions/YYYYMMDD_preview.parquet`。08 5.1)にも `pv_source` を記録する(モデル担当に依頼済み)。M-18 の `pv_source` 別の成績の集計はこれを使う。

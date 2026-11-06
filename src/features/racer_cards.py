@@ -38,6 +38,7 @@ from src.features import parse
 from src.features.build_features import FEATURES_DIR, _write_parquet
 from src.features.build_interim import INTERIM_DIR, read_interim
 from src.features.history import assign_series
+from src.features.beforeinfo import load_day_tables
 from src.features.raw_source import LoadRaw, load_day, make_loader
 from src.features.style import compute_style_h
 
@@ -193,12 +194,9 @@ def _results(target: date, day_races: pd.DataFrame, de: pd.DataFrame,
 
 
 def build_day(target: date, interim_dir: Path = INTERIM_DIR, out_dir: Path = CARDS_DIR,
-              load_raw: LoadRaw | None = None, state=None) -> tuple[pd.DataFrame, pd.DataFrame]:
-    loaded = load_day(target, load_raw or make_loader(), sources=("openapi", "turnmark"))
-    if loaded is None:
-        raise FileNotFoundError(f"{target} の生データがありません")
-    source, raw = loaded
-    t = parse.parse_day(raw, source, target)
+              load_raw: LoadRaw | None = None, load_beforeinfo=None, state=None) -> tuple[pd.DataFrame, pd.DataFrame]:
+    # 公式の直前情報(F-12b)があれば、Open API より優先して合流する
+    t = load_day_tables(target, load_raw, load_beforeinfo)
     prev = target - timedelta(days=1)
     if state is not None:
         from src.features.history_state import load_state
