@@ -9,6 +9,7 @@
 #   scripts/ci_run.sh morning   [YYYY-MM-DD]   # 朝の準備(出走表 → 状態 → 特徴量 → pre 予想 → export)
 #   scripts/ci_run.sh daytime   [YYYY-MM-DD]   # 日中の更新(openapi → interim → 直前版の予想 → export)
 #   scripts/ci_run.sh finalize  [YYYY-MM-DD]   # 前日分の最終取り込みと状態を1日進める(既定: 昨日 JST)
+#   scripts/ci_run.sh lock      [YYYY-MM-DD]   # 直前予想の確定(spec/12。直前情報は ci_state beforeinfo-pull で取得済み)
 #   scripts/ci_run.sh weekly    [YYYY-MM-DD]   # 週の分析(キューブ・週のまとめ・シミュレーター)。既定: 昨日 JST(日曜)
 #   分析(spec/11)の全期間の集計(場の傾向・キューブ・週のまとめ)は、ワークフロー側で
 #   archive から recent より前の月の interim を足してから呼ぶ(ci_state archive-pull --months auto)。
@@ -95,14 +96,18 @@ case "$MODE" in
   morning)
     morning
     ;;
-  daytime)
+  daytime|lock)
     # 朝のジョブが失敗・遅延して pre 予想が無いときだけ、準備から行う
     if [ ! -f "data/predictions/${YMD}_pre.parquet" ]; then
       echo "pre 予想が無いため、準備から実行します"
       morning
       exit 0
     fi
-    run "$PY" -m src.collect.fetch --source openapi --date "$D"
+    # lock(直前予想の確定)は軽くするため Open API を取らない。interim は R2 の直前情報
+    # (data/raw/beforeinfo/。F-12b が Open API より優先して合流する)と、前回の取得分から作り直す
+    if [ "$MODE" = "daytime" ]; then
+      run "$PY" -m src.collect.fetch --source openapi --date "$D"
+    fi
     run "$PY" -m src.features.build_interim --from "$D" --to "$D"
     ensure_state "$D"
     # 直前版の予想(preview)。レースごとに、直前情報が揃った締切前のレースだけを1回確定する(--per-race-lock)。

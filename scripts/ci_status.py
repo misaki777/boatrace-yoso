@@ -22,7 +22,7 @@ OUT_PATH = ROOT / "docs" / "data" / "status.json"
 MODELS_DIR = ROOT / "models"
 MODEL_VARIANTS = ("pre", "preview")
 # ci_run.sh のモード名 → status.json の job 名
-JOB_NAMES = {"morning": "morning", "daytime": "update", "finalize": "finalize", "monthly": "monthly"}
+JOB_NAMES = {"morning": "morning", "daytime": "update", "lock": "update", "finalize": "finalize", "monthly": "monthly"}
 
 
 def schedule_times(day: datetime) -> list[datetime]:

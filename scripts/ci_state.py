@@ -12,6 +12,11 @@
 | archive/raw/YYYY-MM.tar.gz         | 月ごとの raw(openapi・turnmark)                             | 前日確定ジョブがその月を保存 |
 | archive/interim/YYYY-MM.tar.gz     | 月ごとの interim                                             | 前日確定ジョブがその月を保存 |
 
+| beforeinfo/YYYYMMDD/SS-RR.json     | 直前情報(Worker「beforeinfo」が書く。spec/12)             | 確定ジョブ(lock)が取得 |
+
+直前情報は data/raw/beforeinfo/YYYYMMDD/SS-RR.json に置き(F-12b が読む場所)、recent と archive の raw にも入れる
+(前日確定で interim を作り直すときにも、直前情報の出どころ pv_source を変えないため)。
+
 archive/ は月1の作り直し(CI-3)と、手元の復元に使う。毎日のジョブでは取得しない。
 interim は月単位で作り直される(build_interim はその月の raw を全部読む)ので、
 毎日のジョブには当月と前月の raw が必要(前月は、月初の前日確定のため)。
@@ -29,6 +34,7 @@ R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キー
     python -m scripts.ci_state archive-push --months 2026-11        # 1か月分
     python -m scripts.ci_state archive-pull --months 2026-01..2026-11
     python -m scripts.ci_state archive-pull --months auto --part interim   # 分析用: recent に無い古い月の interim
+    python -m scripts.ci_state beforeinfo-pull --date 2026-11-06 --race-ids 20261106-02-01,20261106-12-03
     --dry-run を付けると R2 に触らない(push 系は tar.gz を作ってサイズを表示するまで)
 
 安全のため:
@@ -41,6 +47,7 @@ R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キー
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -55,6 +62,8 @@ JST = timezone(timedelta(hours=9))
 
 KINDS = ("history", "recent", "predictions", "models")
 RAW_SOURCES = ("openapi", "turnmark")
+BEFOREINFO_DIR = "data/raw/beforeinfo"  # F-12b が読む場所(spec/12 1.5)
+BEFOREINFO_WINDOW_MIN = 20  # 指定が無くても、締切がこの分数以内のレースの直前情報は取りに行く
 INTERIM_TABLES = ("races", "entries", "payouts", "odds")
 HISTORY_KEEP = 3
 INTERIM_LOOKBACK_DAYS = 400  # src/features/racer_cards.py の RESULT_LOOKBACK_DAYS と合わせる
@@ -65,10 +74,12 @@ DATA_FROM_MONTH = "2026-01"
 # 種類ごとに、tar の中に入ってよいパスの先頭
 ALLOWED_PREFIXES: dict[str, tuple[str, ...]] = {
     "history": ("data/history/",),
-    "recent": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/_fetch_log.jsonl", "data/interim/"),
+    "recent": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/", "data/raw/_fetch_log.jsonl",
+               "data/interim/"),
     "predictions": ("data/predictions/",),
     "models": ("models/", "reports/eval/", "reports/backtest/"),
-    "archive-raw": ("data/raw/openapi/", "data/raw/turnmark/"),
+    "archive-raw": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/"),
+    "beforeinfo": ("data/raw/beforeinfo/",),
     "archive-interim": ("data/interim/",),
 }
 
@@ -175,6 +186,7 @@ def raw_files_for_month(key: str, root: Path = ROOT) -> list[str]:
     files = []
     for src in RAW_SOURCES:
         files += (root / "data/raw" / src / y).glob(f"{y}{m}[0-9][0-9].json.gz")
+    files += (root / BEFOREINFO_DIR).glob(f"{y}{m}[0-9][0-9]/*.json")
     return _rel(files, root)
 
 
@@ -377,6 +389,81 @@ def pull_items(items: list[tuple[str, str]], dry_run: bool, label: str) -> int:
     return 0
 
 
+RACE_ID_RE = re.compile(r"^(\d{8})-(\d{2})-(\d{2})$")
+
+
+def parse_race_ids(text: str, d: date) -> list[str]:
+    """'20261106-02-01, 20261106-12-03' を検証して返す。形式が違う・日付が違うものはエラー。"""
+    out = []
+    for rid in re.split(r"[,\s]+", text or ""):
+        if not rid:
+            continue
+        m = RACE_ID_RE.match(rid)
+        if not m or m[1] != d.strftime("%Y%m%d") or not (1 <= int(m[2]) <= 24) or not (1 <= int(m[3]) <= 12):
+            raise ValueError(f"race_id の形式が違います: {rid[:40]}")
+        if rid not in out:
+            out.append(rid)
+    return out
+
+
+def races_near_close(d: date, now: datetime, minutes: int = BEFOREINFO_WINDOW_MIN) -> list[str]:
+    """当日の interim の races から、締切が now 〜 now+minutes のレース(前の確定ジョブの待ちが
+    置き換えられて race_id が届かなかった分を拾うため)。"""
+    import pandas as pd
+    from src.features.build_interim import read_interim  # 特徴量担当の関数(読むだけ)
+
+    try:
+        races = read_interim("races", d, d)
+    except (OSError, ValueError):
+        return []
+    if races.empty:
+        return []
+    closed = pd.to_datetime(races["closed_at"], utc=True)
+    now_ts = pd.Timestamp(now).tz_convert("UTC")
+    mask = (closed >= now_ts) & (closed <= now_ts + pd.Timedelta(minutes=minutes))
+    return sorted(races.loc[mask, "race_id"].astype(str))
+
+
+def beforeinfo_key(race_id: str) -> str:
+    ymd, ss, rr = RACE_ID_RE.match(race_id).groups()
+    return f"{BUCKET}/beforeinfo/{ymd}/{ss}-{rr}.json"
+
+
+def beforeinfo_path(race_id: str, root: Path = ROOT) -> Path:
+    ymd, ss, rr = RACE_ID_RE.match(race_id).groups()
+    return root / BEFOREINFO_DIR / ymd / f"{ss}-{rr}.json"
+
+
+def beforeinfo_pull(race_ids: list[str], dry_run: bool) -> int:
+    """直前情報を1レースずつ取得する。無いレースは飛ばす(Open API の直前情報で代わりに動く)。
+    内容(展示タイム等)はログに出さない。"""
+    got = 0
+    for rid in race_ids:
+        dest = beforeinfo_path(rid)
+        cmd = wrangler_cmd("get", beforeinfo_key(rid), dest)
+        print("  $ " + " ".join(cmd), flush=True)
+        if dry_run:
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dest.with_name(dest.name + ".tmp")
+        cmd[cmd.index("--file") + 1] = str(tmp)
+        r = subprocess.run(cmd, cwd=tempfile.gettempdir(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if r.returncode != 0:
+            print(f"  {rid}: R2 にありません(Open API の直前情報で続けます)", flush=True)
+            tmp.unlink(missing_ok=True)
+            continue
+        try:
+            json.loads(tmp.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            print(f"  {rid}: JSON として読めないので使いません", flush=True)
+            tmp.unlink(missing_ok=True)
+            continue
+        tmp.replace(dest)
+        got += 1
+    print(f"[beforeinfo-pull] {got}/{len(race_ids)} レース" + ("(dry-run)" if dry_run else ""))
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -384,7 +471,9 @@ def pull_items(items: list[tuple[str, str]], dry_run: bool, label: str) -> int:
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="R2 との状態の取得・保存")
-    p.add_argument("action", choices=["pull", "push", "archive-pull", "archive-push"])
+    p.add_argument("action", choices=["pull", "push", "archive-pull", "archive-push", "beforeinfo-pull"])
+    p.add_argument("--date", help="beforeinfo-pull の日(既定: 今日 JST)")
+    p.add_argument("--race-ids", default="", help="beforeinfo-pull のレース(カンマ・空白区切り)")
     p.add_argument("--dry-run", action="store_true", help="R2 に触らない")
     p.add_argument("--only", help=f"pull/push の種類を絞る(カンマ区切り。{','.join(KINDS)})")
     p.add_argument("--ref-date", help="recent の月を決める日(既定: 今日 JST)。YYYY-MM-DD")
@@ -400,6 +489,7 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
         if bad:
             p.error(f"不明な種類: {','.join(bad)}")
     a.ref = date.fromisoformat(a.ref_date) if a.ref_date else today_jst()
+    a.day = date.fromisoformat(a.date) if a.date else today_jst()
     if a.action.startswith("archive"):
         if not a.months:
             p.error("--months を指定してください")
@@ -423,6 +513,10 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     a = parse_args(argv)
     try:
+        if a.action == "beforeinfo-pull":
+            ids = parse_race_ids(a.race_ids, a.day)
+            near = races_near_close(a.day, datetime.now(JST)) if a.day == today_jst() else []
+            return beforeinfo_pull(sorted(set(ids) | set(near)), a.dry_run)
         if a.action == "push":
             return push(a.kinds, a.ref, a.dry_run)
         if a.action == "pull":

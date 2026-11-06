@@ -140,8 +140,11 @@ New-NetFirewallRule -DisplayName "boatrace-yoso 8000" -Direction Inbound -Protoc
 | 日中 | 8:04〜23:34 の30分ごと | `4,34 23 * * *` と `4,34 0-14 * * *` | openapi → build_interim → 当日の pre・preview の特徴量 → 直前版の予想と展開予想(`--per-race-lock`。直前情報が揃った締切前のレースだけ1回確定)→ 選手カード(作り直し)→ export。pre 予想が無ければ準備から |
 | 前日分の確定 | 1:12 | `12 16 * * *` | 前日の openapi を取り直して結果を最終反映(fetch は翌日1時以降の取得を確定とみなす)→ 履歴の集計の状態を1日進める(`history_state advance`)→ 分析: 場の傾向・モデルの弱点・シミュレーター(実運用分)→ その月の raw・interim を R2 の archive/ に保存 |
 | 週次の分析 | 月曜 3:00 | `0 18 * * 0` | 分析: 条件で集計(キューブ)・週のまとめ(前の週。`docs/data/analytics/weekly/` は残し続ける)・シミュレーター。コミットだけで公開しない(朝 7:41 の公開に含まれる)。R2 の状態は保存しない |
+| 直前予想の確定(lock) | 随時(Worker「beforeinfo」が直前情報を R2 に置いたとき。spec/12) | — | 入力 `race_ids` のレース(と締切20分以内のレース)の直前情報を R2 `beforeinfo/YYYYMMDD/SS-RR.json` から `data/raw/beforeinfo/` に取得 → build_interim(Open API は取らない)→ 直前版の予想・展開予想をレースごとに確定(`--per-race-lock`)→ export → 公開 → R2 に予想と recent だけ保存。コミットしない。目標5分以内(8分で打ち切り) |
 
 - 朝ジョブは当日のランキング(分析)も作ります。日中ジョブには分析は入りません。
+- 朝・日中ジョブは、当日のレース一覧と締切時刻(中止を除く)を R2 の `schedule/YYYYMMDD.json`(約13KB)に置きます。締切時刻が変わったときだけ書き直します。Worker「beforeinfo」はこれだけを読みます。失敗してもジョブは止めません。
+- lock は daily と同じ同時実行のグループです。GitHub は待ちを1つしか持たないので、待ちの間に次の起動が来ると古い待ちは取り消されます(lock は締切20分以内のレースの直前情報も取りに行くので、取り消された lock のレースも拾えます。朝・前日確定の待ちが lock に取り消された場合は、次の日中ジョブ(pre 予想が無ければ準備から)・手動実行で補います)。
 - 各ジョブは「R2 から状態を取得 → 処理 → 公開 →(朝・確定・週次のみ)`docs/data` をコミット・push(github-actions[bot])→ R2 に状態を保存」。途中で失敗したら状態は保存しません。
 - 同時には1つしか動きません(concurrency)。1回30分で打ち切ります。GitHub の都合で起動が数分〜数十分遅れることがあります。
 
@@ -207,7 +210,7 @@ for k in raw interim features; do npx wrangler r2 object delete br-yoso-data/sta
 
 ### 4. 手動実行
 
-GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / daytime / finalize / weekly)・対象日・公開するかを選んで実行します。または `gh workflow run daily -f mode=daytime`。
+GitHub の Actions タブ → daily → Run workflow で、`mode`(morning / daytime / finalize / weekly / lock。lock は `race_ids` も)・対象日・公開するかを選んで実行します。または `gh workflow run daily -f mode=daytime`。
 
 ### 5. 止め方
 
