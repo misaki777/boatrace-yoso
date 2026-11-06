@@ -35,7 +35,7 @@ CLASSES = ("nige", "sashi", "makuri", "makurisashi", "nuki", "megumare")  # tech
 PROB_COLUMNS = [f"p_{c}" for c in CLASSES]
 N_CLASSES = 6
 STADIUM_ALPHA = 20.0
-TENKAI_VARIANTS = ("pre", "preview")
+TENKAI_VARIANTS = ("pre", "preview", "preview_v3")
 _EPS = 1e-15
 
 
@@ -313,17 +313,23 @@ def main() -> None:
     parser.add_argument("--features", default=None)
     parser.add_argument("--models-dir", default=str(MODELS_DIR))
     parser.add_argument("--set-latest", action="store_true", help="valid で B1 に勝ったときだけ latest を更新する")
+    parser.add_argument("--train-from", default=None, help="学習の開始日(既定は config の期間)")
     args = parser.parse_args()
 
-    booster, meta, report = train(args.variant, path=args.features)
+    periods = DEFAULT_PERIODS
+    if args.train_from:
+        periods = Periods(**{**DEFAULT_PERIODS.to_dict(), "train_from": args.train_from})
+    booster, meta, report = train(args.variant, periods, path=args.features)
     periods = Periods(**meta["periods"])
     te = filter_period(labeled(load_tenkai(args.variant, args.features)), *periods.range_of("test"))
     P = predict_proba(booster, te, meta)
-    report["consistency"] = consistency(te, P, "latest", args.variant,
+    main_variant = "preview" if args.variant.startswith("preview") else "pre"
+    report["consistency"] = consistency(te, P, "latest", main_variant,
                                         lambda f: filter_period(f, *periods.range_of("test")))
     d = save(booster, meta, args.models_dir, set_latest=args.set_latest and meta["beats_b1"])
-    (REPORTS_DIR / f"tenkai_{args.variant}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (REPORTS_DIR / f"tenkai_{args.variant}.md").write_text(render(report), encoding="utf-8")
+    tag = args.variant + (f"_from{args.train_from}" if args.train_from else "")
+    (REPORTS_DIR / f"tenkai_{tag}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (REPORTS_DIR / f"tenkai_{tag}.md").write_text(render(report), encoding="utf-8")
     for period, r in report["periods"].items():
         print(f"[{period}] logloss: B0={r['B0']['logloss']:.4f} B1={r['B1']['logloss']:.4f} LightGBM={r['lgbm']['logloss']:.4f}")
     print(f"較正={meta['calibration']['method']} beats_b1(valid)={meta['beats_b1']} → {d}")

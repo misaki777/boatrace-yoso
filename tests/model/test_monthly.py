@@ -78,3 +78,27 @@ def test_switch_tenkai(tmp_path):
     assert (tmp_path / "tenkai" / "preview" / "latest").read_text().strip() == "tenkai_preview_x"
     mo.switch_latest("preview", "preview_y", tmp_path)
     assert (tmp_path / "preview" / "latest").read_text().strip() == "preview_y"
+
+
+def test_train_start_options():
+    sel, _ = mo.month_periods("2026-11", "2016-08-01")
+    assert sel.train_from == "2016-10-30"  # データ開始 + 90日
+    sel, _ = mo.month_periods("2026-11", "2016-08-01", train_years=5)
+    assert sel.train_from == "2021-10-01"
+    sel, _ = mo.month_periods("2026-11", "2016-08-01", train_from="2020-01-01")
+    assert sel.train_from == "2020-01-01"
+    sel, _ = mo.month_periods("2026-11", "2026-01-01", train_from="2020-01-01")
+    assert sel.train_from == "2026-04-01"  # warm-up より前にはしない
+
+
+def test_health_check_uses_recent_year():
+    import numpy as np
+    import pandas as pd
+
+    d = pd.date_range("2016-01-01", "2026-09-30", freq="D")
+    df = pd.DataFrame({"date": d, "race_id": [f"r{i}" for i in range(len(d))], "x": 1.0,
+                       "pv_parts_count": np.where(d < "2026-01-01", np.nan, 1.0)})
+    h = mo.health_check(df, ["x", "pv_parts_count"], np.ones(3))
+    assert h["ok"] and h["max_feature_nan_all_period"] > 0.9  # 古い期間の欠損は問題にしない
+    df.loc[df["date"] > "2026-01-01", "x"] = np.nan
+    assert not mo.health_check(df, ["x"], np.ones(3))["ok"]  # 直近の欠損は問題にする

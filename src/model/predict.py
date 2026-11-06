@@ -5,6 +5,7 @@ CLI:
 入力: data/features/today/YYYYMMDD_{variant}.parquet(特徴量担当の当日用。目的変数は null)
 出力: data/predictions/YYYYMMDD_{variant}.parquet(1行=1艇。export の入力)
     列: race_id, entry_number, model_id, variant, predicted_at, locked_at, score, p_win, p_top2, p_top3
+      直前版(preview 系)だけ pv_source(直前情報の出どころ official / openapi / none。艇ごと。無い行は不明)も付ける
       data/predictions/YYYYMMDD_{variant}_contrib.parquet(根拠トップ3。spec/08 5.2)
     列: race_id, entry_number, rank, feature, contribution, label, value, value_public, model_id
 
@@ -133,6 +134,43 @@ def fallback_to_pre(out: pd.DataFrame, feats: pd.DataFrame, ymd: str, args, cont
     return out, contrib
 
 
+def attach_pv_source(out: pd.DataFrame, feats: pd.DataFrame, date) -> pd.DataFrame:
+    """直前情報の出どころ(official / openapi / none)を艇ごとに pv_source 列として付ける(M-18 の集計用)。
+
+    特徴量に pv_source があればそれを、無ければ interim の entries から読む。分からなければ null(不明)。
+    既に pv_source を持つ行(確定済みの行)は変えない。
+    """
+    if "pv_source" in out.columns and out["pv_source"].notna().all():
+        return out
+    src = None
+    if "pv_source" in feats.columns:
+        src = feats[["race_id", "entry_number", "pv_source"]].copy()
+    else:
+        try:
+            from src.features.build_interim import read_interim
+
+            d = pd.Timestamp(date).date()
+            ent = read_interim("entries", d, d)
+            if "pv_source" in ent.columns:
+                src = ent[["race_id", "entry_number", "pv_source"]].copy()
+        except Exception as e:  # noqa: BLE001 - 出どころが分からなくても予想は止めない
+            print(f"警告: pv_source を読めませんでした({e})。不明として記録します")
+    out = out.copy()
+    if src is None:
+        if "pv_source" not in out.columns:
+            out["pv_source"] = pd.Series([None] * len(out), dtype="string")
+        return out
+    src["race_id"] = src["race_id"].astype(str)
+    src["entry_number"] = src["entry_number"].astype("int8")
+    src = src.drop_duplicates(["race_id", "entry_number"]).rename(columns={"pv_source": "_pv_source_new"})
+    out = out.merge(src, on=["race_id", "entry_number"], how="left")
+    if "pv_source" in out.columns:
+        out["pv_source"] = out["pv_source"].astype("string").fillna(out["_pv_source_new"].astype("string"))
+    else:
+        out["pv_source"] = out["_pv_source_new"].astype("string")
+    return out.drop(columns="_pv_source_new")
+
+
 def _write_atomic(df: pd.DataFrame, path: Path) -> None:
     tmp = path.with_suffix(".tmp")
     df.to_parquet(tmp, index=False)
@@ -218,7 +256,8 @@ def per_race_update(
     if not ready:
         return existing, existing_contrib, counts
     part = feats[feats["race_id"].astype(str).isin(ready)]
-    new = predict_frame(part, booster, meta, now)
+    new = attach_pv_source(predict_frame(part, booster, meta, now), part, pd.Timestamp(now).tz_convert(JST).date()
+                           if pd.Timestamp(now).tzinfo else pd.Timestamp(now).date())
     new_c = contrib_frame(part, booster, meta)
     out = new if existing is None else pd.concat([existing, new], ignore_index=True)
     con = new_c if existing_contrib is None else pd.concat([existing_contrib, new_c], ignore_index=True)
@@ -291,6 +330,7 @@ def main() -> None:
     contrib = contrib_frame(feats, booster, meta)
     if is_preview_variant(args.variant):
         out, contrib = fallback_to_pre(out, feats, ymd, args, contrib)
+        out = attach_pv_source(out, feats, pd.Timestamp(args.date))
 
     status = write_locked(out, contrib, args.out_dir, ymd, args.variant, args.force)
     out_path = output_paths(args.out_dir, ymd, args.variant)[0]

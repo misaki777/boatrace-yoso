@@ -105,6 +105,14 @@ FEATURE_LABELS: dict[str, str] = {
     "r_sty_nige_minus_sashi2": "1号艇の逃げと2号艇の差しの力関係",
     "r_sty_nige_minus_makuri34": "1号艇の逃げと3・4号艇のまくりの力関係",
     "r_sty_st_diff_inner": "内側の艇とのST差",
+    # 展示ST(preview_v3。src/features/exhibition.py)
+    "r_pv_st_rank": "スタート展示のSTのレース内順位",
+    "pv_st_flying": "スタート展示でフライング",
+    "r_pv_st_rank_group": "スタート展示のSTの順位(内側・外側の中で)",
+    "r_pv_st_diff_best": "スタート展示のST(最速との差)",
+    "r_pv_st_diff_inner": "スタート展示のST(すぐ内側の艇との差)",
+    "r_pv_exhibition_rank_group": "展示タイムの順位(内側・外側の中で)",
+    "pv_outer_both_top": "外側で展示ST・展示タイムともに1位",
 }
 
 # 値を公開してはいけない特徴量(spec/04 1章)と、値に意味が無いコード値

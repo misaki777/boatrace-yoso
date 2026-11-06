@@ -17,7 +17,7 @@ REPORTS_DIR = ROOT / "reports"
 SEED = 42
 
 # variant の一覧(feature_sets.VARIANTS と同じ)。model_id は "{variant}_{YYYYMMDD}_{hash4}"
-VARIANTS: tuple[str, ...] = ("pre", "preview", "pre_v2", "preview_v2")
+VARIANTS: tuple[str, ...] = ("pre", "preview", "pre_v2", "preview_v2", "preview_v3")
 
 
 def is_preview_variant(variant: str) -> bool:

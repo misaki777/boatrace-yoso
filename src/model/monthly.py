@@ -53,11 +53,28 @@ MAX_FEATURE_NAN = 0.5  # 1列でも欠損率がこれを超えたら健全でな
 # ---------------------------------------------------------------------------
 
 
-def month_periods(month: str, data_start: str) -> tuple[Periods, Periods]:
-    """(選択用, 候補の学び直し用) の期間。test は置かないので valid と同じにしておく。"""
+# 学習の開始日の指定(メモリが足りないときに直近 N 年へ絞る。spec/10 2.5)。main で設定する
+TRAIN_FROM: str | None = None
+TRAIN_YEARS: float | None = None
+
+
+def month_periods(month: str, data_start: str, train_from: str | None = None,
+                  train_years: float | None = None) -> tuple[Periods, Periods]:
+    """(選択用, 候補の学び直し用) の期間。test は置かないので valid と同じにしておく。
+
+    学習の開始は「データ開始 + warm-up 90日」。train_from(日付)か train_years(M−1 の初日から遡る年数)を
+    指定すると、それより前は学習に使わない(遅い方を採る)。
+    """
+    train_from = train_from or TRAIN_FROM
+    train_years = train_years or TRAIN_YEARS
     m = pd.Period(month, "M")
     m1, m2 = m - 1, m - 2
-    train_from = (pd.Timestamp(data_start) + pd.Timedelta(days=WARMUP_DAYS)).strftime("%Y-%m-%d")
+    start = pd.Timestamp(data_start) + pd.Timedelta(days=WARMUP_DAYS)
+    if train_from:
+        start = max(start, pd.Timestamp(train_from))
+    if train_years:
+        start = max(start, m1.start_time - pd.DateOffset(months=int(round(train_years * 12))))
+    train_from = start.strftime("%Y-%m-%d")
     v_from, v_to = m1.start_time.strftime("%Y-%m-%d"), m1.end_time.strftime("%Y-%m-%d")
     sel = Periods(warmup_from=data_start, train_from=train_from, train_to=m2.end_time.strftime("%Y-%m-%d"),
                   valid_from=v_from, valid_to=v_to, test_from=v_from, test_to=v_to)
@@ -154,8 +171,17 @@ def live_tenkai(booster, meta: dict, part: pd.DataFrame, files: list[Path]) -> d
             "locked": multi_logloss(L, y)}
 
 
+NAN_CHECK_DAYS = 365  # 欠損率は学習期間の直近1年で見る(旧APIに無い項目は古い期間で欠損するのが正常なため)
+
+
 def health_check(train_part: pd.DataFrame, features: list[str], P_sum: np.ndarray, min_races: int = MIN_TRAIN_RACES) -> dict:
-    nan = train_part[features].isna().mean()
+    """学習の健全性。欠損率は直近 NAN_CHECK_DAYS 日の学習データで見る(全期間の欠損率は参考に残す)。"""
+    recent = train_part
+    if "date" in train_part.columns and len(train_part):
+        d = pd.to_datetime(train_part["date"])
+        recent = train_part[d > d.max() - pd.Timedelta(days=NAN_CHECK_DAYS)]
+    nan = recent[features].isna().mean()
+    nan_all = train_part[features].isna().mean()
     races = train_part["race_id"].nunique()
     checks = {
         "train_races": int(races),
@@ -163,6 +189,9 @@ def health_check(train_part: pd.DataFrame, features: list[str], P_sum: np.ndarra
         "max_feature_nan": float(nan.max()),
         "max_feature_nan_column": str(nan.idxmax()),
         "feature_nan_ok": bool(nan.max() <= MAX_FEATURE_NAN),
+        "nan_window_days": NAN_CHECK_DAYS,
+        "max_feature_nan_all_period": float(nan_all.max()),
+        "max_feature_nan_all_period_column": str(nan_all.idxmax()),
         "prob_sum_ok": bool(np.allclose(P_sum, 1, atol=1e-6)),
     }
     checks["ok"] = checks["train_races_ok"] and checks["feature_nan_ok"] and checks["prob_sum_ok"]
@@ -261,10 +290,12 @@ def run_main_target(slot: str, month: str, models_dir: Path, pred_dir: Path, fea
                    criteria, why, time.time() - t0, note)
 
 
-def run_tenkai_target(slot: str, month: str, models_dir: Path, pred_dir: Path) -> dict:
+def run_tenkai_target(slot: str, month: str, models_dir: Path, pred_dir: Path, feature_variant: str | None = None) -> dict:
+    """展開予想。feature_variant(例 preview_v3)を指定するとその特徴量で候補を作る(latest は slot のもの)。"""
     from src.model import tenkai as tk
 
-    variant = slot.replace("tenkai_", "")
+    slot_variant = slot.replace("tenkai_", "")
+    variant = feature_variant or slot_variant
     df = tk.labeled(tk.load_tenkai(variant))
     data_start = df["date"].min().strftime("%Y-%m-%d")
     sel_p, refit_p = month_periods(month, data_start)
@@ -285,15 +316,20 @@ def run_tenkai_target(slot: str, month: str, models_dir: Path, pred_dir: Path) -
     tk.save(b_ref, meta_ref, models_dir, set_latest=False)
     latest_m, latest_id = None, None
     try:
-        b_lat, meta_lat = tk.load("latest", variant, models_dir)
+        b_lat, meta_lat = tk.load("latest", slot_variant, models_dir)
         latest_id = meta_lat["model_id"]
-        latest_m = tenkai_metrics(b_lat, meta_lat, valid)
+        lat_valid = valid if meta_lat["variant"] == variant else filter_period(
+            tk.labeled(tk.load_tenkai(meta_lat["variant"])), *sel_p.range_of("valid"))
+        latest_m = tenkai_metrics(b_lat, meta_lat, lat_valid)
     except FileNotFoundError:
         pass
-    live = live_tenkai(b_sel, meta_sel, valid, locked_dates(m1, f"{variant}_tenkai", pred_dir))
+    live = live_tenkai(b_sel, meta_sel, valid, locked_dates(m1, f"{slot_variant}_tenkai", pred_dir))
     criteria, why = judge(cand_m, latest_m, live, health, has_trifecta=False)
+    note = None
+    if variant != slot_variant:
+        note = f"特徴量 {variant} の候補。切り替えるには毎日のジョブを --variant {variant} にする必要がある"
     return _record(slot, meta_ref["model_id"], latest_id, month, refit_p, m1, cand_m, latest_m, live, health,
-                   criteria, why, time.time() - t0, None)
+                   criteria, why, time.time() - t0, note)
 
 
 def _record(slot, cand_id, latest_id, month, refit_p, m1, cand_m, latest_m, live, health, criteria, why, secs, note):
@@ -390,12 +426,18 @@ def main() -> None:
     parser.add_argument("--month", default=None, help="実行月 YYYY-MM(既定は今月 JST)。M−1 が valid になる")
     parser.add_argument("--targets", nargs="+", default=[*MAIN_TARGETS, *TENKAI_TARGETS])
     parser.add_argument("--with-v2", action="store_true", help="本体で v2 特徴量の候補も作り、valid で良い方を記録する")
+    parser.add_argument("--feature-variant", default=None,
+                        help="この特徴量(例 preview_v3)で候補だけを作って記録する(自動では切り替えない)")
     parser.add_argument("--models-dir", default=str(MODELS_DIR))
     parser.add_argument("--predictions-dir", default=str(PREDICTIONS_DIR))
+    parser.add_argument("--train-from", default=None, help="学習に使う最初の日(YYYY-MM-DD)")
+    parser.add_argument("--train-years", type=float, default=None, help="学習に使う年数(M−1 から遡る。例 5)")
     parser.add_argument("--approve", default=None, metavar="CANDIDATE_ID")
     parser.add_argument("--list-pending", action="store_true")
     args = parser.parse_args()
     models_dir = Path(args.models_dir)
+    global TRAIN_FROM, TRAIN_YEARS
+    TRAIN_FROM, TRAIN_YEARS = args.train_from, args.train_years
 
     if args.approve:
         h = approve(args.approve, models_dir)
@@ -413,6 +455,17 @@ def main() -> None:
     pred_dir = Path(args.predictions_dir)
     t_all = time.time()
     for slot in args.targets:
+        if args.feature_variant:
+            fv = args.feature_variant
+            rec = (run_tenkai_target(slot, month, models_dir, pred_dir, fv) if slot in TENKAI_TARGETS
+                   else run_main_target(slot, month, models_dir, pred_dir, feature_variant=fv))
+            rec["all_criteria_met_raw"] = rec["all_criteria_met"]
+            rec["all_criteria_met"] = False  # 毎日のジョブの変更が要るので自動では切り替えない
+            rec["_why"].append(f"{fv} は毎日のジョブの変更が必要なため、利用者の判断まで切り替えない")
+            hist.append(decide(rec, approval, models_dir))
+            save_history(models_dir, hist)
+            print(f"[{slot}/{fv}] 候補 {rec['candidate']} 基準 {rec['criteria']} → {rec['reason']}({rec['seconds']:.0f}秒)")
+            continue
         if slot in TENKAI_TARGETS:
             rec = run_tenkai_target(slot, month, models_dir, pred_dir)
         else:
