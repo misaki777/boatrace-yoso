@@ -53,6 +53,18 @@ def test_values_handmade():
     df.loc[3, "pv_exhibition_time"] = 6.60
     f2 = compute_ex_features(df, planned).set_index(df["entry_number"])
     assert f2.loc[4, "pv_outer_both_top"] == 1
+    # 直前情報が無い艇は NaN(内側の艇も)。値がある艇は 0/1
+    df.loc[[0, 5], "pv_start_timing"] = np.nan
+    df.loc[2, "pv_exhibition_time"] = np.nan
+    f3 = compute_ex_features(df, planned).set_index(df["entry_number"])
+    assert f3.loc[[1, 3, 6], "pv_outer_both_top"].isna().all()
+    assert f3.loc[[2, 4, 5], "pv_outer_both_top"].notna().all()
+
+
+def test_tenkai_v3_drops_always_missing_column():
+    feats = fs.tenkai_features_for("preview_v3")
+    assert "c1_r_pv_st_diff_inner" not in feats and "c2_r_pv_st_diff_inner" in feats
+    assert fs.tenkai_features_for("preview") == [c for c in fs.tenkai_features_for("preview")]
 
 
 def _shuffle(raw):

@@ -7,7 +7,7 @@
   - 順位では「最速」とみなす(F が複数いれば同順位)。
   - 差の計算では 0.00 とみなす(負の値のまま引くと差が大きく出すぎるため)。
   - F だったことは pv_st_flying(1/0)で別に持つ。
-展示ST・展示タイムが無い艇は、順位・差・フラグとも NaN(フラグは同じグループに値が無ければ NaN)。
+展示ST・展示タイムが無い艇は、順位・差・フラグとも NaN。
 """
 
 from __future__ import annotations
@@ -52,5 +52,6 @@ def compute_ex_features(df: pd.DataFrame, planned: pd.Series) -> pd.DataFrame:
     out["r_pv_exhibition_rank_group"] = ex.groupby(gkey).rank(method="min")
     is_outer = pd.Series(group == "outer", index=df.index)
     both = (out["r_pv_st_rank_group"] == 1) & (out["r_pv_exhibition_rank_group"] == 1) & is_outer
-    out["pv_outer_both_top"] = both.astype(float).where(~is_outer | (st.notna() & ex.notna()))
+    # 自分の展示ST か展示タイムが無い艇は NaN(内側の艇も同じ。直前情報が無いのに 0 にしない)
+    out["pv_outer_both_top"] = both.astype(float).where(st.notna() & ex.notna())
     return out.astype("float32")

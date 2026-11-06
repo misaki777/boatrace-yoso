@@ -236,9 +236,14 @@ def tenkai_race_columns(variant: str) -> list[str]:
     raise ValueError(f"未知の variant です: {variant}")
 
 
+# 定義上いつも欠損になる列(1コースには内側の艇がいない)
+_TENKAI_ALWAYS_MISSING = {(1, "r_pv_st_diff_inner")}
+
+
 def tenkai_features_for(variant: str) -> list[str]:
     """展開予想モデルの特徴量の列リスト。"""
-    boat = [f"c{c}_{name}" for name in tenkai_boat_columns(variant) for c in range(1, 7)]
+    boat = [f"c{c}_{name}" for name in tenkai_boat_columns(variant) for c in range(1, 7)
+            if (c, name) not in _TENKAI_ALWAYS_MISSING]
     return tenkai_race_columns(variant) + boat
 
 
