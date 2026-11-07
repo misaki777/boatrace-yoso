@@ -117,20 +117,27 @@ def outer_top_boats(entries: pd.DataFrame) -> pd.Series:
 
 
 def underdog_flags(odds: pd.DataFrame) -> pd.Series:
-    """race_id → 1号艇が単勝の1番人気ではないか(True = 2番人気以下)。単勝のオッズが無いレースは含めない。
+    """race_id → 1号艇が単勝の1番人気ではないか(True = 2番人気以下)。判定できないレースは含めない(= 買わない)。
 
-    odds: race_id, bet_type, combination, odds(interim の odds_pre / odds と同じ列)。
-    1番人気 = 単勝オッズが最も低い艇。最も低いオッズが同じ艇が複数いて、その中に1号艇がいれば「1番人気」とみなす。
-    特徴量担当の人気順位の関数(F-13b)ができたら、そちらに合わせる。
+    締切前オッズ(interim の odds_pre。fetched_at の列がある)は、特徴量担当の win_popularity(F-13b)で人気順を出す。
+    確定オッズ(interim の odds。過去の参考用)は同じ規則で自前で出す: 単勝オッズの低い順、同じオッズは同じ順位
+    (rank の min)。1号艇のオッズが無い(欠場など)レースは判定しない。
     """
-    w = odds[(odds["bet_type"] == "win") & odds["odds"].notna()].copy()
-    if w.empty:
+    if "fetched_at" in odds.columns:
+        from src.features.odds_pre import win_popularity
+
+        pop = win_popularity(odds)
+    else:
+        w = odds[odds["bet_type"] == "win"].copy()
+        pop = pd.DataFrame({"race_id": w["race_id"].values,
+                            "entry_number": pd.to_numeric(w["combination"], errors="coerce").values,
+                            "win_odds": pd.to_numeric(w["odds"], errors="coerce").values})
+        pop["popularity"] = pop.groupby("race_id")["win_odds"].rank(method="min")
+    if pop.empty:
         return pd.Series(dtype=bool)
-    w["race_id"] = w["race_id"].astype(str)
-    w["o"] = w["odds"].astype(float)
-    mn = w.groupby("race_id")["o"].min()
-    b1 = w[w["combination"].astype(str) == "1"].set_index("race_id")["o"]
-    return (b1 > mn.reindex(b1.index)).rename("underdog")
+    pop["race_id"] = pop["race_id"].astype(str)
+    b1 = pop[(pop["entry_number"] == 1) & pop["popularity"].notna()].set_index("race_id")["popularity"]
+    return (b1.astype(float) > 1).rename("underdog")
 
 
 def app_strategies(dates, days_dir: str | Path = DAYS_DIR) -> dict:

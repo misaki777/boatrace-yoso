@@ -188,3 +188,15 @@ def test_build_personas_does_not_read_features():
 
     src = inspect.getsource(ps.build_personas)
     assert "load_features(" not in src and "predict_p(" not in src and "load_history_cache(" in src
+
+
+def test_underdog_flags_with_odds_pre_format():
+    # 締切前オッズの形(fetched_at など)では win_popularity を使う。1号艇のオッズが無いレースは判定しない
+    rows = []
+    for rid, o1 in (("a", 3.0), ("b", 1.4), ("c", None)):
+        for e in range(1, 7):
+            o = o1 if e == 1 else (1.5 if e == 2 else 9.0)
+            rows.append({"race_id": rid, "bet_type": "win", "combination": str(e), "odds": o,
+                         "fetched_at": pd.Timestamp("2026-11-07 15:00", tz="Asia/Tokyo"), "minutes_before_close": 5.0})
+    f = ps.underdog_flags(pd.DataFrame(rows))
+    assert f.to_dict() == {"a": True, "b": False}
