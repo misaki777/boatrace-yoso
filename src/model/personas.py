@@ -14,6 +14,10 @@
                               その艇と、モデルの1着確率の上位2艇(その艇を除いた上位2艇)との2連複2点。直前情報が無いレースは買わない
  ⑩ select10   厳選さん     : 1日のうち本命の確率が高い順に10レースだけ、3連単のモデルの上位5点
                               (その日の確定した予想だけで選ぶ。結果は見ない)
+ ⑬ boat1_underdog 人気薄1号艇さん: 締切前オッズ(締切の約5分前の記録。interim の odds_pre)で1号艇が1番人気では
+                              ないレースだけ、1号艇の単勝500円+複勝500円。締切前オッズが無いレースは買わない。
+                              モデルを使わない。実運用は締切前オッズの記録を始めた 2026-11-07 から。
+                              過去の参考は確定オッズでしか判定できないので「確定オッズで判定した後知恵の参考」として別枠に出す
 
 共通の規則:
 - 1レースの予算は SIM_BUDGET_PER_RACE_YEN(1,000円)で固定。点数で均等に配る(simulator.allocate_bets の equal。
@@ -64,7 +68,12 @@ PERSONAS: list[dict] = [
     {"id": "outer_ana", "name": "外枠穴さん",
      "description": "外側(4〜6コース)で展示ST・展示タイムがともに1位の艇がいるレースだけ、その艇と1着確率の上位2艇との2連複2点を買う"},
     {"id": "select10", "name": "厳選さん", "description": "1日のうち本命の確率が高い10レースだけ、3連単の確率の上位5点を買う"},
+    {"id": "boat1_underdog", "name": "人気薄1号艇さん",
+     "description": "締切の約5分前のオッズで1号艇が1番人気ではないレースだけ、1号艇の単勝と複勝を500円ずつ買う(モデルを使わない)"},
 ]
+UNDERDOG_LIVE_FROM = "2026-11-07"  # 締切前オッズの記録を始めた日
+UNDERDOG_REFERENCE_NOTE = ("確定オッズ(締切後にわかるもの)で「1号艇が1番人気ではない」を判定した後知恵の参考。"
+                           "実際には締切前オッズで判定するので、この数字どおりにはならない")
 HINDSIGHT_NOTE = "過去のデータで計算した参考値。買い方を結果を見てから選ぶと、たまたま良かったものを選びやすい(後知恵を含む)"
 
 
@@ -107,6 +116,23 @@ def outer_top_boats(entries: pd.DataFrame) -> pd.Series:
     return out
 
 
+def underdog_flags(odds: pd.DataFrame) -> pd.Series:
+    """race_id → 1号艇が単勝の1番人気ではないか(True = 2番人気以下)。単勝のオッズが無いレースは含めない。
+
+    odds: race_id, bet_type, combination, odds(interim の odds_pre / odds と同じ列)。
+    1番人気 = 単勝オッズが最も低い艇。最も低いオッズが同じ艇が複数いて、その中に1号艇がいれば「1番人気」とみなす。
+    特徴量担当の人気順位の関数(F-13b)ができたら、そちらに合わせる。
+    """
+    w = odds[(odds["bet_type"] == "win") & odds["odds"].notna()].copy()
+    if w.empty:
+        return pd.Series(dtype=bool)
+    w["race_id"] = w["race_id"].astype(str)
+    w["o"] = w["odds"].astype(float)
+    mn = w.groupby("race_id")["o"].min()
+    b1 = w[w["combination"].astype(str) == "1"].set_index("race_id")["o"]
+    return (b1 > mn.reindex(b1.index)).rename("underdog")
+
+
 def app_strategies(dates, days_dir: str | Path = DAYS_DIR) -> dict:
     """日付 → その日にアプリが使った既定の買い方(docs/data/days の strategy)。ファイルが無い日は既定値。"""
     out = {}
@@ -138,7 +164,8 @@ def strategy_changes(strats: dict) -> list[dict]:
 class _Ctx:
     """1回の計算で共通に使う値(レースの並び、1着確率、組合せ確率のキャッシュ)。"""
 
-    def __init__(self, preds: pd.DataFrame, models_dir: Path, outer: pd.Series | None, strategies: dict | None):
+    def __init__(self, preds: pd.DataFrame, models_dir: Path, outer: pd.Series | None, strategies: dict | None,
+                 underdog: pd.Series | None = None):
         self.race_ids, self.pw = p_win_matrix(preds)
         self.n = len(self.race_ids)
         self.pfav = self.pw.max(axis=1)
@@ -150,6 +177,9 @@ class _Ctx:
         self.outer = (outer.reindex(self.race_ids).fillna(-1).astype(int).to_numpy() if outer is not None
                       else np.full(self.n, -1))
         self.strategies = strategies or {}
+        # 人気薄1号艇さんの対象レース(締切前オッズで判定。判定できないレースは False = 買わない)
+        self.underdog = (underdog.reindex(self.race_ids).fillna(False).astype(bool).to_numpy() if underdog is not None
+                         else np.zeros(self.n, dtype=bool))
         self._cache: dict[str, np.ndarray] = {}
 
     def probs(self, bt: str) -> np.ndarray:
@@ -216,6 +246,10 @@ def _select(pid: str, ctx: _Ctx, i: int, extra: dict) -> list[tuple[str, str, fl
             c = f"{min(x, y)}={max(x, y)}"
             out.append(("quinella", c, ctx.prob_of("quinella", i, c)))
         return out
+    if pid == "boat1_underdog":
+        if not ctx.underdog[i]:
+            return []
+        return [("win", "1", float(pw[0])), ("place", "1", float(pw[0]))]  # 1,000円を2点で均等 → 500円ずつ
     if pid == "select10":
         if i not in extra["select10"]:
             return []
@@ -266,7 +300,8 @@ def race_results(preds: pd.DataFrame, payouts: pd.DataFrame, pid: str, budget: i
     base["bought"] = base["stake"] > 0
     out = base.reset_index().sort_values("race_id")
     # 買い目ごとの詳細(反省点の分析で、点数を減らした場合の計算に使う)
-    out.attrs["bets"] = pd.DataFrame({"race_id": s["race_id"].to_numpy(), "rank": bets["rank"].to_numpy(),
+    out.attrs["bets"] = pd.DataFrame({"race_id": s["race_id"].to_numpy(), "bet_type": bets["bet_type"].to_numpy(),
+                                      "rank": bets["rank"].to_numpy(),
                                       "prob": bets["prob"].to_numpy(), "amount": s["amount"].to_numpy(),
                                       "rate": s["return"].to_numpy(float) / 100.0})
     return out
@@ -291,6 +326,20 @@ def summarize_person(r: pd.DataFrame) -> dict:
         ci = bootstrap_roi_interval(b["stake"].tolist(), b["return"].tolist())
         out.update({"roi": round(ret / stake, 4), "roi_ci95": [round(ci[0], 4), round(ci[1], 4)] if ci else None,
                     "hit_rate": round(float(b["hit"].mean()), 4)})
+    return out
+
+
+def bet_type_parts(r: pd.DataFrame) -> dict:
+    """券種ごとの内訳(同じ買い方のうち、単勝の分だけ・複勝の分だけの成績)。"""
+    bets = r.attrs.get("bets")
+    out = {}
+    if bets is None or not len(bets):
+        return out
+    for bt, g in bets[bets["amount"] > 0].groupby("bet_type"):
+        per = g.assign(ret=g["amount"] * g["rate"], hit=g["rate"] > 0).groupby("race_id").agg(
+            stake=("amount", "sum"), ret=("ret", "sum"), hit=("hit", "any")).reset_index()
+        per = per.rename(columns={"ret": "return"}).assign(bought=True)
+        out[bt] = summarize_person(per)
     return out
 
 
@@ -327,23 +376,28 @@ def _valid_with_results(preds: pd.DataFrame) -> pd.DataFrame:
 
 def personas_table(preds: pd.DataFrame, payouts: pd.DataFrame, budget: int = SIM_BUDGET_PER_RACE_YEN,
                    models_dir: str | Path = MODELS_DIR, periods=("day", "week"), outer: pd.Series | None = None,
-                   strategies: dict | None = None, return_details: bool = False):
+                   strategies: dict | None = None, return_details: bool = False,
+                   underdog: pd.Series | None = None, only: list[str] | None = None):
     """10人それぞれの成績。preds は予想(結果の出ていないレース・中止は自動で除く)。
 
     outer: race_id → 外枠穴さんの対象の艇(outer_top_boats の戻り値)。None なら外枠穴さんは買わない。
     strategies: 日付 → アプリの既定の買い方(app_strategies の戻り値)。None なら既定値(3連単上位5点)。
     """
     preds = _valid_with_results(preds)
-    ctx = _Ctx(preds, Path(models_dir), outer, strategies)
+    ctx = _Ctx(preds, Path(models_dir), outer, strategies, underdog)
     out = []
     details = {}
     for p in PERSONAS:
+        if only is not None and p["id"] not in only:
+            continue
         r = race_results(preds, payouts, p["id"], budget, models_dir, ctx=ctx)
         details[p["id"]] = r
         row = {k: p[k] for k in ("id", "name", "description")}
         row["is_baseline"] = bool(p.get("is_baseline", False))
         row["races_available"] = int(ctx.n)
         row.update(summarize_person(r))
+        if p["id"] == "boat1_underdog":
+            row["parts"] = bet_type_parts(r)
         for per in periods:
             row[f"by_{per}"] = _by_period(r, per)
         out.append(row)
@@ -355,8 +409,9 @@ def personas_table(preds: pd.DataFrame, payouts: pd.DataFrame, budget: int = SIM
 
 def build_personas(live_from, live_to, history_model_id: str = "pre_20261106_7d3a",
                    budget: int = SIM_BUDGET_PER_RACE_YEN, models_dir: str | Path = MODELS_DIR,
-                   pred_dir: str | Path = PREDICTIONS_DIR, days_dir: str | Path = DAYS_DIR) -> dict:
-    """10人の成績。live(実運用: 確定版の予想と実際の払戻)と history(過去の参考値)を分けて返す。
+                   pred_dir: str | Path = PREDICTIONS_DIR, days_dir: str | Path = DAYS_DIR,
+                   reference_from: str = "2026-01-01", reference_to: str = "2026-10-31") -> dict:
+    """仮想の購入者の成績。live(実運用: 確定版の予想と実際の払戻)と history(過去の参考値)を分けて返す。
 
     live: レースごとに直前版があれば直前版、無ければ前日版(export と同じ)。日ごと・週ごと、アプリの既定の変更履歴つき。
     history: history_model_id の test 期間(学習にも選択にも使っていない期間)。月ごと・週ごと。
@@ -386,26 +441,31 @@ def build_personas(live_from, live_to, history_model_id: str = "pre_20261106_7d3
                  "app_strategy_changes": strategy_changes(strats),
                  "rows": []},
     }
+    live_under = _underdog_live(lf, lt)
+    out["live"]["boat1_underdog_from"] = UNDERDOG_LIVE_FROM
+    out["live"]["boat1_underdog_races_judged"] = int(len(live_under))
     live_rows, live_det, live_pf = (personas_table(live, lpay, budget, models_dir, ("day", "week"), outer_top_boats(lent),
-                                                   strats, return_details=True) if len(live) else ([], {}, pd.Series(dtype=float)))
+                                                   strats, return_details=True, underdog=live_under)
+                                    if len(live) else ([], {}, pd.Series(dtype=float)))
     out["live"]["rows"] = live_rows
-    booster, meta = load_model(history_model_id, models_dir)
-    per = meta["periods"]
-    part = filter_period(load_features(features_path(meta["variant"])), per["test_from"], per["test_to"])
-    hpred = part[["race_id", "entry_number", "finish_position", "is_valid_result", "is_absent"]].assign(
-        p_win=predict_p(part, booster, meta), model_id=meta["model_id"])
-    hpay = load_interim_table("payouts", hpred["race_id"])
-    hent = read_interim("entries", pd.Timestamp(per["test_from"]).date(), pd.Timestamp(per["test_to"]).date())
+    # 過去の参考は、手元で作ったキャッシュ(models の pre の latest のフォルダ)から読む。
+    # Actions には学習用の特徴量が無いため、ここでは特徴量を読まない(build_history_cache で作る)
+    h = load_history_cache(models_dir)
+    hmeta, hpred, hpay, hent, hraces = h["meta"], h["preds"], h["payouts"], h["entries"], h["races"]
     hist_rows, hist_det, hist_pf = personas_table(hpred, hpay, budget, models_dir, ("month", "week"),
-                                                  outer_top_boats(hent), None, return_details=True)
-    out["history"] = {"from": per["test_from"], "to": per["test_to"], "model_id": meta["model_id"],
-                      "note": HINDSIGHT_NOTE, "app_strategy": DEFAULT_APP_STRATEGY, "rows": hist_rows}
+                                                  outer_top_boats(hent), None, return_details=True,
+                                                  underdog=h["underdog"])
+    for row in hist_rows:
+        if row["id"] == "boat1_underdog":
+            row["note"] = UNDERDOG_REFERENCE_NOTE
+    out["history"] = {"from": hmeta["history_from"], "to": hmeta["history_to"], "model_id": hmeta["history_model_id"],
+                      "note": HINDSIGHT_NOTE, "app_strategy": DEFAULT_APP_STRATEGY, "rows": hist_rows,
+                      "cache_built_at": hmeta["built_at"]}
 
     # 反省点(過去の検証期間と実運用の両方で回収率が上がる候補だけ)
     if live_rows:
         from src.model.reflections import race_attributes, reflections_for
 
-        hraces = read_interim("races", pd.Timestamp(per["test_from"]).date(), pd.Timestamp(per["test_to"]).date())
         lver = live.groupby("race_id")["version"].first()
         attrs = {"history": race_attributes(hraces, hpay, hist_pf),
                  "live": race_attributes(lraces, lpay, live_pf, lver)}
@@ -413,4 +473,139 @@ def build_personas(live_from, live_to, history_model_id: str = "pre_20261106_7d3
         labels = {p["id"]: p["name"] for p in PERSONAS}
         for row in out["live"]["rows"]:
             row["reflections"] = reflections_for(row["id"], res_all, attrs, labels, budget)
+            if row["id"] == "boat1_underdog":
+                row["reflections"]["note"] += "。過去の側は確定オッズで判定した後知恵の参考"
+
+    # 人気薄1号艇さんの過去の参考(確定オッズで判定。別枠)
+    out["boat1_underdog_reference"] = underdog_reference_from_cache(h, budget, models_dir)
     return out
+
+
+def _underdog_live(lf: pd.Timestamp, lt: pd.Timestamp) -> pd.Series:
+    """実運用の対象レース: 締切前オッズ(interim の odds_pre)で判定。記録を始めた日より前と、無いレースは含めない。"""
+    from src.features.build_interim import read_interim
+
+    start = max(lf, pd.Timestamp(UNDERDOG_LIVE_FROM))
+    if start > lt:
+        return pd.Series(dtype=bool)
+    try:
+        odds_pre = read_interim("odds_pre", start.date(), lt.date())
+    except (KeyError, FileNotFoundError, ValueError):
+        return pd.Series(dtype=bool)  # 締切前オッズがまだ取り込まれていない → 買わない
+    if odds_pre is None or not len(odds_pre):
+        return pd.Series(dtype=bool)
+    return underdog_flags(odds_pre)
+
+
+# ---------------------------------------------------------------------------
+# 過去の参考のキャッシュ(Actions には学習用の特徴量が無いので、手元で一度作って models に置く)
+# ---------------------------------------------------------------------------
+
+HISTORY_CACHE_DIRNAME = "personas_history"
+
+
+def history_cache_dir(models_dir: str | Path = MODELS_DIR) -> Path:
+    """models の pre の latest のフォルダの中(models.tar.gz に latest のフォルダごと入るので R2 に載る)。"""
+    from src.model.lgbm import model_dir, resolve_model_id
+
+    return model_dir(resolve_model_id("latest", models_dir, "pre"), models_dir) / HISTORY_CACHE_DIRNAME
+
+
+def build_history_cache(history_model_id: str = "pre_20261106_7d3a", reference_from: str = "2026-01-01",
+                        reference_to: str = "2026-10-31", models_dir: str | Path = MODELS_DIR) -> Path:
+    """過去の参考に必要な入力を計算して保存する(学習用の特徴量と interim が要る。手元で実行する)。
+
+    - preds: history_model_id の test 期間の予想(1行=1艇、p_win)
+    - payouts / entries(展示の列)/ races: 同じ期間の interim
+    - underdog: 同じ期間の「1号艇が1番人気ではない」(確定オッズで判定。後知恵)
+    - ref_*: 人気薄1号艇さんの過去の参考(reference_from〜reference_to。確定オッズで判定)
+    """
+    from datetime import datetime, timedelta, timezone
+
+    from src.features.build_interim import read_interim
+    from src.model.data import features_path, filter_period, load_features
+    from src.model.lgbm import load_model
+    from src.model.report import predict_p
+
+    booster, meta = load_model(history_model_id, models_dir)
+    per = meta["periods"]
+    part = filter_period(load_features(features_path(meta["variant"])), per["test_from"], per["test_to"])
+    preds = part[["race_id", "entry_number", "finish_position", "is_valid_result", "is_absent"]].assign(
+        p_win=predict_p(part, booster, meta), model_id=meta["model_id"])
+    a, b = pd.Timestamp(per["test_from"]).date(), pd.Timestamp(per["test_to"]).date()
+    pay = read_interim("payouts", a, b)
+    ent = read_interim("entries", a, b)[["race_id", "entry_number", "pv_course_number", "pv_start_timing",
+                                         "pv_exhibition_time"]]
+    races = read_interim("races", a, b)[["race_id", "stadium_number", "closed_at", "pv_weather_number",
+                                         "pv_wind_direction_number", "pv_wind_speed"]]
+    under = underdog_flags(read_interim("odds", a, b))
+    ra, rb = pd.Timestamp(reference_from).date(), pd.Timestamp(reference_to).date()
+    rent = read_interim("entries", ra, rb)
+    rraces = read_interim("races", ra, rb)
+    rpay = read_interim("payouts", ra, rb)
+    rpay = rpay[rpay["bet_type"].isin(["win", "place"])]
+    rpred = rent[["race_id", "entry_number", "finish_position", "is_absent"]].merge(
+        rraces[["race_id", "is_valid_result"]], on="race_id")
+    run = underdog_flags(read_interim("odds", ra, rb))
+
+    d = history_cache_dir(models_dir)
+    d.mkdir(parents=True, exist_ok=True)
+    tables = {"preds": preds, "payouts": pay, "entries": ent, "races": races,
+              "underdog": under.rename("underdog").reset_index().rename(columns={"index": "race_id"}),
+              "ref_preds": rpred, "ref_payouts": rpay,
+              "ref_underdog": run.rename("underdog").reset_index().rename(columns={"index": "race_id"})}
+    for name, t in tables.items():
+        t = t.copy()
+        t["race_id"] = t["race_id"].astype(str)
+        t.to_parquet(d / f"{name}.parquet", index=False)
+    info = {"history_model_id": meta["model_id"], "history_from": per["test_from"], "history_to": per["test_to"],
+            "reference_from": reference_from, "reference_to": reference_to,
+            "built_at": datetime.now(timezone(timedelta(hours=9))).isoformat(timespec="seconds"),
+            "note": "仮想の購入者の過去の参考の入力。python -m src.model.personas --build-history-cache で作り直す"}
+    (d / "meta.json").write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
+    return d
+
+
+def load_history_cache(models_dir: str | Path = MODELS_DIR) -> dict:
+    """キャッシュを読む。無ければ、作り方を書いたエラーにする。"""
+    d = history_cache_dir(models_dir)
+    if not (d / "meta.json").exists():
+        raise FileNotFoundError(
+            f"仮想の購入者の過去の参考のキャッシュがありません: {d}。学習用の特徴量のある手元で "
+            "`python -m src.model.personas --build-history-cache` を実行し、models を R2 に載せてください"
+            "(models/latest を切り替えたときも作り直しが必要)")
+    out = {"meta": json.loads((d / "meta.json").read_text(encoding="utf-8"))}
+    for name in ("preds", "payouts", "entries", "races", "underdog", "ref_preds", "ref_payouts", "ref_underdog"):
+        out[name] = pd.read_parquet(d / f"{name}.parquet")
+    for name in ("underdog", "ref_underdog"):
+        out[name] = out[name].set_index("race_id")["underdog"].astype(bool)
+    return out
+
+
+def underdog_reference_from_cache(h: dict, budget: int = SIM_BUDGET_PER_RACE_YEN,
+                                  models_dir: str | Path = MODELS_DIR) -> dict:
+    """人気薄1号艇さんの過去の参考(確定オッズで判定した後知恵の参考。モデルを使わない)。"""
+    preds = h["ref_preds"].assign(p_win=1 / 6)  # このひとはモデルの確率を使わない
+    rows = personas_table(preds, h["ref_payouts"], budget, models_dir, ("month",), None, None,
+                          underdog=h["ref_underdog"], only=["boat1_underdog"])
+    m = h["meta"]
+    return {"from": m["reference_from"], "to": m["reference_to"], "note": UNDERDOG_REFERENCE_NOTE, "rows": rows}
+
+
+def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="仮想の購入者")
+    parser.add_argument("--build-history-cache", action="store_true",
+                        help="過去の参考のキャッシュを models の pre の latest のフォルダに作る(手元で実行)")
+    parser.add_argument("--history-model-id", default="pre_20261106_7d3a")
+    parser.add_argument("--models-dir", default=str(MODELS_DIR))
+    args = parser.parse_args()
+    if args.build_history_cache:
+        d = build_history_cache(args.history_model_id, models_dir=args.models_dir)
+        size = sum(f.stat().st_size for f in d.iterdir())
+        print(f"キャッシュを作りました: {d}({size / 1e6:.1f}MB)")
+
+
+if __name__ == "__main__":
+    main()

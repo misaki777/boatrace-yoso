@@ -8,7 +8,8 @@ import pytest
 
 from src.model import personas as ps
 
-IDS = ["win_fav", "boat1", "in_nige", "app", "box3", "quinella3", "steady", "upset", "outer_ana", "select10"]
+IDS = ["win_fav", "boat1", "in_nige", "app", "box3", "quinella3", "steady", "upset", "outer_ana", "select10",
+       "boat1_underdog"]
 
 
 def _data(n=60):
@@ -110,3 +111,80 @@ def test_choose_live_version():
     pv = pd.DataFrame({**base, "race_id": "a", "version": "preview"})
     got = ps.choose_live_version(pd.concat([pre, pv]))
     assert got.groupby("race_id")["version"].first().to_dict() == {"a": "preview", "b": "pre"}
+
+
+def _win_odds(flags: dict) -> pd.DataFrame:
+    """flags: race_id → True なら1号艇は2番人気、False なら1番人気。"""
+    rows = []
+    for rid, under in flags.items():
+        for e in range(1, 7):
+            o = (3.0 if e == 1 else (1.5 if e == 2 else 10.0)) if under else (1.5 if e == 1 else 10.0)
+            rows.append({"race_id": rid, "bet_type": "win", "combination": str(e), "odds": o})
+    return pd.DataFrame(rows)
+
+
+def test_underdog_flags():
+    f = ps.underdog_flags(_win_odds({"a": True, "b": False}))
+    assert f.to_dict() == {"a": True, "b": False}
+    # 1番人気が同じオッズで並んで1号艇を含むなら「1番人気」
+    tie = pd.DataFrame([{"race_id": "c", "bet_type": "win", "combination": str(e), "odds": 2.0 if e <= 2 else 9.0}
+                        for e in range(1, 7)])
+    assert ps.underdog_flags(tie).to_dict() == {"c": False}
+
+
+def test_underdog_persona(tmp_path):
+    preds, pay = _data(24)
+    pay = pd.concat([pay, pd.DataFrame([(r, "place", "1", 110, None) for r in preds["race_id"].unique()],
+                                       columns=pay.columns)])
+    rids = sorted(preds["race_id"].unique())
+    flags = ps.underdog_flags(_win_odds({r: i % 2 == 0 for i, r in enumerate(rids[:20])}))  # 残り4レースはオッズなし
+    rows = {r["id"]: r for r in ps.personas_table(preds, pay, 1000, tmp_path, ("day",), None, None, underdog=flags,
+                                                  only=["boat1_underdog"])}
+    u = rows["boat1_underdog"]
+    assert u["races_bought"] == 10 and u["stake"] == 10000          # 1番人気でない10レースだけ、1,000円ずつ
+    assert u["return"] == 10 * (5 * 150 + 5 * 110)                  # 単勝500円(150円/100円)+複勝500円(110円/100円)
+    assert u["parts"]["win"]["stake"] == 5000 and u["parts"]["place"]["stake"] == 5000
+    assert u["parts"]["place"]["return"] == 10 * 550
+    # オッズの数値は出力に入らない
+    import json
+
+    text = json.dumps(rows, ensure_ascii=False, default=str)
+    assert "odds" not in text and "1.5" not in text and "3.0" not in text
+
+
+def test_underdog_without_odds_buys_nothing(tmp_path):
+    preds, pay = _data(12)
+    rows = {r["id"]: r for r in ps.personas_table(preds, pay, 1000, tmp_path, ("day",), only=["boat1_underdog"])}
+    assert rows["boat1_underdog"]["races_bought"] == 0
+
+
+def test_output_keys_have_no_odds_word(tmp_path):
+    preds, pay = _data(12)
+    rows = ps.personas_table(preds, pay, 1000, tmp_path, ("day",))
+
+    def keys(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                yield k
+                yield from keys(v)
+        elif isinstance(o, list):
+            for v in o:
+                yield from keys(v)
+
+    assert not [k for k in keys(rows) if "odds" in str(k)]  # 出力のキー名にもオッズを入れない
+
+
+def test_history_cache_missing_message(tmp_path):
+    (tmp_path / "latest").write_text("pre_20990101_aaaa\n")
+    (tmp_path / "pre" / "pre_20990101_aaaa").mkdir(parents=True)
+    with pytest.raises(FileNotFoundError, match="--build-history-cache"):
+        ps.load_history_cache(tmp_path)
+    assert ps.history_cache_dir(tmp_path) == tmp_path / "pre" / "pre_20990101_aaaa" / "personas_history"
+
+
+def test_build_personas_does_not_read_features():
+    # Actions には学習用の特徴量が無い: build_personas は特徴量を読まない(キャッシュだけ)
+    import inspect
+
+    src = inspect.getsource(ps.build_personas)
+    assert "load_features(" not in src and "predict_p(" not in src and "load_history_cache(" in src
