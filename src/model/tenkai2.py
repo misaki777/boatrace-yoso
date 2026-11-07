@@ -54,6 +54,7 @@ TECH_JA = {"nige": "逃げ", "sashi": "差し", "makuri": "まくり", "makurisa
 MIN_CLASS_SHARE = 0.008  # これ未満の (コース, 決まり手) は other にまとめる
 OTHER = "other"
 FORBIDDEN_WORDS = ("最適", "必ず", "おすすめ", "確実")
+MIXED_BELOW = 0.25  # 一番の展開の確率がこれ未満なら「混戦」と書く
 DEFAULT_TRAIN_FROM = "2016-10-30"
 
 
@@ -344,10 +345,18 @@ def headline(row: dict, classes: list[str]) -> str:
     parts = []
     if probs:
         p1, c1 = probs[0]
-        parts.append(f"本線: {desc(c1)}({p1 * 100:.0f}%)。")
-        if len(probs) > 1:
-            p2, c2 = probs[1]
-            parts.append(f"崩れるなら{desc(c2)}({p2 * 100:.0f}%)。")
+        if p1 >= MIXED_BELOW:
+            parts.append(f"本線: {desc(c1)}({p1 * 100:.0f}%)。")
+            if len(probs) > 1:
+                p2, c2 = probs[1]
+                parts.append(f"崩れるなら{desc(c2)}({p2 * 100:.0f}%)。")
+        else:
+            # 一番の展開でも確率が低いときは「本線」と言わない
+            parts.append(f"混戦。最も確率が高いのは{desc(c1)}({p1 * 100:.0f}%)")
+            if len(probs) > 1:
+                p2, c2 = probs[1]
+                parts.append(f"、次いで{desc(c2)}({p2 * 100:.0f}%)")
+            parts.append("。")
     tops = [(row[f"p_top_c{k}"], k) for k in range(1, 7)]
     pk = row["p_top_c4"]
     if pk >= 0.2:

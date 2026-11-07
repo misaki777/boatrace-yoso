@@ -42,3 +42,10 @@ def test_headline_format():
     assert h2.endswith("トップスタートの候補は2コースの3号艇(30%)。")  # 直前版では予定コースと枠番が違う
     for w in ("最適", "必ず", "確実"):
         assert w not in h + h2
+
+
+def test_headline_mixed():
+    cls = ["c1_nige", "c3_makuri", "other"]
+    h = t2.headline(_row(p_who_c1_nige=0.15, p_who_c3_makuri=0.13, p_who_c4_makuri=0.0, p_top_c3=0.23), cls)
+    assert h.startswith("混戦。最も確率が高いのは1号艇の逃げ(15%)、次いで3号艇のまくり(13%)。")
+    assert "本線" not in h
