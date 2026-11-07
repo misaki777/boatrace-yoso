@@ -144,3 +144,34 @@ def test_models_history():
     assert set(h) == {"date", "variant", "candidate", "adopted", "train_to", "valid", "metrics", "reason"}
     assert h["metrics"] == {"win_logloss": {"candidate": 1.3012, "latest": 1.305}}
     assert build_models([], GEN)["history"] == []
+
+
+def _detail_row(rid, variant, c1_entry=1):
+    who = {"c1_nige": 0.5, "c2_sashi": 0.15, "c2_makuri": 0.005, "c3_makuri": 0.1, "c4_makuri": 0.12,
+           "c4_makurisashi": 0.05, "c6_makurisashi": 0.009, "other": 0.066}
+    entries = [c1_entry] + [e for e in range(1, 7) if e != c1_entry]
+    return {"race_id": rid, "variant": variant, "model_id": f"td_{variant}", "headline": f"本線: {variant}",
+            **{f"course{k}_entry": entries[k - 1] for k in range(1, 7)},
+            **{f"p_who_{k}": v for k, v in who.items()},
+            **{f"p_top_c{k}": [0.22, 0.15, 0.14, 0.24, 0.13, 0.12][k - 1] for k in range(1, 7)},
+            **{f"p_faster_c{k}": 0.41 + k / 100 for k in range(2, 7)}}
+
+
+def test_tenkai_detail():
+    inp = inputs()
+    rids = sorted(inp.races["race_id"])
+    inp.tenkai = _tenkai_rows(rids, "pre")
+    inp.tenkai_detail = pd.DataFrame([_detail_row(r, "pre") for r in rids] + [_detail_row(f"{YMD}-02-01", "preview", 2)])
+    day = ed.build_day(D, inp, generated_at=GEN)
+    t = find(day, 2, 1)["prediction"]["tenkai"]
+    assert t["detail_version"] == "preview" and t["summary"] == {"text": "本線: preview"}
+    assert t["by_boat"][0] == {"entry": 2, "course": 1, "nige": 0.5}            # 予定コース → 艇番
+    assert t["by_boat"][1] == {"entry": 1, "course": 2, "sashi": 0.15}           # 0.01 未満は載せない
+    assert all("other" not in b for b in t["by_boat"])
+    assert t["start"]["top_start"]["2"] == 0.22 and abs(sum(t["start"]["top_start"].values()) - 1) < 1e-9
+    assert t["start"]["kado_ahead_of_3"] == 0.45 and t["start"]["ahead_of_inner"]["2"] == 0.43
+    assert find(day, 2, 2)["prediction"]["tenkai"]["detail_version"] == "pre"
+    assert validate_day(day, local=True) == []
+    # 詳しい版が無い日は項目なし
+    inp.tenkai_detail = pd.DataFrame()
+    assert "by_boat" not in find(ed.build_day(D, inp, generated_at=GEN), 2, 1)["prediction"]["tenkai"]

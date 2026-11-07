@@ -257,8 +257,29 @@ def make_fake_tenkai(race_id: str, p_win: list[float], variant: str, locked_at: 
     rest = [rng.uniform(0.6, 1.4) * w for w in (0.36, 0.30, 0.22, 0.09, 0.03)]
     vals = round_to_one([nige] + [(1 - nige) * x / sum(rest) for x in rest])
     c1 = next((b["entry"] for b in boats if b.get("exhibition_course") == 1), 1)
-    return {**dict(zip(TENKAI_KEYS, vals)), "course1_entry": c1, "version": variant, "model_id": model_id,
+    base = {**dict(zip(TENKAI_KEYS, vals)), "course1_entry": c1, "version": variant, "model_id": model_id,
             "locked_at": locked_at}
+    # 詳しい版(spec 10 3.4)。モデル担当の出力と同じ列の1行を作り、export と同じ関数で変換する
+    import pandas as pd
+
+    from src.export.phase3b import tenkai_detail_for_race
+
+    entries = [b["entry"] for b in sorted(boats, key=lambda b: b.get("exhibition_course") or b["entry"])]
+    who = {"c1_nige": vals[0], "c2_sashi": vals[1] * 0.6, "c2_makuri": vals[2] * 0.3, "c3_makuri": vals[2] * 0.3,
+           "c3_makurisashi": vals[3] * 0.5, "c4_makuri": vals[2] * 0.4, "c4_makurisashi": vals[3] * 0.5,
+           "c3_sashi": vals[1] * 0.2, "c4_sashi": vals[1] * 0.1, "c5_makuri": 0.005, "c5_makurisashi": 0.012,
+           "c6_makuri": 0.004, "c6_makurisashi": 0.006}
+    who["other"] = max(0.0, 1 - sum(who.values()))
+    tops = [rng.uniform(0.6, 1.4) for _ in range(6)]
+    row = {"race_id": race_id, "variant": variant, "headline": "",
+           **{f"course{k}_entry": entries[k - 1] for k in range(1, 7)},
+           **{f"p_who_{k}": v for k, v in who.items()},
+           **{f"p_top_c{k}": tops[k - 1] / sum(tops) for k in range(1, 7)},
+           **{f"p_faster_c{k}": rng.uniform(0.3, 0.6) for k in range(2, 7)}}
+    p1 = max((v, k) for k, v in who.items() if k != "other")
+    row["headline"] = f"本線: {entries[int(p1[1][1]) - 1]}号艇の{'逃げ' if 'nige' in p1[1] else 'まくり'}({p1[0] * 100:.0f}%)。"
+    det = tenkai_detail_for_race(pd.DataFrame([row]), race_id)
+    return {**base, **det}
 
 
 SAMPLE_MODEL_HISTORY = [

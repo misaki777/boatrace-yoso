@@ -340,6 +340,24 @@ def _check_prediction(c: _Checker, pr: Any, path: str, local: bool = False) -> N
             c.integer(t["course1_entry"], f"{q}.course1_entry", lo=1, hi=6)
             c.string(t["version"], f"{q}.version", choices=VARIANTS)
             c.string(t["model_id"], f"{q}.model_id", nullable=True)
+            if "by_boat" in t and c.arr(t["by_boat"], f"{q}.by_boat"):
+                for j, bb in enumerate(t["by_boat"]):
+                    qq = f"{q}.by_boat[{j}]"
+                    if c.obj(bb, qq, ("entry", "course")):
+                        c.integer(bb["entry"], f"{qq}.entry", lo=1, hi=6)
+                        c.integer(bb["course"], f"{qq}.course", lo=1, hi=6)
+                        for k, v in bb.items():
+                            if k not in ("entry", "course"):
+                                c.string(k, f"{qq}.<key>", choices=keys)
+                                c.number(v, f"{qq}.{k}", lo=0.01, hi=1)
+            if "start" in t and c.obj(t["start"], f"{q}.start", ("ahead_of_inner", "kado_ahead_of_3", "top_start")):
+                st = t["start"]
+                c.prob(st["kado_ahead_of_3"], f"{q}.start.kado_ahead_of_3")
+                if c.obj(st["top_start"], f"{q}.start.top_start", ()):
+                    if abs(sum(st["top_start"].values()) - 1) > 1e-9:
+                        c.err(f"{q}.start.top_start", "合計が1になっていません")
+            if t.get("summary") is not None:
+                c.obj(t["summary"], f"{q}.summary", ())
     if "skip_reason" in pr:
         c.string(pr["skip_reason"], f"{path}.skip_reason", nullable=True, choices=SKIP_REASONS)
         if pr["skip_reason"] is not None and pr.get("recommended"):

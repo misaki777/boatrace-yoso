@@ -82,6 +82,66 @@ def tenkai_for_race(tenkai: pd.DataFrame, race_id: str) -> dict[str, Any] | None
 
 
 # ---------------------------------------------------------------------------
+# 展開予想の詳しい版(E-13b。spec 10 3.4: 誰の決まり手か・スタート隊形・一言)
+# ---------------------------------------------------------------------------
+
+BY_BOAT_MIN = 0.01
+
+
+def load_tenkai_detail(d: Date, predictions_dir: Path = PREDICTIONS_DIR) -> pd.DataFrame:
+    frames = []
+    for variant in ("pre", "preview"):
+        p = Path(predictions_dir) / f"{d:%Y%m%d}_{variant}_tenkai_detail.parquet"
+        if p.exists():
+            df = pd.read_parquet(p)
+            if "variant" not in df.columns:
+                df["variant"] = variant
+            frames.append(df)
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def tenkai_detail_for_race(detail: pd.DataFrame, race_id: str) -> dict[str, Any] | None:
+    """by_boat・start・summary(直前版の確定行があればそれ、無ければ前日版)。無ければ None。
+
+    - by_boat: p_who_c{コース}_{決まり手} のうち 0.01 以上を、そのコースに入る予定の艇ごとにまとめる(小数3桁)。
+      "other"(どれにも入らない展開)は載せない。
+    - start: ahead_of_inner(キーは予定コース 2〜6)、kado_ahead_of_3(= 4コースが3コースより先)、
+      top_start(キーは枠番。合計1)。小数2桁。
+    - summary: モデル担当の一言の文をそのまま {"text": ...} で出す(型ID・値への分解はしない。報告参照)。
+    """
+    if detail.empty:
+        return None
+    g = detail[detail["race_id"].astype(str) == race_id]
+    pv, pre = g[g["variant"] == "preview"], g[g["variant"] == "pre"]
+    if pv.empty and pre.empty:
+        return None
+    r = (pv if not pv.empty else pre).iloc[0].to_dict()
+    entry = {k: int(r.get(f"course{k}_entry") or k) for k in range(1, 7)}
+    boats: dict[int, dict[str, Any]] = {}
+    for col, v in r.items():
+        if not col.startswith("p_who_c") or v is None or pd.isna(v):
+            continue
+        course_s, tech = col[len("p_who_c"):].split("_", 1)
+        k = int(course_s)
+        if float(v) >= BY_BOAT_MIN:
+            b = boats.setdefault(k, {"entry": entry[k], "course": k})
+            b[tech] = round(float(v), 3)
+    tops = round_to_one([float(r[f"p_top_c{k}"]) for k in range(1, 7)], 2)
+    start = {
+        "ahead_of_inner": {str(k): round(float(r[f"p_faster_c{k}"]), 2) for k in range(2, 7)},
+        "kado_ahead_of_3": round(float(r["p_faster_c4"]), 2),
+        "top_start": {str(entry[k]): tops[k - 1] for k in range(1, 7)},
+    }
+    headline = r.get("headline")
+    return {
+        "by_boat": [boats[k] for k in sorted(boats)],
+        "start": start,
+        "summary": {"text": str(headline)} if headline is not None and not pd.isna(headline) else None,
+        "detail_version": str(r["variant"]),
+    }
+
+
+# ---------------------------------------------------------------------------
 # 選手カード(E-14。spec 10 4章)
 # ---------------------------------------------------------------------------
 

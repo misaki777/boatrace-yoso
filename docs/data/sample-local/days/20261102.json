@@ -631,7 +631,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.521
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.096,
+         "makuri": 0.045
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.045,
+         "makurisashi": 0.059,
+         "sashi": 0.032
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.06,
+         "makurisashi": 0.059,
+         "sashi": 0.016
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.47,
+         "3": 0.34,
+         "4": 0.36,
+         "5": 0.56,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.36,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.19,
+         "3": 0.18,
+         "4": 0.21,
+         "5": 0.14,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(52%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -1279,7 +1333,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.7
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.06,
+         "makuri": 0.022
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.022,
+         "makurisashi": 0.048,
+         "sashi": 0.02
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.029,
+         "makurisashi": 0.048,
+         "sashi": 0.01
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.36,
+         "3": 0.43,
+         "4": 0.41,
+         "5": 0.52,
+         "6": 0.59
+        },
+        "kado_ahead_of_3": 0.41,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.21,
+         "3": 0.12,
+         "4": 0.19,
+         "5": 0.11,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(70%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -1927,7 +2035,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.477
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.087,
+         "makuri": 0.062
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.062,
+         "makurisashi": 0.051,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.083,
+         "makurisashi": 0.051,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.57,
+         "3": 0.37,
+         "4": 0.48,
+         "5": 0.46,
+         "6": 0.31
+        },
+        "kado_ahead_of_3": 0.48,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.18,
+         "3": 0.25,
+         "4": 0.16,
+         "5": 0.12,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(48%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -2448,7 +2610,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.474
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.1,
+         "makuri": 0.038
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.038,
+         "makurisashi": 0.065,
+         "sashi": 0.033
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.051,
+         "makurisashi": 0.065,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.47,
+         "4": 0.4,
+         "5": 0.6,
+         "6": 0.39
+        },
+        "kado_ahead_of_3": 0.4,
+        "top_start": {
+         "1": 0.16,
+         "2": 0.13,
+         "3": 0.19,
+         "4": 0.22,
+         "5": 0.14,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(47%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -3096,7 +3312,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.123
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.131,
+         "makuri": 0.081
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.081,
+         "makurisashi": 0.118,
+         "sashi": 0.044
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.108,
+         "makurisashi": 0.118,
+         "sashi": 0.022
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.58,
+         "4": 0.6,
+         "5": 0.58,
+         "6": 0.58
+        },
+        "kado_ahead_of_3": 0.6,
+        "top_start": {
+         "1": 0.23,
+         "2": 0.2,
+         "3": 0.17,
+         "4": 0.12,
+         "5": 0.16,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 2号艇のまくり(13%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -3744,7 +4014,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.336
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.151,
+         "makuri": 0.07
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.07,
+         "makurisashi": 0.049,
+         "sashi": 0.05
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.094,
+         "makurisashi": 0.049,
+         "sashi": 0.025
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.34,
+         "3": 0.42,
+         "4": 0.43,
+         "5": 0.32,
+         "6": 0.35
+        },
+        "kado_ahead_of_3": 0.43,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.22,
+         "3": 0.12,
+         "4": 0.11,
+         "5": 0.17,
+         "6": 0.25
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(34%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -4392,7 +4716,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.575
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.069,
+         "makuri": 0.044
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.044,
+         "makurisashi": 0.047,
+         "sashi": 0.023
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.059,
+         "makurisashi": 0.047,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.38,
+         "3": 0.49,
+         "4": 0.43,
+         "5": 0.52,
+         "6": 0.45
+        },
+        "kado_ahead_of_3": 0.43,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.15,
+         "3": 0.16,
+         "4": 0.17,
+         "5": 0.21,
+         "6": 0.11
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(57%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -4994,7 +5372,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.247
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.113,
+         "makuri": 0.09
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.09,
+         "makurisashi": 0.08,
+         "sashi": 0.038
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.12,
+         "makurisashi": 0.08,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.59,
+         "3": 0.49,
+         "4": 0.35,
+         "5": 0.34,
+         "6": 0.47
+        },
+        "kado_ahead_of_3": 0.35,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.11,
+         "3": 0.18,
+         "4": 0.17,
+         "5": 0.2,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(25%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -5642,7 +6074,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.638
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.08,
+         "makuri": 0.033
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.033,
+         "makurisashi": 0.038,
+         "sashi": 0.027
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.044,
+         "makurisashi": 0.038,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.33,
+         "3": 0.59,
+         "4": 0.33,
+         "5": 0.39,
+         "6": 0.47
+        },
+        "kado_ahead_of_3": 0.33,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.2,
+         "3": 0.15,
+         "4": 0.12,
+         "5": 0.12,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(64%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -6290,7 +6776,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.77
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.043,
+         "makuri": 0.021
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.021,
+         "makurisashi": 0.031,
+         "sashi": 0.014
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.028,
+         "makurisashi": 0.031
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.46,
+         "3": 0.56,
+         "4": 0.44,
+         "5": 0.41,
+         "6": 0.54
+        },
+        "kado_ahead_of_3": 0.44,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.21,
+         "3": 0.13,
+         "4": 0.13,
+         "5": 0.18,
+         "6": 0.23
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(77%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -6938,7 +7477,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.506
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.122,
+         "makuri": 0.041
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.041,
+         "makurisashi": 0.056,
+         "sashi": 0.041
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.054,
+         "makurisashi": 0.056,
+         "sashi": 0.02
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.42,
+         "3": 0.44,
+         "4": 0.59,
+         "5": 0.35,
+         "6": 0.56
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.1,
+         "3": 0.15,
+         "4": 0.21,
+         "5": 0.14,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(51%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -7586,7 +8179,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.583
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.122,
+         "makuri": 0.026
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.026,
+         "makurisashi": 0.038,
+         "sashi": 0.041
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.034,
+         "makurisashi": 0.038,
+         "sashi": 0.02
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.32,
+         "3": 0.51,
+         "4": 0.57,
+         "5": 0.43,
+         "6": 0.32
+        },
+        "kado_ahead_of_3": 0.57,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.17,
+         "3": 0.2,
+         "4": 0.2,
+         "5": 0.1,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(58%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -8243,7 +8890,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.602
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.073,
+         "makuri": 0.043
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.043,
+         "makurisashi": 0.047,
+         "sashi": 0.024
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.057,
+         "makurisashi": 0.047,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.54,
+         "3": 0.35,
+         "4": 0.5,
+         "5": 0.32,
+         "6": 0.45
+        },
+        "kado_ahead_of_3": 0.5,
+        "top_start": {
+         "1": 0.1,
+         "2": 0.15,
+         "3": 0.15,
+         "4": 0.18,
+         "5": 0.2,
+         "6": 0.22
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(60%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -8891,7 +9592,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.473
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.122,
+         "makuri": 0.05
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.05,
+         "makurisashi": 0.052,
+         "sashi": 0.041
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.067,
+         "makurisashi": 0.052,
+         "sashi": 0.02
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.31,
+         "3": 0.59,
+         "4": 0.48,
+         "5": 0.31,
+         "6": 0.39
+        },
+        "kado_ahead_of_3": 0.48,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.17,
+         "3": 0.15,
+         "4": 0.15,
+         "5": 0.24,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(47%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -9539,7 +10294,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.514
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.098,
+         "makuri": 0.044
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.044,
+         "makurisashi": 0.047,
+         "sashi": 0.033
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.059,
+         "makurisashi": 0.047,
+         "sashi": 0.016
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.37,
+         "3": 0.44,
+         "4": 0.33,
+         "5": 0.56,
+         "6": 0.44
+        },
+        "kado_ahead_of_3": 0.33,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.15,
+         "3": 0.17,
+         "4": 0.23,
+         "5": 0.13,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(51%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -10188,7 +10997,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.751
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.046,
+         "makuri": 0.026
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.026,
+         "makurisashi": 0.032,
+         "sashi": 0.015
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.035,
+         "makurisashi": 0.032
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.56,
+         "3": 0.43,
+         "4": 0.59,
+         "5": 0.34,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.12,
+         "3": 0.13,
+         "4": 0.16,
+         "5": 0.22,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(75%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -10836,7 +11698,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.415
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.166,
+         "makuri": 0.039
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.039,
+         "makurisashi": 0.047,
+         "sashi": 0.055
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.052,
+         "makurisashi": 0.047,
+         "sashi": 0.028
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.48,
+         "3": 0.34,
+         "4": 0.59,
+         "5": 0.38,
+         "6": 0.38
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.18,
+         "3": 0.2,
+         "4": 0.16,
+         "5": 0.15,
+         "6": 0.11
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(42%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -11482,7 +12398,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.337
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.117,
+         "makuri": 0.07
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.07,
+         "makurisashi": 0.079,
+         "sashi": 0.039
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.093,
+         "makurisashi": 0.079,
+         "sashi": 0.02
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.33,
+         "3": 0.55,
+         "4": 0.58,
+         "5": 0.45,
+         "6": 0.5
+        },
+        "kado_ahead_of_3": 0.58,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.12,
+         "3": 0.11,
+         "4": 0.14,
+         "5": 0.22,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(34%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -12084,7 +13054,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.341
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.106,
+         "makuri": 0.066
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.066,
+         "makurisashi": 0.093,
+         "sashi": 0.035
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.088,
+         "makurisashi": 0.093,
+         "sashi": 0.018
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.57,
+         "4": 0.45,
+         "5": 0.34,
+         "6": 0.35
+        },
+        "kado_ahead_of_3": 0.45,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.18,
+         "3": 0.1,
+         "4": 0.2,
+         "5": 0.18,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(34%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -12732,7 +13756,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.531
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.085,
+         "makuri": 0.03
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.03,
+         "makurisashi": 0.083,
+         "sashi": 0.028
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.04,
+         "makurisashi": 0.083,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.5,
+         "3": 0.58,
+         "4": 0.51,
+         "5": 0.4,
+         "6": 0.32
+        },
+        "kado_ahead_of_3": 0.51,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.15,
+         "3": 0.15,
+         "4": 0.16,
+         "5": 0.15,
+         "6": 0.25
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(53%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -13380,7 +14458,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T14:17:00+09:00"
+       "locked_at": "2026-11-02T14:17:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.472
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.094,
+         "makuri": 0.046
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.046,
+         "makurisashi": 0.081,
+         "sashi": 0.031
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.062,
+         "makurisashi": 0.081,
+         "sashi": 0.016
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.56,
+         "3": 0.54,
+         "4": 0.59,
+         "5": 0.53,
+         "6": 0.38
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.23,
+         "3": 0.12,
+         "4": 0.14,
+         "5": 0.17,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(47%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -14071,7 +15203,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T14:45:00+09:00"
+       "locked_at": "2026-11-02T14:45:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.551
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.087,
+         "makuri": 0.032
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.032,
+         "makurisashi": 0.073,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.042,
+         "makurisashi": 0.073,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.51,
+         "3": 0.54,
+         "4": 0.31,
+         "5": 0.6,
+         "6": 0.54
+        },
+        "kado_ahead_of_3": 0.31,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.21,
+         "3": 0.11,
+         "4": 0.12,
+         "5": 0.21,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(55%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -14630,7 +15816,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:13:00+09:00"
+       "locked_at": "2026-11-02T15:13:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.683
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.086,
+         "makuri": 0.03
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.03,
+         "makurisashi": 0.024,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.04,
+         "makurisashi": 0.024,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.59,
+         "3": 0.35,
+         "4": 0.39,
+         "5": 0.53,
+         "6": 0.4
+        },
+        "kado_ahead_of_3": 0.39,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.2,
+         "3": 0.17,
+         "4": 0.12,
+         "5": 0.19,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(68%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -15154,7 +16394,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.851
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.031,
+         "makuri": 0.015
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.015,
+         "makurisashi": 0.017,
+         "sashi": 0.01
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.02,
+         "makurisashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.47,
+         "3": 0.48,
+         "4": 0.51,
+         "5": 0.43,
+         "6": 0.36
+        },
+        "kado_ahead_of_3": 0.51,
+        "top_start": {
+         "1": 0.16,
+         "2": 0.26,
+         "3": 0.13,
+         "4": 0.14,
+         "5": 0.15,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(85%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -15776,7 +17069,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.773
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.034,
+         "makuri": 0.022
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.022,
+         "makurisashi": 0.034,
+         "sashi": 0.011
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.029,
+         "makurisashi": 0.034
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.4,
+         "3": 0.53,
+         "4": 0.41,
+         "5": 0.35,
+         "6": 0.47
+        },
+        "kado_ahead_of_3": 0.41,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.14,
+         "3": 0.13,
+         "4": 0.15,
+         "5": 0.19,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(77%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -16424,7 +17770,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.716
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.047,
+         "makuri": 0.03
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.03,
+         "makurisashi": 0.033,
+         "sashi": 0.016
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.04,
+         "makurisashi": 0.033
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.47,
+         "3": 0.43,
+         "4": 0.43,
+         "5": 0.44,
+         "6": 0.38
+        },
+        "kado_ahead_of_3": 0.43,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.18,
+         "3": 0.18,
+         "4": 0.13,
+         "5": 0.16,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(72%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -17026,7 +18425,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.178
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.125,
+         "makuri": 0.089
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.089,
+         "makurisashi": 0.107,
+         "sashi": 0.042
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.118,
+         "makurisashi": 0.107,
+         "sashi": 0.021
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.53,
+         "3": 0.37,
+         "4": 0.38,
+         "5": 0.35,
+         "6": 0.56
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.21,
+         "3": 0.13,
+         "4": 0.13,
+         "5": 0.16,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(18%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -17628,7 +19081,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.359
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.151,
+         "makuri": 0.055
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.055,
+         "makurisashi": 0.065,
+         "sashi": 0.05
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.074,
+         "makurisashi": 0.065,
+         "sashi": 0.025
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.42,
+         "3": 0.59,
+         "4": 0.56,
+         "5": 0.35,
+         "6": 0.46
+        },
+        "kado_ahead_of_3": 0.56,
+        "top_start": {
+         "1": 0.16,
+         "2": 0.2,
+         "3": 0.16,
+         "4": 0.11,
+         "5": 0.14,
+         "6": 0.23
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(36%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -18230,7 +19737,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.139
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.14,
+         "makuri": 0.106
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.106,
+         "makurisashi": 0.093,
+         "sashi": 0.047
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.142,
+         "makurisashi": 0.093,
+         "sashi": 0.023
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.48,
+         "3": 0.35,
+         "4": 0.58,
+         "5": 0.57,
+         "6": 0.48
+        },
+        "kado_ahead_of_3": 0.58,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.2,
+         "3": 0.18,
+         "4": 0.23,
+         "5": 0.11,
+         "6": 0.14
+        }
+       },
+       "summary": {
+        "text": "本線: 4号艇のまくり(14%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -18878,7 +20439,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.637
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.086,
+         "makuri": 0.028
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.028,
+         "makurisashi": 0.041,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.037,
+         "makurisashi": 0.041,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.37,
+         "3": 0.33,
+         "4": 0.59,
+         "5": 0.35,
+         "6": 0.35
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.19,
+         "2": 0.16,
+         "3": 0.22,
+         "4": 0.15,
+         "5": 0.16,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(64%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -19394,7 +21009,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.646
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.066,
+         "makuri": 0.037
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.037,
+         "makurisashi": 0.029,
+         "sashi": 0.022
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.05,
+         "makurisashi": 0.029,
+         "sashi": 0.011
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.54,
+         "3": 0.59,
+         "4": 0.56,
+         "5": 0.54,
+         "6": 0.45
+        },
+        "kado_ahead_of_3": 0.56,
+        "top_start": {
+         "1": 0.22,
+         "2": 0.13,
+         "3": 0.18,
+         "4": 0.14,
+         "5": 0.17,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(65%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -19875,7 +21544,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.549
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.081,
+         "makuri": 0.044
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.044,
+         "makurisashi": 0.06,
+         "sashi": 0.027
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.059,
+         "makurisashi": 0.06,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.38,
+         "3": 0.52,
+         "4": 0.59,
+         "5": 0.55,
+         "6": 0.39
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.16,
+         "3": 0.2,
+         "4": 0.21,
+         "5": 0.18,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(55%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -20356,7 +22079,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.547
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.115,
+         "makuri": 0.026
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.026,
+         "makurisashi": 0.056,
+         "sashi": 0.038
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.035,
+         "makurisashi": 0.056,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.32,
+         "4": 0.56,
+         "5": 0.33,
+         "6": 0.34
+        },
+        "kado_ahead_of_3": 0.56,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.14,
+         "3": 0.22,
+         "4": 0.14,
+         "5": 0.12,
+         "6": 0.25
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(55%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -20837,7 +22614,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.324
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.184,
+         "makuri": 0.06
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.06,
+         "makurisashi": 0.056,
+         "sashi": 0.061
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.08,
+         "makurisashi": 0.056,
+         "sashi": 0.031
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.4,
+         "3": 0.45,
+         "4": 0.38,
+         "5": 0.45,
+         "6": 0.3
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.22,
+         "2": 0.16,
+         "3": 0.18,
+         "4": 0.17,
+         "5": 0.12,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(32%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -21318,7 +23149,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.533
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.093,
+         "makuri": 0.05
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.05,
+         "makurisashi": 0.053,
+         "sashi": 0.031
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.066,
+         "makurisashi": 0.053,
+         "sashi": 0.015
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.36,
+         "3": 0.52,
+         "4": 0.32,
+         "5": 0.44,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.32,
+        "top_start": {
+         "1": 0.23,
+         "2": 0.16,
+         "3": 0.13,
+         "4": 0.13,
+         "5": 0.14,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(53%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -21799,7 +23684,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.492
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.139,
+         "makuri": 0.032
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.032,
+         "makurisashi": 0.049,
+         "sashi": 0.046
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.043,
+         "makurisashi": 0.049,
+         "sashi": 0.023
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.39,
+         "3": 0.57,
+         "4": 0.33,
+         "5": 0.44,
+         "6": 0.6
+        },
+        "kado_ahead_of_3": 0.33,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.1,
+         "3": 0.24,
+         "4": 0.19,
+         "5": 0.17,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(49%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -22421,7 +24360,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.427
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.143,
+         "makuri": 0.032
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.032,
+         "makurisashi": 0.073,
+         "sashi": 0.048
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.042,
+         "makurisashi": 0.073,
+         "sashi": 0.024
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.6,
+         "3": 0.34,
+         "4": 0.52,
+         "5": 0.34,
+         "6": 0.59
+        },
+        "kado_ahead_of_3": 0.52,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.14,
+         "3": 0.25,
+         "4": 0.11,
+         "5": 0.2,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(43%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -23069,7 +25062,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.441
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.112,
+         "makuri": 0.053
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.053,
+         "makurisashi": 0.063,
+         "sashi": 0.037
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.071,
+         "makurisashi": 0.063,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.48,
+         "3": 0.57,
+         "4": 0.36,
+         "5": 0.42,
+         "6": 0.58
+        },
+        "kado_ahead_of_3": 0.36,
+        "top_start": {
+         "1": 0.1,
+         "2": 0.19,
+         "3": 0.19,
+         "4": 0.19,
+         "5": 0.21,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(44%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -23717,7 +25764,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.13
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.179,
+         "makuri": 0.075
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.075,
+         "makurisashi": 0.112,
+         "sashi": 0.06
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.1,
+         "makurisashi": 0.112,
+         "sashi": 0.03
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.36,
+         "3": 0.34,
+         "4": 0.39,
+         "5": 0.49,
+         "6": 0.36
+        },
+        "kado_ahead_of_3": 0.39,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.1,
+         "3": 0.18,
+         "4": 0.15,
+         "5": 0.23,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 2号艇のまくり(18%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -24405,7 +26506,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.607
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.095,
+         "makuri": 0.036
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.036,
+         "makurisashi": 0.038,
+         "sashi": 0.032
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.048,
+         "makurisashi": 0.038,
+         "sashi": 0.016
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.35,
+         "3": 0.49,
+         "4": 0.53,
+         "5": 0.39,
+         "6": 0.36
+        },
+        "kado_ahead_of_3": 0.53,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.18,
+         "3": 0.22,
+         "4": 0.15,
+         "5": 0.22,
+         "6": 0.11
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(61%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -25053,7 +27208,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.418
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.14,
+         "makuri": 0.06
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.06,
+         "makurisashi": 0.044,
+         "sashi": 0.047
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.08,
+         "makurisashi": 0.044,
+         "sashi": 0.023
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.37,
+         "3": 0.51,
+         "4": 0.42,
+         "5": 0.3,
+         "6": 0.49
+        },
+        "kado_ahead_of_3": 0.42,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.21,
+         "3": 0.16,
+         "4": 0.15,
+         "5": 0.18,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(42%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -25701,7 +27910,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.745
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.058,
+         "makuri": 0.019
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.019,
+         "makurisashi": 0.024,
+         "sashi": 0.019
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.026,
+         "makurisashi": 0.024
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.55,
+         "3": 0.55,
+         "4": 0.34,
+         "5": 0.42,
+         "6": 0.57
+        },
+        "kado_ahead_of_3": 0.34,
+        "top_start": {
+         "1": 0.23,
+         "2": 0.16,
+         "3": 0.18,
+         "4": 0.12,
+         "5": 0.18,
+         "6": 0.13
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(74%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -26349,7 +28611,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.583
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.089,
+         "makuri": 0.037
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.037,
+         "makurisashi": 0.049,
+         "sashi": 0.03
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.049,
+         "makurisashi": 0.049,
+         "sashi": 0.015
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.57,
+         "3": 0.55,
+         "4": 0.38,
+         "5": 0.38,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.17,
+         "3": 0.18,
+         "4": 0.22,
+         "5": 0.17,
+         "6": 0.14
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(58%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -26870,7 +29186,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T14:17:00+09:00"
+       "locked_at": "2026-11-02T14:17:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.592
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.078,
+         "makuri": 0.053
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.053,
+         "makurisashi": 0.033,
+         "sashi": 0.026
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.071,
+         "makurisashi": 0.033,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.53,
+         "3": 0.4,
+         "4": 0.6,
+         "5": 0.38,
+         "6": 0.35
+        },
+        "kado_ahead_of_3": 0.6,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.11,
+         "3": 0.25,
+         "4": 0.19,
+         "5": 0.13,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(59%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -27561,7 +29931,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T14:45:00+09:00"
+       "locked_at": "2026-11-02T14:45:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.588
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.08,
+         "makuri": 0.038
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.038,
+         "makurisashi": 0.05,
+         "sashi": 0.027
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.051,
+         "makurisashi": 0.05,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.46,
+         "3": 0.46,
+         "4": 0.35,
+         "5": 0.38,
+         "6": 0.37
+        },
+        "kado_ahead_of_3": 0.35,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.14,
+         "3": 0.25,
+         "4": 0.13,
+         "5": 0.19,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(59%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -28120,7 +30544,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:13:00+09:00"
+       "locked_at": "2026-11-02T15:13:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.648
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.078,
+         "makuri": 0.031
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.031,
+         "makurisashi": 0.038,
+         "sashi": 0.026
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.042,
+         "makurisashi": 0.038,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.51,
+         "3": 0.55,
+         "4": 0.58,
+         "5": 0.46,
+         "6": 0.55
+        },
+        "kado_ahead_of_3": 0.58,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.18,
+         "3": 0.16,
+         "4": 0.17,
+         "5": 0.17,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(65%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -28644,7 +31122,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.738
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.067,
+         "makuri": 0.023
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.023,
+         "makurisashi": 0.02,
+         "sashi": 0.022
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.031,
+         "makurisashi": 0.02,
+         "sashi": 0.011
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.42,
+         "3": 0.41,
+         "4": 0.32,
+         "5": 0.41,
+         "6": 0.31
+        },
+        "kado_ahead_of_3": 0.32,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.18,
+         "3": 0.15,
+         "4": 0.17,
+         "5": 0.17,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(74%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -29266,7 +31798,60 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:03:00+09:00"
+       "locked_at": "2026-11-02T15:03:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.63
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.056,
+         "makuri": 0.041
+        },
+        {
+         "entry": 6,
+         "course": 3,
+         "makuri": 0.041,
+         "makurisashi": 0.046,
+         "sashi": 0.019
+        },
+        {
+         "entry": 3,
+         "course": 4,
+         "makuri": 0.054,
+         "makurisashi": 0.046
+        },
+        {
+         "entry": 4,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.38,
+         "3": 0.4,
+         "4": 0.51,
+         "5": 0.54,
+         "6": 0.32
+        },
+        "kado_ahead_of_3": 0.51,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.19,
+         "6": 0.16,
+         "3": 0.14,
+         "4": 0.19,
+         "5": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(63%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -29790,7 +32375,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:31:00+09:00"
+       "locked_at": "2026-11-02T15:31:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.583
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.086,
+         "makuri": 0.037
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.037,
+         "makurisashi": 0.05,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.05,
+         "makurisashi": 0.05,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.42,
+         "3": 0.49,
+         "4": 0.55,
+         "5": 0.48,
+         "6": 0.33
+        },
+        "kado_ahead_of_3": 0.55,
+        "top_start": {
+         "1": 0.16,
+         "2": 0.14,
+         "3": 0.17,
+         "4": 0.15,
+         "5": 0.21,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(58%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -30283,7 +32922,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.32
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.183,
+         "makuri": 0.049
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.049,
+         "makurisashi": 0.061,
+         "sashi": 0.061
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.066,
+         "makurisashi": 0.061,
+         "sashi": 0.03
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.37,
+         "3": 0.44,
+         "4": 0.47,
+         "5": 0.37,
+         "6": 0.34
+        },
+        "kado_ahead_of_3": 0.47,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.18,
+         "3": 0.14,
+         "4": 0.21,
+         "5": 0.19,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(32%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -30764,7 +33457,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.398
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.171,
+         "makuri": 0.04
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.04,
+         "makurisashi": 0.056,
+         "sashi": 0.057
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.053,
+         "makurisashi": 0.056,
+         "sashi": 0.028
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.35,
+         "3": 0.5,
+         "4": 0.33,
+         "5": 0.32,
+         "6": 0.3
+        },
+        "kado_ahead_of_3": 0.33,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.19,
+         "3": 0.2,
+         "4": 0.12,
+         "5": 0.13,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(40%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -31245,7 +33992,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.611
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.067,
+         "makuri": 0.04
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.04,
+         "makurisashi": 0.048,
+         "sashi": 0.022
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.054,
+         "makurisashi": 0.048,
+         "sashi": 0.011
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.56,
+         "3": 0.42,
+         "4": 0.53,
+         "5": 0.47,
+         "6": 0.48
+        },
+        "kado_ahead_of_3": 0.53,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.2,
+         "3": 0.14,
+         "4": 0.19,
+         "5": 0.14,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(61%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -31726,7 +34527,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.562
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.085,
+         "makuri": 0.053
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.053,
+         "makurisashi": 0.03,
+         "sashi": 0.028
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.071,
+         "makurisashi": 0.03,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.36,
+         "3": 0.55,
+         "4": 0.3,
+         "5": 0.47,
+         "6": 0.37
+        },
+        "kado_ahead_of_3": 0.3,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.21,
+         "3": 0.17,
+         "4": 0.14,
+         "5": 0.21,
+         "6": 0.13
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(56%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -32207,7 +35062,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.565
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.1,
+         "makuri": 0.045
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.045,
+         "makurisashi": 0.04,
+         "sashi": 0.033
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.06,
+         "makurisashi": 0.04,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.48,
+         "4": 0.32,
+         "5": 0.51,
+         "6": 0.44
+        },
+        "kado_ahead_of_3": 0.32,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.14,
+         "3": 0.22,
+         "4": 0.17,
+         "5": 0.18,
+         "6": 0.09
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(56%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -32688,7 +35597,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.538
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.074,
+         "makuri": 0.061
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.061,
+         "makurisashi": 0.033,
+         "sashi": 0.025
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.081,
+         "makurisashi": 0.033,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.53,
+         "3": 0.31,
+         "4": 0.6,
+         "5": 0.57,
+         "6": 0.56
+        },
+        "kado_ahead_of_3": 0.6,
+        "top_start": {
+         "1": 0.19,
+         "2": 0.1,
+         "3": 0.18,
+         "4": 0.16,
+         "5": 0.2,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(54%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -33169,7 +36132,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.414
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.1,
+         "makuri": 0.061
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.061,
+         "makurisashi": 0.067,
+         "sashi": 0.033
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.081,
+         "makurisashi": 0.067,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.5,
+         "3": 0.55,
+         "4": 0.39,
+         "5": 0.58,
+         "6": 0.36
+        },
+        "kado_ahead_of_3": 0.39,
+        "top_start": {
+         "1": 0.27,
+         "2": 0.12,
+         "3": 0.19,
+         "4": 0.15,
+         "5": 0.15,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(41%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -33619,7 +36636,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.302
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.195,
+         "makuri": 0.053
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.053,
+         "makurisashi": 0.052,
+         "sashi": 0.065
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.07,
+         "makurisashi": 0.052,
+         "sashi": 0.033
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.33,
+         "3": 0.56,
+         "4": 0.52,
+         "5": 0.57,
+         "6": 0.55
+        },
+        "kado_ahead_of_3": 0.52,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.16,
+         "3": 0.15,
+         "4": 0.22,
+         "5": 0.11,
+         "6": 0.22
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(30%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -34100,7 +37171,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.689
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.063,
+         "makuri": 0.032
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.032,
+         "makurisashi": 0.033,
+         "sashi": 0.021
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.042,
+         "makurisashi": 0.033,
+         "sashi": 0.011
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.4,
+         "3": 0.44,
+         "4": 0.54,
+         "5": 0.47,
+         "6": 0.56
+        },
+        "kado_ahead_of_3": 0.54,
+        "top_start": {
+         "1": 0.19,
+         "2": 0.2,
+         "3": 0.15,
+         "4": 0.1,
+         "5": 0.19,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(69%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -34581,7 +37706,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.526
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.088,
+         "makuri": 0.039
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.039,
+         "makurisashi": 0.065,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.052,
+         "makurisashi": 0.065,
+         "sashi": 0.015
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.34,
+         "3": 0.56,
+         "4": 0.32,
+         "5": 0.45,
+         "6": 0.45
+        },
+        "kado_ahead_of_3": 0.32,
+        "top_start": {
+         "1": 0.23,
+         "2": 0.18,
+         "3": 0.15,
+         "4": 0.16,
+         "5": 0.11,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(53%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -35203,7 +38382,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:03:00+09:00"
+       "locked_at": "2026-11-02T15:03:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.681
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.069,
+         "makuri": 0.034
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.034,
+         "makurisashi": 0.027,
+         "sashi": 0.023
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.045,
+         "makurisashi": 0.027,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.58,
+         "4": 0.42,
+         "5": 0.47,
+         "6": 0.44
+        },
+        "kado_ahead_of_3": 0.42,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.13,
+         "3": 0.18,
+         "4": 0.23,
+         "5": 0.12,
+         "6": 0.13
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(68%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -35727,7 +38960,60 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:31:00+09:00"
+       "locked_at": "2026-11-02T15:31:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.814
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.037,
+         "makuri": 0.013
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.013,
+         "makurisashi": 0.024,
+         "sashi": 0.012
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.018,
+         "makurisashi": 0.024
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.35,
+         "4": 0.55,
+         "5": 0.33,
+         "6": 0.38
+        },
+        "kado_ahead_of_3": 0.55,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.13,
+         "3": 0.17,
+         "4": 0.16,
+         "5": 0.2,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(81%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -36251,7 +39537,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.53
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.151,
+         "makuri": 0.029
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.029,
+         "makurisashi": 0.037,
+         "sashi": 0.05
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.038,
+         "makurisashi": 0.037,
+         "sashi": 0.025
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.36,
+         "3": 0.56,
+         "4": 0.3,
+         "5": 0.58,
+         "6": 0.4
+        },
+        "kado_ahead_of_3": 0.3,
+        "top_start": {
+         "1": 0.19,
+         "2": 0.17,
+         "3": 0.21,
+         "4": 0.13,
+         "5": 0.1,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(53%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -36732,7 +40072,60 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.626
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.057,
+         "makuri": 0.041
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.041,
+         "makurisashi": 0.049,
+         "sashi": 0.019
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.055,
+         "makurisashi": 0.049
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.5,
+         "3": 0.35,
+         "4": 0.59,
+         "5": 0.4,
+         "6": 0.57
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.21,
+         "3": 0.13,
+         "4": 0.14,
+         "5": 0.21,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(63%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -37213,7 +40606,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.28
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.127,
+         "makuri": 0.063
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.063,
+         "makurisashi": 0.099,
+         "sashi": 0.042
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.084,
+         "makurisashi": 0.099,
+         "sashi": 0.021
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.44,
+         "3": 0.6,
+         "4": 0.38,
+         "5": 0.38,
+         "6": 0.42
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.17,
+         "3": 0.22,
+         "4": 0.15,
+         "5": 0.14,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(28%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -37694,7 +41141,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.544
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.1,
+         "makuri": 0.042
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.042,
+         "makurisashi": 0.051,
+         "sashi": 0.033
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.056,
+         "makurisashi": 0.051,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.44,
+         "4": 0.55,
+         "5": 0.55,
+         "6": 0.32
+        },
+        "kado_ahead_of_3": 0.55,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.13,
+         "3": 0.15,
+         "4": 0.22,
+         "5": 0.12,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(54%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -38175,7 +41676,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.471
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.131,
+         "makuri": 0.042
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.042,
+         "makurisashi": 0.062,
+         "sashi": 0.044
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.056,
+         "makurisashi": 0.062,
+         "sashi": 0.022
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.42,
+         "3": 0.42,
+         "4": 0.32,
+         "5": 0.41,
+         "6": 0.32
+        },
+        "kado_ahead_of_3": 0.32,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.17,
+         "3": 0.22,
+         "4": 0.12,
+         "5": 0.16,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(47%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -38656,7 +42211,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.456
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.143,
+         "makuri": 0.038
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.038,
+         "makurisashi": 0.049,
+         "sashi": 0.048
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.051,
+         "makurisashi": 0.049,
+         "sashi": 0.024
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.5,
+         "3": 0.47,
+         "4": 0.41,
+         "5": 0.37,
+         "6": 0.42
+        },
+        "kado_ahead_of_3": 0.41,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.18,
+         "3": 0.12,
+         "4": 0.16,
+         "5": 0.2,
+         "6": 0.2
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(46%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -39137,7 +42746,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.631
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.095,
+         "makuri": 0.024
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.024,
+         "makurisashi": 0.049,
+         "sashi": 0.032
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.032,
+         "makurisashi": 0.049,
+         "sashi": 0.016
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.33,
+         "3": 0.35,
+         "4": 0.36,
+         "5": 0.53,
+         "6": 0.34
+        },
+        "kado_ahead_of_3": 0.36,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.2,
+         "3": 0.15,
+         "4": 0.21,
+         "5": 0.14,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(63%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -39618,7 +43281,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.638
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.085,
+         "makuri": 0.039
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.039,
+         "makurisashi": 0.023,
+         "sashi": 0.028
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.052,
+         "makurisashi": 0.023,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.46,
+         "3": 0.49,
+         "4": 0.47,
+         "5": 0.35,
+         "6": 0.49
+        },
+        "kado_ahead_of_3": 0.47,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.14,
+         "3": 0.21,
+         "4": 0.21,
+         "5": 0.11,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(64%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -40099,7 +43816,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.338
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.167,
+         "makuri": 0.048
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.048,
+         "makurisashi": 0.058,
+         "sashi": 0.056
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.064,
+         "makurisashi": 0.058,
+         "sashi": 0.028
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.3,
+         "3": 0.34,
+         "4": 0.34,
+         "5": 0.49,
+         "6": 0.34
+        },
+        "kado_ahead_of_3": 0.34,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.18,
+         "3": 0.16,
+         "4": 0.2,
+         "5": 0.22,
+         "6": 0.11
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(34%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -40580,7 +44351,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.51
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.113,
+         "makuri": 0.051
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.051,
+         "makurisashi": 0.04,
+         "sashi": 0.038
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.068,
+         "makurisashi": 0.04,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.57,
+         "3": 0.42,
+         "4": 0.59,
+         "5": 0.57,
+         "6": 0.47
+        },
+        "kado_ahead_of_3": 0.59,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.15,
+         "3": 0.15,
+         "4": 0.12,
+         "5": 0.18,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(51%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -41075,7 +44900,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.445
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.113,
+         "makuri": 0.038
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.038,
+         "makurisashi": 0.073,
+         "sashi": 0.038
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.051,
+         "makurisashi": 0.073,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.35,
+         "3": 0.4,
+         "4": 0.34,
+         "5": 0.31,
+         "6": 0.56
+        },
+        "kado_ahead_of_3": 0.34,
+        "top_start": {
+         "1": 0.23,
+         "2": 0.12,
+         "3": 0.18,
+         "4": 0.14,
+         "5": 0.17,
+         "6": 0.16
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(44%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -41596,7 +45475,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.465
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.14,
+         "makuri": 0.043
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.043,
+         "makurisashi": 0.048,
+         "sashi": 0.047
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.058,
+         "makurisashi": 0.048,
+         "sashi": 0.023
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.54,
+         "3": 0.36,
+         "4": 0.54,
+         "5": 0.38,
+         "6": 0.38
+        },
+        "kado_ahead_of_3": 0.54,
+        "top_start": {
+         "1": 0.12,
+         "2": 0.13,
+         "3": 0.21,
+         "4": 0.25,
+         "5": 0.16,
+         "6": 0.13
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(46%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -42117,7 +46050,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.54
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.101,
+         "makuri": 0.051
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.051,
+         "makurisashi": 0.041,
+         "sashi": 0.034
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.068,
+         "makurisashi": 0.041,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.54,
+         "3": 0.6,
+         "4": 0.5,
+         "5": 0.48,
+         "6": 0.59
+        },
+        "kado_ahead_of_3": 0.5,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.13,
+         "3": 0.11,
+         "4": 0.15,
+         "5": 0.18,
+         "6": 0.22
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(54%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -42638,7 +46625,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.374
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.115,
+         "makuri": 0.045
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.045,
+         "makurisashi": 0.098,
+         "sashi": 0.038
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.06,
+         "makurisashi": 0.098,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.38,
+         "3": 0.33,
+         "4": 0.4,
+         "5": 0.48,
+         "6": 0.57
+        },
+        "kado_ahead_of_3": 0.4,
+        "top_start": {
+         "1": 0.22,
+         "2": 0.15,
+         "3": 0.12,
+         "4": 0.2,
+         "5": 0.16,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(37%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -43159,7 +47200,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.387
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.11,
+         "makuri": 0.058
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.058,
+         "makurisashi": 0.081,
+         "sashi": 0.037
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.077,
+         "makurisashi": 0.081,
+         "sashi": 0.018
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.57,
+         "3": 0.41,
+         "4": 0.46,
+         "5": 0.32,
+         "6": 0.57
+        },
+        "kado_ahead_of_3": 0.46,
+        "top_start": {
+         "1": 0.14,
+         "2": 0.21,
+         "3": 0.18,
+         "4": 0.15,
+         "5": 0.17,
+         "6": 0.15
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(39%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -43683,7 +47778,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.444
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.116,
+         "makuri": 0.053
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.053,
+         "makurisashi": 0.066,
+         "sashi": 0.039
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.071,
+         "makurisashi": 0.066,
+         "sashi": 0.019
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.31,
+         "3": 0.6,
+         "4": 0.46,
+         "5": 0.31,
+         "6": 0.43
+        },
+        "kado_ahead_of_3": 0.46,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.15,
+         "3": 0.13,
+         "4": 0.17,
+         "5": 0.21,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(44%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -44173,7 +48322,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.345
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.125,
+         "makuri": 0.068
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.068,
+         "makurisashi": 0.057,
+         "sashi": 0.042
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.091,
+         "makurisashi": 0.057,
+         "sashi": 0.021
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.44,
+         "3": 0.58,
+         "4": 0.5,
+         "5": 0.44,
+         "6": 0.36
+        },
+        "kado_ahead_of_3": 0.5,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.19,
+         "3": 0.18,
+         "4": 0.16,
+         "5": 0.14,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(34%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -44694,7 +48897,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.503
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.101,
+         "makuri": 0.039
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.039,
+         "makurisashi": 0.069,
+         "sashi": 0.034
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.052,
+         "makurisashi": 0.069,
+         "sashi": 0.017
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.55,
+         "3": 0.41,
+         "4": 0.38,
+         "5": 0.41,
+         "6": 0.48
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.11,
+         "2": 0.26,
+         "3": 0.14,
+         "4": 0.15,
+         "5": 0.13,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(50%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -45184,7 +49441,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.331
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.127,
+         "makuri": 0.071
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.071,
+         "makurisashi": 0.059,
+         "sashi": 0.042
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.095,
+         "makurisashi": 0.059,
+         "sashi": 0.021
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.53,
+         "3": 0.31,
+         "4": 0.55,
+         "5": 0.39,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.55,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.19,
+         "3": 0.2,
+         "4": 0.1,
+         "5": 0.22,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(33%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -45674,7 +49985,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.318
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.137,
+         "makuri": 0.045
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.045,
+         "makurisashi": 0.101,
+         "sashi": 0.046
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.06,
+         "makurisashi": 0.101,
+         "sashi": 0.023
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.59,
+         "4": 0.38,
+         "5": 0.51,
+         "6": 0.33
+        },
+        "kado_ahead_of_3": 0.38,
+        "top_start": {
+         "1": 0.13,
+         "2": 0.24,
+         "3": 0.13,
+         "4": 0.24,
+         "5": 0.12,
+         "6": 0.14
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(32%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -46164,7 +50529,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.259
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.128,
+         "makuri": 0.063
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.063,
+         "makurisashi": 0.096,
+         "sashi": 0.043
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.084,
+         "makurisashi": 0.096,
+         "sashi": 0.021
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.46,
+         "4": 0.52,
+         "5": 0.59,
+         "6": 0.47
+        },
+        "kado_ahead_of_3": 0.52,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.12,
+         "3": 0.21,
+         "4": 0.1,
+         "5": 0.18,
+         "6": 0.21
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(26%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -46685,7 +51104,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.613
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.08,
+         "makuri": 0.027
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.027,
+         "makurisashi": 0.062,
+         "sashi": 0.027
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.036,
+         "makurisashi": 0.062,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.4,
+         "3": 0.34,
+         "4": 0.6,
+         "5": 0.55,
+         "6": 0.5
+        },
+        "kado_ahead_of_3": 0.6,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.16,
+         "3": 0.14,
+         "4": 0.19,
+         "5": 0.13,
+         "6": 0.23
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(61%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -47342,7 +51815,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:03:00+09:00"
+       "locked_at": "2026-11-02T15:03:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.671
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.087,
+         "makuri": 0.02
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.02,
+         "makurisashi": 0.043,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.026,
+         "makurisashi": 0.043,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.54,
+         "3": 0.42,
+         "4": 0.4,
+         "5": 0.53,
+         "6": 0.31
+        },
+        "kado_ahead_of_3": 0.4,
+        "top_start": {
+         "1": 0.15,
+         "2": 0.18,
+         "3": 0.2,
+         "4": 0.2,
+         "5": 0.13,
+         "6": 0.14
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(67%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -47866,7 +52393,61 @@
        "course1_entry": 1,
        "version": "preview",
        "model_id": "preview_20261001_sample",
-       "locked_at": "2026-11-02T15:31:00+09:00"
+       "locked_at": "2026-11-02T15:31:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.675
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.086,
+         "makuri": 0.031
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.031,
+         "makurisashi": 0.022,
+         "sashi": 0.029
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.041,
+         "makurisashi": 0.022,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.57,
+         "4": 0.37,
+         "5": 0.47,
+         "6": 0.43
+        },
+        "kado_ahead_of_3": 0.37,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.18,
+         "3": 0.17,
+         "4": 0.13,
+         "5": 0.18,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(68%)。"
+       },
+       "detail_version": "preview"
       }
      },
      "preview_info": {
@@ -48390,7 +52971,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.644
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.069,
+         "makuri": 0.041
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.041,
+         "makurisashi": 0.025,
+         "sashi": 0.023
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.054,
+         "makurisashi": 0.025,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.55,
+         "3": 0.38,
+         "4": 0.49,
+         "5": 0.51,
+         "6": 0.44
+        },
+        "kado_ahead_of_3": 0.49,
+        "top_start": {
+         "1": 0.2,
+         "2": 0.2,
+         "3": 0.17,
+         "4": 0.11,
+         "5": 0.13,
+         "6": 0.19
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(64%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -48871,7 +53506,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.665
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.075,
+         "makuri": 0.034
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.034,
+         "makurisashi": 0.023,
+         "sashi": 0.025
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.046,
+         "makurisashi": 0.023,
+         "sashi": 0.013
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.45,
+         "3": 0.36,
+         "4": 0.44,
+         "5": 0.46,
+         "6": 0.31
+        },
+        "kado_ahead_of_3": 0.44,
+        "top_start": {
+         "1": 0.16,
+         "2": 0.15,
+         "3": 0.12,
+         "4": 0.13,
+         "5": 0.27,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(66%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -49352,7 +54041,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.601
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.106,
+         "makuri": 0.025
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.025,
+         "makurisashi": 0.039,
+         "sashi": 0.035
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.034,
+         "makurisashi": 0.039,
+         "sashi": 0.018
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.33,
+         "4": 0.55,
+         "5": 0.44,
+         "6": 0.52
+        },
+        "kado_ahead_of_3": 0.55,
+        "top_start": {
+         "1": 0.1,
+         "2": 0.14,
+         "3": 0.21,
+         "4": 0.17,
+         "5": 0.2,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(60%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -49833,7 +54576,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.392
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.085,
+         "makuri": 0.067
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.067,
+         "makurisashi": 0.075,
+         "sashi": 0.028
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.09,
+         "makurisashi": 0.075,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.31,
+         "3": 0.38,
+         "4": 0.5,
+         "5": 0.58,
+         "6": 0.59
+        },
+        "kado_ahead_of_3": 0.5,
+        "top_start": {
+         "1": 0.17,
+         "2": 0.22,
+         "3": 0.11,
+         "4": 0.15,
+         "5": 0.12,
+         "6": 0.23
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(39%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -50314,7 +55111,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.629
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.07,
+         "makuri": 0.041
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.041,
+         "makurisashi": 0.034,
+         "sashi": 0.023
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.055,
+         "makurisashi": 0.034,
+         "sashi": 0.012
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.31,
+         "3": 0.55,
+         "4": 0.33,
+         "5": 0.41,
+         "6": 0.53
+        },
+        "kado_ahead_of_3": 0.33,
+        "top_start": {
+         "1": 0.19,
+         "2": 0.14,
+         "3": 0.2,
+         "4": 0.14,
+         "5": 0.21,
+         "6": 0.12
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(63%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -50795,7 +55646,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.562
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.085,
+         "makuri": 0.031
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.031,
+         "makurisashi": 0.058,
+         "sashi": 0.028
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.041,
+         "makurisashi": 0.058,
+         "sashi": 0.014
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.46,
+         "3": 0.48,
+         "4": 0.48,
+         "5": 0.47,
+         "6": 0.39
+        },
+        "kado_ahead_of_3": 0.48,
+        "top_start": {
+         "1": 0.25,
+         "2": 0.15,
+         "3": 0.12,
+         "4": 0.13,
+         "5": 0.12,
+         "6": 0.23
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(56%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -51276,7 +56181,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.141
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.211,
+         "makuri": 0.059
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.059,
+         "makurisashi": 0.117,
+         "sashi": 0.07
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.078,
+         "makurisashi": 0.117,
+         "sashi": 0.035
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.49,
+         "3": 0.39,
+         "4": 0.47,
+         "5": 0.34,
+         "6": 0.5
+        },
+        "kado_ahead_of_3": 0.47,
+        "top_start": {
+         "1": 0.11,
+         "2": 0.18,
+         "3": 0.19,
+         "4": 0.16,
+         "5": 0.19,
+         "6": 0.17
+        }
+       },
+       "summary": {
+        "text": "本線: 2号艇のまくり(21%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -51767,7 +56726,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.622
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.09,
+         "makuri": 0.036
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.036,
+         "makurisashi": 0.028,
+         "sashi": 0.03
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.048,
+         "makurisashi": 0.028,
+         "sashi": 0.015
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.52,
+         "3": 0.38,
+         "4": 0.42,
+         "5": 0.43,
+         "6": 0.51
+        },
+        "kado_ahead_of_3": 0.42,
+        "top_start": {
+         "1": 0.18,
+         "2": 0.2,
+         "3": 0.11,
+         "4": 0.12,
+         "5": 0.21,
+         "6": 0.18
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(62%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
@@ -52248,7 +57261,61 @@
        "course1_entry": 1,
        "version": "pre",
        "model_id": "pre_20261001_sample",
-       "locked_at": "2026-11-02T07:30:00+09:00"
+       "locked_at": "2026-11-02T07:30:00+09:00",
+       "by_boat": [
+        {
+         "entry": 1,
+         "course": 1,
+         "nige": 0.635
+        },
+        {
+         "entry": 2,
+         "course": 2,
+         "sashi": 0.092,
+         "makuri": 0.029
+        },
+        {
+         "entry": 3,
+         "course": 3,
+         "makuri": 0.029,
+         "makurisashi": 0.035,
+         "sashi": 0.031
+        },
+        {
+         "entry": 4,
+         "course": 4,
+         "makuri": 0.039,
+         "makurisashi": 0.035,
+         "sashi": 0.015
+        },
+        {
+         "entry": 5,
+         "course": 5,
+         "makurisashi": 0.012
+        }
+       ],
+       "start": {
+        "ahead_of_inner": {
+         "2": 0.47,
+         "3": 0.41,
+         "4": 0.54,
+         "5": 0.59,
+         "6": 0.37
+        },
+        "kado_ahead_of_3": 0.54,
+        "top_start": {
+         "1": 0.21,
+         "2": 0.2,
+         "3": 0.2,
+         "4": 0.19,
+         "5": 0.11,
+         "6": 0.09
+        }
+       },
+       "summary": {
+        "text": "本線: 1号艇の逃げ(64%)。"
+       },
+       "detail_version": "pre"
       }
      },
      "preview_info": null,
