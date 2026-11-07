@@ -193,5 +193,88 @@
     return s;
   }
 
-  global.BRCharts = {wilson, calibration, pnl, yen, trend, hbars, stacked, heatmap, nClass, RULES};
+
+  // ===================== v1.1 追加(展開予想の拡張・仮想の購入者) =====================
+  /** 線の見分け方(色 + 線の形 + 端の印)。slot 0〜3 と基準。CSS の .ln-s1〜s4 / .ln-base が色を持つ */
+  const LINE_STYLES = [
+    {cls: 'ln-s1', dash: '', marker: 'circle', name: '実線・●'},
+    {cls: 'ln-s2', dash: '7 4', marker: 'square', name: '破線・■'},
+    {cls: 'ln-s3', dash: '2 3', marker: 'triangle', name: '点線・▲'},
+    {cls: 'ln-s4', dash: '9 3 2 3', marker: 'diamond', name: '一点鎖線・◆'},
+  ];
+  const BASE_STYLE = {cls: 'ln-base', dash: '4 4', marker: 'none', name: '灰の破線'};
+  function markerSvg(kind, cx, cy, cls) {
+    if (kind === 'square') return `<rect class="mk ${cls}" x="${cx - 4}" y="${cy - 4}" width="8" height="8"/>`;
+    if (kind === 'triangle') return `<path class="mk ${cls}" d="M${cx} ${cy - 5}L${cx + 5} ${cy + 4}H${cx - 5}Z"/>`;
+    if (kind === 'diamond') return `<path class="mk ${cls}" d="M${cx} ${cy - 5}L${cx + 5} ${cy}L${cx} ${cy + 5}L${cx - 5} ${cy}Z"/>`;
+    if (kind === 'circle') return `<circle class="mk ${cls}" cx="${cx}" cy="${cy}" r="4"/>`;
+    return '';
+  }
+  /** 凡例やチップに置く線の見本(小さな SVG) */
+  function lineSwatch(slot) {
+    const st = slot === 'base' ? BASE_STYLE : LINE_STYLES[slot];
+    return `<svg class="ln-swatch" viewBox="0 0 28 10" aria-hidden="true"><line class="ln ${st.cls}" x1="1" x2="27" y1="5" y2="5" stroke-dasharray="${st.dash}"/>${markerSvg(st.marker, 14, 5, st.cls)}</svg>`;
+  }
+
+  /**
+   * 多系列の折れ線(仮想の購入者の累計収支など。値は円)。
+   * series: [{name, values:[円 or null], base?: true}]。base の系列は灰の破線・「(基準)」。それ以外は渡した順に slot 0〜3(最大4本)。
+   * 0円の基準線、端に名前(重ならないよう上下にずらす)、opts.marks(縦線の注記)。opts.format: 'yen'(既定)/ 'pct'。
+   */
+  function lines(series, labels, opts = {}) {
+    const W = opts.width || 360, H = opts.height || 240, L = 54, R = 92, T = 16, B = 26;
+    const vals = series.flatMap(s => s.values.filter(v => v != null)).concat([0]);
+    const step = niceStep((Math.max(...vals) - Math.min(...vals)) / 4 || 1000);
+    const y0 = Math.floor(Math.min(...vals) / step) * step, y1 = Math.ceil(Math.max(...vals) / step) * step;
+    const x = i => L + (labels.length > 1 ? i * (W - L - R) / (labels.length - 1) : 0);
+    const y = v => T + (1 - (v - y0) / (y1 - y0 || 1)) * (H - T - B);
+    const fmt = v => opts.format === 'pct' ? `${Math.round(v * 100)}%` : yen(v);
+    let s = `<svg class="chart lines" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label || '累計収支の推移')}">`;
+    for (let v = y0; v <= y1 + 1e-9; v += step) s += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+    s += `<line class="zero" x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}"/><text class="zero-lbl" x="${L + 4}" y="${y(0) - 4}">0円</text>`;
+    (opts.marks || []).forEach(m => { s += `<line class="vmark" x1="${x(m.at)}" x2="${x(m.at)}" y1="${T}" y2="${H - B}"/><text class="vmark-lbl" x="${x(m.at) + 3}" y="${T + 8}">${esc(m.label)}</text>`; });
+    let slot = 0; const ends = [];
+    series.forEach(sr => {
+      const st = sr.base ? BASE_STYLE : LINE_STYLES[slot++ % LINE_STYLES.length];
+      const pts = sr.values.map((v, i) => v == null ? null : [x(i), y(v)]);
+      let d = '', pen = false;
+      pts.forEach(p => { if (!p) { pen = false; return; } d += `${pen ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`; pen = true; });
+      s += `<path class="ln ${st.cls}${sr.lown ? ' is-lown' : ''}" d="${d}" stroke-dasharray="${st.dash}"><title>${esc(sr.name)}</title></path>`;
+      const li = sr.values.map((v, i) => v == null ? -1 : i).filter(i => i >= 0).pop();
+      if (li != null) { s += markerSvg(st.marker, x(li), y(sr.values[li]), st.cls); ends.push({y: y(sr.values[li]), name: sr.name + (sr.base ? '(基準)' : ''), v: sr.values[li], cls: st.cls}); }
+    });
+    // 端の名前: y でならべ、12px 以上あける
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+    ends.forEach(e => { s += `<text class="end-lbl ${e.cls}" x="${W - R + 8}" y="${e.y + 4}">${esc(e.name)}</text>`; });
+    s += `<text x="${L}" y="${H - 6}">${esc(labels[0] || '')}</text><text x="${W - R}" y="${H - 6}" text-anchor="end">${esc(labels[labels.length - 1] || '')}</text>`;
+    return s + '</svg>';
+  }
+
+  /**
+   * スタート隊形(HTML)。courses: [{course:1〜6, entry:枠番}]、start: spec/10 3.4 の tenkai.start。
+   * 行 = コース(上が1コース)。各行に「内側より先に出る確率」(▲矢印 + % + 棒)と「トップスタート」(棒 + %、最大に★)。
+   * 4コースは「カド」の札、上に「カドが3コースより先 52%」の帯。
+   */
+  function startFormation(courses, start, opts = {}) {
+    const ahead = start.ahead_of_inner || {}, top = start.top_start || {};
+    const topMax = Math.max(...Object.values(top));
+    const kado = start.kado_ahead_of_3;
+    let s = '<div class="sform">';
+    if (kado != null) s += `<div class="sform__kado"><span class="kado-tag">カド</span>4コースが3コースより先に出る確率<b class="num">${Math.round(kado * 100)}%</b><span class="sform__meter" style="--p:${kado}"><i></i></span></div>`;
+    s += '<div class="sform__head"><span>コース</span><span>すぐ内側より先に出る</span><span>トップスタート</span></div>';
+    courses.slice().sort((a, b) => a.course - b.course).forEach(c => {
+      const a = ahead[String(c.course)], t = top[String(c.entry)];
+      s += `<div class="sform__row${c.course === 4 ? ' is-kado' : ''}">`;
+      s += `<span class="sform__lane"><span class="sform__cno">${c.course}</span><span class="boat boat--sm boat-${c.entry}">${c.entry}</span>${c.course === 4 ? '<span class="kado-tag">カド</span>' : ''}</span>`;
+      s += a == null ? '<span class="sform__ahead is-none">―(最も内側)</span>'
+        : `<span class="sform__ahead${a >= .5 ? ' is-likely' : ''}"><span class="sform__arrow" aria-hidden="true">▲</span><span class="sform__bar" style="--p:${a}"><i></i><i class="half"></i></span><b class="num">${Math.round(a * 100)}%</b></span>`;
+      s += t == null ? '<span></span>' : `<span class="sform__top${t === topMax ? ' is-max' : ''}"><span class="sform__bar sform__bar--top" style="--p:${t / (opts.topScale || .5)}"><i></i></span><b class="num">${Math.round(t * 100)}%</b></span>`;
+      s += '</div>';
+    });
+    s += '<div class="sform__foot">▲ = すぐ内側の艇より先に出る確率(50%の線より右なら、内より先の見込みが高い)。★ = トップスタートの確率が最も高い艇。</div>';
+    return s + '</div>';
+  }
+
+  global.BRCharts = {wilson, calibration, pnl, yen, trend, hbars, stacked, heatmap, nClass, RULES, lines, lineSwatch, LINE_STYLES, startFormation};
 })(typeof window !== 'undefined' ? window : globalThis);

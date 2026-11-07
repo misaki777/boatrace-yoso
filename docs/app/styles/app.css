@@ -695,3 +695,10 @@ details.fold.fold--flow > .flow { padding: 0 var(--sp-3) var(--sp-3); }
 .atable-h { font-size: var(--fs-s); margin: 12px 0 4px; color: var(--c-text-2); }
 .card .atable { margin-top: 4px; }
 .tabbar.tabbar--5 { grid-template-columns: repeat(5, 1fr); }
+.ptable td, .ptable th { white-space: nowrap; }
+.ptable td:first-child { white-space: normal; min-width: 11em; }
+.ptable .insuff, .ptable .lown-tag { white-space: nowrap; }
+.reflect__list { margin: 8px 0 0; padding-left: 1.4em; line-height: 1.7; }
+h2.sechead { font-size: var(--fs-s); }
+
+.reflectbox .select { width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }

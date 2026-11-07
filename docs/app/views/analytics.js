@@ -128,8 +128,9 @@ export function modelTab({ weak, weekly, weeks, ui }) {
 }
 
 // ---------------------------------------------------------------- 買い方(シミュレーター)
-export function simTab({ data, ui }) {
-  if (!data) return loading;
+export function simTab({ data, ui, personas }) {
+  const people = personasBlock({ data: personas, ui });
+  if (!data) return html`${people}${loading}`;
   const src = ui.simsrc === 'live' ? 'live' : 'validation';
   const v = ui.mver === 'preview' ? 'preview' : 'pre';
   const block = src === 'validation' ? data.validation : (data.live || {})[v] || { rows: [] };
@@ -137,10 +138,69 @@ export function simTab({ data, ui }) {
   if (ui.simsort === 'roi') rows.sort((a, b) => (b.roi ?? -1) - (a.roi ?? -1));
   const p = block.period || {};
   return html`
+    ${people}
+    <h2 class="sechead">買い方のシミュレーター</h2>
     ${filter('期間', chips('ana-simsrc', [['validation', t('label.backtest')], ['live', t('label.live')]], src))}
     ${src === 'live' ? filter('予想の版', chips('ana-mver', [['pre', t('label.version_pre')], ['preview', t('label.version_preview')]], v)) : ''}
     ${src === 'validation' ? html`<div class="hindsight" role="note" style="margin:8px var(--gutter) 0"><div><b>${t('label.backtest')}</b>${t('ana.hindsight')}</div></div>` : ''}
     ${filter('並び', chips('ana-simsort', [['default', '券種 → 点数'], ['roi', '回収率の高い順']], ui.simsort === 'roi' ? 'roi' : 'default'))}
     ${card('買い方ごとの成績', html`${p.from || ''}〜${p.to || ''} <span class="${cls('periodtag', src === 'validation' ? 'periodtag--bt' : 'periodtag--live')}">${src === 'validation' ? '検証' : '実運用'}</span>`, html`<table class="atable"><thead><tr><th>買い方</th><th>件数</th><th>回収率(95%区間)</th></tr></thead><tbody>${rows.map((r) => html`<tr class="${cls(r.level === 'few' && 'is-lown')}"><td>${r.label}${r.level === 'few' ? refTag(r.races) : ''}</td><td class="n">${fmtNumber(r.bet_races ?? r.races)}R</td>${r.level === 'insufficient' || r.roi === null ? html`<td>${insuf(r.bet_races ?? r.races)}</td>` : html`<td class="rate">${fmtRoi(r.roi)}${r.roi_ci95 ? html`<small>(${Math.round(r.roi_ci95[0] * 100)}〜${Math.round(r.roi_ci95[1] * 100)})${r.ci_crosses_100 ? ' ±' : ''}</small>` : ''}</td>`}</tr>`)}</tbody></table>
       <p class="card__note" style="padding:6px 0 0">${t('ana.sim_budget')} 区間が100%をまたぐ行(±)は、${t('warn.ci_crosses_100')}</p>`)}`;
+}
+
+// ---------------------------------------------------------------- 仮想の購入者(W-22、spec/11 8〜9章、文言 spec/09 9〜10章)
+// どの人も1レース1,000円で固定。並べ替えの操作は置かない(spec/11 8.1 の順のまま)。線は基準を含めて4本まで
+export const PERSONA_DEFAULT = ['win_fav', 'boat1', 'app', 'steady'];
+export const PERSONA_MAX_LINES = 4;
+const pName = (p) => t(`personas.${p.id}.name`) !== `personas.${p.id}.name` ? t(`personas.${p.id}.name`) : p.name;
+const pDesc = (p) => t(`personas.${p.id}.desc`) !== `personas.${p.id}.desc` ? t(`personas.${p.id}.desc`) : p.description;
+
+export function personasBlock({ data, ui }) {
+  if (data === undefined) return loading;
+  if (!data) return '';
+  const src = ui.psrc === 'history' ? 'history' : 'live';
+  const block = data[src] || { rows: [] };
+  const rows = block.rows || [];
+  const base = rows.find((r) => r.is_baseline);
+  const picked = (ui.ppick || PERSONA_DEFAULT).filter((id) => rows.some((r) => r.id === id));
+  const shown = [base].concat(rows.filter((r) => !r.is_baseline && picked.includes(r.id))).filter(Boolean).slice(0, PERSONA_MAX_LINES);
+  const others = rows.filter((r) => !r.is_baseline && picked.includes(r.id));
+  const full = others.length >= PERSONA_MAX_LINES - 1;
+  // 線の見本: 基準は 'base'、それ以外は表示の順に 0〜2
+  let slot = 0;
+  const slotOf = new Map(shown.map((r) => [r.id, r.is_baseline ? 'base' : slot++]));
+  const pts = (r) => (src === 'live' ? (block.by_day_thinned ? r.by_week || [] : r.by_day || []) : r.by_month || []);
+  const labelsSrc = pts(shown[0] || rows[0] || {});
+  const labels = labelsSrc.map((x) => (x.day ? x.day.slice(5).replace('-', '/') : x.week || x.month));
+  const series = shown.map((r) => ({ name: pName(r).replace('(基準)', ''), base: r.is_baseline, values: pts(r).map((x) => (x.cum_profit ?? null)), lown: r.level !== 'normal' }));
+  const chart = labels.length >= 2 ? raw(C().lines(series, labels, { label: '仮想の購入者の累計収支' })) : html`<p class="card__note">推移は2${src === 'live' ? '日' : 'か月'}分以上たまると表示します。</p>`;
+  const pchips = html`<div class="pchips" role="group" aria-label="表示する人">${rows.map((r) => {
+    if (r.is_baseline) return html`<button class="pchip pchip--base" aria-pressed="true" disabled title="基準は常に表示">${raw(C().lineSwatch('base'))}${pName(r)}</button>`;
+    const on = picked.includes(r.id);
+    return html`<button class="pchip" aria-pressed="${String(on)}" data-action="ana-ppick" data-value="${r.id}" ${raw(!on && full ? 'disabled aria-describedby="pchip-reason"' : '')}>${on ? raw(C().lineSwatch(slotOf.get(r.id))) : ''}${pName(r)}</button>`;
+  })}</div><p class="fchip-reason" id="pchip-reason">線を見分けられるよう、基準を含めて${PERSONA_MAX_LINES}人まで同時に表示します。</p>`;
+  const roiCell = (r) => {
+    if (r.level === 'insufficient' || r.roi === null || r.roi === undefined) return html`<td>${insuf(r.races_bought)}</td>`;
+    return html`<td class="rate">${fmtRoi(r.roi)}${r.roi_ci95 ? html`<small>(${Math.round(r.roi_ci95[0] * 100)}〜${Math.round(r.roi_ci95[1] * 100)})${r.roi_ci95[0] < 1 && r.roi_ci95[1] > 1 ? ' ±' : ''}</small>` : ''}</td>`;
+  };
+  const table = html`<div class="tbl-wrap" data-noswipe><table class="atable ptable"><thead><tr><th>人</th><th>回収率(95%区間)</th><th>的中率</th><th>件数</th><th>最長連敗</th><th>最大の落ち込み</th></tr></thead><tbody>${rows.map((r) => html`<tr class="${cls(r.level === 'few' && 'is-lown')}">
+    <td><b>${pName(r)}</b>${r.is_baseline ? html` <span class="basetag">基準</span>` : ''}${r.level === 'few' ? refTag(r.races_bought) : ''}<small class="faint" style="display:block;min-width:12em">${pDesc(r)}</small></td>
+    ${roiCell(r)}<td>${r.level === 'insufficient' || r.hit_rate === null ? '—' : fmtPct(r.hit_rate, 0)}</td><td class="n">${fmtNumber(r.races_bought)}R</td><td>${r.max_losing_streak ?? '—'}</td><td>${r.max_drawdown_yen !== undefined && r.max_drawdown_yen !== null ? `−${fmtNumber(r.max_drawdown_yen)}円` : '—'}</td></tr>`)}</tbody></table></div>`;
+  const sel = rows.find((r) => r.id === ui.preflect) || rows.find((r) => !r.is_baseline) || rows[0];
+  const refl = sel && (sel.reflections || (block.reflections || {})[sel.id]);
+  const reflectBody = sel ? html`<div class="reflectbox">
+    <label class="field__label" for="reflect-who">人を選ぶ</label>
+    <select class="select" id="reflect-who" data-reflect>${rows.map((r) => html`<option value="${r.id}" ${raw(r.id === sel.id ? 'selected' : '')}>${pName(r)}</option>`)}</select>
+    <p class="card__note" style="padding:8px 0 0">${t('reflect.intro')}</p>
+    ${src === 'live' && sel.races_bought < C().RULES.okN ? html`<p class="card__note" style="padding:4px 0 0"><span class="lown-tag"></span> ${t('reflect.few')}</p>` : ''}
+    ${Array.isArray(refl) && refl.length ? html`<ol class="reflect__list">${refl.slice(0, 3).map((x) => html`<li>${t(`reflect.${x.type}`, { persona: pName(sel), ...(x.params || x) })}${x.ci_narrow === false || x.ci_note ? html` ${t('reflect.ci_note')}` : ''}</li>`)}</ol>` : html`<p>${t('reflect.none')}</p>`}
+  </div>` : '';
+  return html`
+    ${card(t('personas.heading'), '', html`<p>${t('personas.intro')}</p><p><b>${t('personas.no_recommend')}</b></p><p class="card__note" style="padding:4px 0 0">${t('personas.fixed_stake')}</p>`)}
+    ${filter('期間', chips('ana-psrc', [['live', t('label.live')], ['history', '過去の参考']], src))}
+    ${src === 'live' ? html`<p class="disclaimer" style="margin-top:4px">${t('personas.live')}(${block.from || ''}〜${block.to || ''})。件数が少ないため、全体を参考程度に見てください。</p>`
+      : html`<div class="hindsight" role="note" style="margin:8px var(--gutter) 0"><div><b>${t('personas.backtest')}</b>${t('ana.hindsight')}${block.explanation ? ` ${block.explanation}` : ''}</div></div>`}
+    ${card('累計収支', '1レース1,000円', html`${pchips}${chart}`)}
+    ${card('人ごとの成績', '左右にスクロール', table)}
+    ${card(t('reflect.heading'), '', reflectBody)}`;
 }

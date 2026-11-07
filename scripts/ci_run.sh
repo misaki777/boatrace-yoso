@@ -139,6 +139,8 @@ case "$MODE" in
     run "$PY" -m src.export.analytics --what stadiums
     run "$PY" -m src.export.analytics --what model --to "$D"
     run "$PY" -m src.export.analytics --what simulator --to "$D"
+    # 仮想の購入者10人(1レース1,000円固定。過去の収支は使わない)
+    run "$PY" -m src.export.analytics --what personas --to "$D"
     ;;
   weekly)
     # 週の分析: キューブ(全期間)、週のまとめ(D の週。月曜に動くので前の週)、シミュレーター

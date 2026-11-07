@@ -19,7 +19,7 @@ import { summarize, byMonth, budgetWarnings, normalizeBudget, normalizeMarks, ma
 import { ledgerView, marksView, analysisView } from './views/ledger.js';
 import { groupStats, timeBand, evRankKey, allocationKey } from './analytics.js';
 import { racerSheet, modelsView } from './views/phase3b.js';
-import { stadiumTab, playersTab, modelTab, simTab } from './views/analytics.js';
+import { stadiumTab, playersTab, modelTab, simTab, PERSONA_DEFAULT } from './views/analytics.js';
 import { ICONS, tabbar } from './parts.js';
 import { copyText, ALLOCATION_METHODS } from './betsum.js';
 import { currentAllocation } from './views/race.js';
@@ -798,6 +798,14 @@ document.addEventListener('click', (e) => {
     case 'ana-mver': anaUi.mver = el.dataset.value; render(); break;
     case 'ana-week': anaUi.week = el.dataset.value; render(); break;
     case 'ana-simsrc': anaUi.simsrc = el.dataset.value; render(); break;
+    case 'ana-psrc': anaUi.psrc = el.dataset.value; render(); break;
+    case 'ana-ppick': {
+      const cur = anaUi.ppick || PERSONA_DEFAULT.slice();
+      const id = el.dataset.value;
+      anaUi.ppick = cur.includes(id) ? cur.filter((x) => x !== id) : cur.concat(id);
+      render();
+      break;
+    }
     case 'ana-simsort': anaUi.simsort = el.dataset.value; render(); break;
     case 'help':
       toggleHelp(el);
@@ -1045,6 +1053,9 @@ document.addEventListener('change', (e) => {
     state.lastUnauthorizedAt = null;
     render();
     showToast('保存しました');
+  } else if (t.matches('[data-reflect]')) {
+    anaUi.preflect = t.value;
+    render();
   } else if (t.matches('[data-memo]')) {
     const text = t.value.slice(0, 500);
     local.notes[t.dataset.race] = text;
@@ -1491,7 +1502,7 @@ function renderAnalyticsPlaceholder(sub) {
     const weeks = (idx.files.weekly || []).slice().sort();
     const w = weeks.includes(anaUi.week) ? anaUi.week : weeks[weeks.length - 1];
     body = modelTab({ weak: anaLoad('model_weakness.json'), weekly: w ? anaLoad(`weekly/${w}.json`) : null, weeks, ui: { ...anaUi, week: w } });
-  } else body = simTab({ data: anaLoad('simulator.json'), ui: anaUi });
+  } else body = simTab({ data: anaLoad('simulator.json'), personas: anaLoad('personas.json'), ui: anaUi });
   return html`<header class="appbar"><h1 class="appbar__title is-pad">${t('ana.tab')}</h1></header>
     ${analyticsSubtabs(sub)}
     ${body}
