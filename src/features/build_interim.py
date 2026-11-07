@@ -21,17 +21,26 @@ import pandas as pd
 from src.features import parse
 from src.features.beforeinfo import make_beforeinfo_loader, merge_official
 from src.features.legacy import fill_final_day_number
+from src.features.odds_pre import ODDS_PRE_DTYPES, cast_odds_pre, make_odds_record_loader, records_to_rows
 from src.features.raw_source import LoadRaw, load_day, make_final_checker, make_loader
 
 ROOT = Path(__file__).resolve().parents[2]
 INTERIM_DIR = ROOT / "data" / "interim"
-TABLES = ("races", "entries", "payouts", "odds")
+# odds_pre: 締切前オッズの記録(F-13b。公開しない)。確定オッズの odds(turnmark)とは別の表
+TABLES = ("races", "entries", "payouts", "odds", "odds_pre")
 TABLE_DTYPES = {
     "races": parse.RACES_DTYPES,
     "entries": parse.ENTRIES_DTYPES,
     "payouts": parse.PAYOUTS_DTYPES,
     "odds": parse.ODDS_DTYPES,
+    "odds_pre": ODDS_PRE_DTYPES,
 }
+
+
+def _cast(table: str, df: pd.DataFrame) -> pd.DataFrame:
+    if table == "odds_pre":
+        return cast_odds_pre(df)
+    return parse.cast_frame(df, TABLE_DTYPES[table])
 JST = timezone(timedelta(hours=9))
 
 
@@ -74,7 +83,7 @@ def iter_dates(d_from: date, d_to: date):
 
 def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
                 is_final=None, previous_races: pd.DataFrame | None = None,
-                load_beforeinfo=None) -> tuple[dict[str, pd.DataFrame], dict]:
+                load_beforeinfo=None, load_odds_record=None) -> tuple[dict[str, pd.DataFrame], dict]:
     """1か月分の interim と品質レポートを作る(書き込みはしない)。
 
     load_beforeinfo: date -> {race_id: 公式の直前情報}。openapi の日だけ、Open API より優先して合流する(F-12b)。
@@ -98,6 +107,9 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
         try:
             final = is_final(source, d) if is_final is not None else None
             tables = parse.parse_day(raw, source, d, is_final=final)
+            # 締切前オッズの記録(Worker)。どのソースの日でも、記録があれば取り込む
+            tables["odds_pre"] = records_to_rows(load_odds_record(d)) if load_odds_record else \
+                cast_odds_pre(pd.DataFrame())
             if source == "openapi" and load_beforeinfo is not None:
                 tables, bstats = merge_official(tables, load_beforeinfo(d))
                 if bstats["files"]:
@@ -115,14 +127,19 @@ def build_month(key: str, load_raw: LoadRaw, until: date | None = None,
         if parts[t]:
             df = pd.concat(parts[t], ignore_index=True)
         else:
-            df = parse.cast_frame(pd.DataFrame(columns=list(TABLE_DTYPES[t])), TABLE_DTYPES[t])
-        out[t] = parse.cast_frame(df, TABLE_DTYPES[t])
+            df = _cast(t, pd.DataFrame(columns=list(TABLE_DTYPES[t])))
+        out[t] = _cast(t, df)
     # 旧APIの「最終日」は day_number が無いので、前日の値 + 1 で埋める(F-7)
     if len(out["races"]):
         out["races"] = parse.cast_frame(fill_final_day_number(out["races"], previous_races), parse.RACES_DTYPES)
 
     report = quality_report(key, out, day_sources, missing_days, errors)
     report["beforeinfo"] = beforeinfo_stats
+    op = out["odds_pre"]
+    # 件数だけ(オッズの数値はレポートにも出さない)
+    report["odds_pre"] = {"rows": int(len(op)), "races": int(op["race_id"].nunique()),
+                          "by_bet_type": op["bet_type"].value_counts().to_dict(),
+                          "null_value": int((op["odds"].isna() & op["odds_lower"].isna()).sum())}
     report["entries"]["pv_source"] = out["entries"]["pv_source"].value_counts(dropna=False).to_dict() \
         if len(out["entries"]) else {}
     return out, report
@@ -220,7 +237,7 @@ def write_month(key: str, tables: dict[str, pd.DataFrame], report: dict,
 
 def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
                   out_dir: Path = INTERIM_DIR, verbose: bool = True,
-                  is_final=None, load_beforeinfo=None) -> list[dict]:
+                  is_final=None, load_beforeinfo=None, load_odds_record=None) -> list[dict]:
     """指定範囲にかかる月を作り直す。月ごとの品質レポートのリストを返す。
 
     load_raw を省略したときは data/raw と、その取得ログで確定判定をする。
@@ -229,6 +246,7 @@ def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
         load_raw = make_loader()
         is_final = is_final or make_final_checker()
         load_beforeinfo = load_beforeinfo or make_beforeinfo_loader()
+        load_odds_record = load_odds_record or make_odds_record_loader()
     # 未来の日は読まない(品質レポートの「欠けた日」に入れないため)
     until = max(d_to, datetime.now(JST).date())
     reports = []
@@ -239,7 +257,8 @@ def build_interim(d_from: date, d_to: date, load_raw: LoadRaw | None = None,
         prev_path = out_dir / "races" / f"{prev_key}.parquet"
         previous = pd.read_parquet(prev_path) if prev_path.exists() else None
         tables, report = build_month(key, load_raw, until=until, is_final=is_final,
-                                     previous_races=previous, load_beforeinfo=load_beforeinfo)
+                                     previous_races=previous, load_beforeinfo=load_beforeinfo,
+                                     load_odds_record=load_odds_record)
         write_month(key, tables, report, out_dir)
         reports.append(report)
         if verbose:
@@ -268,10 +287,10 @@ def read_interim(table: str, d_from: date | None = None, d_to: date | None = Non
         files = keep
     dtypes = TABLE_DTYPES[table]
     if not files:
-        return parse.cast_frame(pd.DataFrame(columns=list(dtypes)), dtypes)
+        return _cast(table, pd.DataFrame(columns=list(dtypes)))
     df = pd.concat([pd.read_parquet(f, columns=columns) for f in files], ignore_index=True)
     if columns is None:
-        df = parse.cast_frame(df, dtypes)
+        df = _cast(table, df)
     if "date" in df.columns and (d_from is not None or d_to is not None):
         mask = pd.Series(True, index=df.index)
         if d_from is not None:
@@ -279,7 +298,7 @@ def read_interim(table: str, d_from: date | None = None, d_to: date | None = Non
         if d_to is not None:
             mask &= df["date"] <= d_to
         df = df[mask].reset_index(drop=True)
-    elif table in ("payouts", "odds") and (d_from is not None or d_to is not None):
+    elif table in ("payouts", "odds", "odds_pre") and (d_from is not None or d_to is not None):
         ymd = df["race_id"].str.slice(0, 8)
         if d_from is not None:
             df = df[ymd >= d_from.strftime("%Y%m%d")]
