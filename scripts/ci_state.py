@@ -14,6 +14,12 @@
 
 | beforeinfo/YYYYMMDD/SS-RR.json     | 直前情報(Worker「beforeinfo」が書く。spec/12)             | 確定ジョブ(lock)が取得 |
 
+| odds/YYYYMMDD/SS-RR.json           | 締切前オッズの記録(Worker「beforeinfo」が書く。spec/13)   | 前日確定ジョブが前日分を取得 |
+
+締切前オッズの記録は data/raw/odds_record/YYYYMMDD/SS-RR.json に置く(特徴量担当が interim の odds_pre を作る)。
+公開しない(docs/ には出さない)。recent(当月・前月)と archive の raw に含める(interim を月ごとに作り直すときに要る。
+容量は年 約180MB、gzip 後はその数分の1)。_state.json・_stopped.json は取らない。中身はログに出さない。
+
 直前情報は data/raw/beforeinfo/YYYYMMDD/SS-RR.json に置き(F-12b が読む場所)、recent と archive の raw にも入れる
 (前日確定で interim を作り直すときにも、直前情報の出どころ pv_source を変えないため)。
 
@@ -34,6 +40,8 @@ R2 の操作は `npx wrangler r2 object get/put --remote` だけ(S3 互換キー
     python -m scripts.ci_state archive-push --months 2026-11        # 1か月分
     python -m scripts.ci_state archive-pull --months 2026-01..2026-11
     python -m scripts.ci_state archive-pull --months auto --part interim   # 分析用: recent に無い古い月の interim
+    python -m scripts.ci_state odds-pull                       # 昨日(JST)の締切前オッズの記録
+    python -m scripts.ci_state odds-pull --from 2026-11-07 --to 2026-11-08   # 過去分をまとめて
     python -m scripts.ci_state beforeinfo-pull --date 2026-11-06 --race-ids 20261106-02-01,20261106-12-03
     --dry-run を付けると R2 に触らない(push 系は tar.gz を作ってサイズを表示するまで)
 
@@ -63,7 +71,9 @@ JST = timezone(timedelta(hours=9))
 KINDS = ("history", "recent", "predictions", "models")
 RAW_SOURCES = ("openapi", "turnmark")
 BEFOREINFO_DIR = "data/raw/beforeinfo"  # F-12b が読む場所(spec/12 1.5)
-BEFOREINFO_WINDOW_MIN = 20  # 指定が無くても、締切がこの分数以内のレースの直前情報は取りに行く
+BEFOREINFO_WINDOW_MIN = 20
+ODDS_RECORD_DIR = "data/raw/odds_record"  # 締切前オッズの記録(spec/13)
+ODDS_PULL_JOBS = 8  # odds-pull の同時取得数(1件ずつ wrangler を起動するため)  # 指定が無くても、締切がこの分数以内のレースの直前情報は取りに行く
 INTERIM_TABLES = ("races", "entries", "payouts", "odds")
 HISTORY_KEEP = 3
 INTERIM_LOOKBACK_DAYS = 400  # src/features/racer_cards.py の RESULT_LOOKBACK_DAYS と合わせる
@@ -74,11 +84,12 @@ DATA_FROM_MONTH = "2026-01"
 # 種類ごとに、tar の中に入ってよいパスの先頭
 ALLOWED_PREFIXES: dict[str, tuple[str, ...]] = {
     "history": ("data/history/",),
-    "recent": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/", "data/raw/_fetch_log.jsonl",
+    "recent": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/", "data/raw/odds_record/",
+               "data/raw/_fetch_log.jsonl",
                "data/interim/"),
     "predictions": ("data/predictions/",),
     "models": ("models/", "reports/eval/", "reports/backtest/"),
-    "archive-raw": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/"),
+    "archive-raw": ("data/raw/openapi/", "data/raw/turnmark/", "data/raw/beforeinfo/", "data/raw/odds_record/"),
     "beforeinfo": ("data/raw/beforeinfo/",),
     "archive-interim": ("data/interim/",),
 }
@@ -187,6 +198,7 @@ def raw_files_for_month(key: str, root: Path = ROOT) -> list[str]:
     for src in RAW_SOURCES:
         files += (root / "data/raw" / src / y).glob(f"{y}{m}[0-9][0-9].json.gz")
     files += (root / BEFOREINFO_DIR).glob(f"{y}{m}[0-9][0-9]/*.json")
+    files += (root / ODDS_RECORD_DIR).glob(f"{y}{m}[0-9][0-9]/[0-9][0-9]-[0-9][0-9].json")
     return _rel(files, root)
 
 
@@ -465,6 +477,84 @@ def beforeinfo_pull(race_ids: list[str], dry_run: bool) -> int:
     return 0
 
 
+def odds_key(race_id: str) -> str:
+    ymd, ss, rr = RACE_ID_RE.match(race_id).groups()
+    return f"{BUCKET}/odds/{ymd}/{ss}-{rr}.json"
+
+
+def odds_path(race_id: str, root: Path = ROOT) -> Path:
+    ymd, ss, rr = RACE_ID_RE.match(race_id).groups()
+    return root / ODDS_RECORD_DIR / ymd / f"{ss}-{rr}.json"
+
+
+def odds_race_ids(state: dict, d: date) -> list[str]:
+    """Worker の odds/YYYYMMDD/_state.json の races から、その日の race_id を取り出す(形式を確かめる)。
+    R2 の一覧を取る手段が wrangler に無いので、状態に載っているレースを1件ずつ取りに行く。"""
+    ymd = d.strftime("%Y%m%d")
+    out = []
+    for rid in (state.get("races") or {}):
+        m = RACE_ID_RE.match(str(rid))
+        if m and m[1] == ymd:
+            out.append(str(rid))
+    return sorted(set(out))
+
+
+def _get_json(key: str, dest: Path) -> dict | None:
+    """R2 から1件取り、JSON として読めたら dict を返す(中身は表示しない)。"""
+    tmp = dest.with_name(dest.name + ".tmp")
+    cmd = wrangler_cmd("get", key, tmp)
+    r = subprocess.run(cmd, cwd=tempfile.gettempdir(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if r.returncode != 0:
+        tmp.unlink(missing_ok=True)
+        return None
+    try:
+        data = json.loads(tmp.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        tmp.unlink(missing_ok=True)
+        return None
+    if not isinstance(data, dict):
+        tmp.unlink(missing_ok=True)
+        return None
+    tmp.replace(dest)
+    return data
+
+
+def odds_pull_day(d: date, dry_run: bool, force: bool = False, jobs: int = ODDS_PULL_JOBS) -> tuple[int, int]:
+    """1日分の締切前オッズの記録を取る。(取得した数, 対象の数) を返す。手元にあるレースは --force が無ければ取らない。"""
+    from concurrent.futures import ThreadPoolExecutor
+
+    ymd = d.strftime("%Y%m%d")
+    state_key_ = f"{BUCKET}/odds/{ymd}/_state.json"
+    print(f"[odds-pull] {d}", flush=True)
+    print("  $ " + " ".join(wrangler_cmd("get", state_key_, Path("_state.json"))), flush=True)
+    if dry_run:
+        print("  $ (_state.json の races の各レースについて) " +
+              " ".join(wrangler_cmd("get", f"{BUCKET}/odds/{ymd}/SS-RR.json",
+                                    Path(f"{ODDS_RECORD_DIR}/{ymd}/SS-RR.json"))), flush=True)
+        return 0, 0
+    with tempfile.TemporaryDirectory(prefix="ci_odds_") as tmp:
+        state = _get_json(state_key_, Path(tmp) / "_state.json")
+    if state is None:
+        print("  記録がありません(Worker がその日にオッズを取っていない)", flush=True)
+        return 0, 0
+    ids = odds_race_ids(state, d)
+    todo = [rid for rid in ids if force or not odds_path(rid).exists()]
+    if todo:
+        odds_path(todo[0]).parent.mkdir(parents=True, exist_ok=True)
+
+    def one(rid: str) -> bool:
+        data = _get_json(odds_key(rid), odds_path(rid))
+        if data is not None and data.get("race_id") not in (None, rid):
+            odds_path(rid).unlink(missing_ok=True)  # 別のレースの中身なら使わない
+            return False
+        return data is not None
+
+    with ThreadPoolExecutor(max_workers=max(1, jobs)) as ex:
+        got = sum(ex.map(one, todo))
+    print(f"  {got}/{len(todo)} レースを取得(状態に載っているレース {len(ids)}、手元に既にある分は飛ばした)", flush=True)
+    return got, len(todo)
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -472,7 +562,10 @@ def beforeinfo_pull(race_ids: list[str], dry_run: bool) -> int:
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="R2 との状態の取得・保存")
-    p.add_argument("action", choices=["pull", "push", "archive-pull", "archive-push", "beforeinfo-pull"])
+    p.add_argument("action", choices=["pull", "push", "archive-pull", "archive-push", "beforeinfo-pull", "odds-pull"])
+    p.add_argument("--from", dest="d_from", help="odds-pull の開始日(--to と一緒に)")
+    p.add_argument("--to", dest="d_to", help="odds-pull の終了日")
+    p.add_argument("--force", action="store_true", help="odds-pull: 手元にあるレースも取り直す")
     p.add_argument("--date", help="beforeinfo-pull の日(既定: 今日 JST)")
     p.add_argument("--race-ids", default="", help="beforeinfo-pull のレース(カンマ・空白区切り)")
     p.add_argument("--dry-run", action="store_true", help="R2 に触らない")
@@ -514,6 +607,20 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     a = parse_args(argv)
     try:
+        if a.action == "odds-pull":
+            if a.d_from or a.d_to:
+                d0 = date.fromisoformat(a.d_from or a.d_to)
+                d1 = date.fromisoformat(a.d_to or a.d_from)
+            else:
+                d0 = d1 = date.fromisoformat(a.date) if a.date else today_jst() - timedelta(days=1)
+            if d1 < d0 or (d1 - d0).days > 400:
+                raise ValueError("odds-pull の期間が不正です")
+            d = d0
+            while d <= d1:
+                odds_pull_day(d, a.dry_run, a.force)
+                d += timedelta(days=1)
+            print("[odds-pull] 完了" + ("(dry-run: R2 には触っていません)" if a.dry_run else ""))
+            return 0
         if a.action == "beforeinfo-pull":
             ids = parse_race_ids(a.race_ids, a.day)
             near = races_near_close(a.day, datetime.now(JST)) if a.day == today_jst() else []

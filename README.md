@@ -177,6 +177,7 @@ npx wrangler r2 bucket create br-yoso-data     # 非公開(公開アクセスや
 | `state/predictions.tar.gz` | 確定済みの予想(全部。記録なので消さない) | 取得・保存 |
 | `state/models.tar.gz` | 採用中のモデル(`latest` が指すもの。展開予想の `models/tenkai/{pre,preview}/latest` も)と、その eval・backtest の要約 | 取得・保存 |
 | `archive/raw/YYYY-MM.tar.gz`、`archive/interim/YYYY-MM.tar.gz` | 月ごとの raw と interim(全期間) | 前日確定ジョブがその月を保存。取得はしない(月1の作り直しと手元の復元用) |
+| `odds/YYYYMMDD/SS-RR.json`(Worker「beforeinfo」が保存。spec/13) | 締切前オッズの記録 | 前日確定ジョブが前日分を `data/raw/odds_record/YYYYMMDD/` に取得し、recent・archive の raw に含める(**公開しない**) |
 
 `data/features`(学習用・当日用・選手カード。当日分は毎回状態から作り直す)・`data/raw/official_odds/`・`data/raw/legacy/` は上げません。
 
@@ -197,6 +198,19 @@ python -m scripts.ci_state push
 - 状態の作成は Actions が動いていない時間帯(2:00〜7:00)に。朝のジョブは当日の状態が無ければ、それより前の一番新しい状態から必要な日数だけ進めます(進める日の interim が当月・前月にあること)。
 - モデルを学習し直したら `python -m scripts.ci_state push --only models`。
 - Actions の最新の状態を手元に持ってくる: `python -m scripts.ci_state pull`(上書きのみで、手元のファイルは消しません)。過去の月は `python -m scripts.ci_state archive-pull --months 2026-01..2026-11`。
+
+**締切前オッズの記録(spec/13)を手元に取る・過去分をまとめて取る**: 前日確定ジョブは毎日、前日分を R2 の `odds/` から取り、`state/recent` と `archive/raw/` に入れます。Worker が記録を始めた 11/07 から、ジョブがこれを始める前の分は手元で取ります(Worker の `_state.json` に載っているレースを1件ずつ取得。中身は表示しません。`_state.json`・`_stopped.json` は取りません)。
+
+```bash
+nvm use 22 && source .venv/bin/activate
+python -m scripts.ci_state odds-pull --from 2026-11-07 --to $(TZ=Asia/Tokyo date -d yesterday +%F) --dry-run
+python -m scripts.ci_state odds-pull --from 2026-11-07 --to $(TZ=Asia/Tokyo date -d yesterday +%F)
+# 取ったら、Actions が動いていない時間に R2 の recent と archive にも入れる
+python -m scripts.ci_state push --only recent
+python -m scripts.ci_state archive-push --months 2026-11 --part raw
+```
+
+`data/raw/odds_record/` は git 管理外(`data/raw/`)で、`docs/` には出しません。
 
 **以前の置き場所からの移行**(`state/raw.tar.gz`・`state/interim.tar.gz` などを上げていた場合): 上の初回の手順で新しい置き場所に上げ、手動実行(morning)が成功したことを確かめてから、古いオブジェクトを消します。
 

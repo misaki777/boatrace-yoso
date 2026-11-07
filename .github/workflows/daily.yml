@@ -104,6 +104,15 @@ jobs:
         if: steps.mode.outputs.mode == 'finalize' || steps.mode.outputs.mode == 'weekly'
         run: python -m scripts.ci_state archive-pull --months auto --part interim
 
+      # 前日確定: 前日分の締切前オッズの記録(R2 odds/。Worker が保存。spec/13)を data/raw/odds_record/ に取る。
+      # build_interim の前に置く(特徴量担当が interim の odds_pre を作る)。公開しない。失敗しても確定は続ける
+      - name: 前日の締切前オッズの記録(R2。前日確定のみ)
+        if: steps.mode.outputs.mode == 'finalize'
+        continue-on-error: true
+        env:
+          IN_DATE: ${{ steps.mode.outputs.date }}
+        run: python -m scripts.ci_state odds-pull --date "${IN_DATE:-$(date -d yesterday +%F)}"
+
       # lock: 直前情報(R2 beforeinfo/)を data/raw/beforeinfo/ に取る。race_ids は検証してから使う
       - name: 直前情報の取得(R2。lock のみ)
         if: steps.mode.outputs.mode == 'lock'
