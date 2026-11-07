@@ -2,7 +2,9 @@
 
 export const FIRST_WINDOW = [10, 15]; // 締切の15〜10分前(両端を含む)
 export const LAST_CHANCE_MINUTES = 5; // 取り損ねたレース(1回の起動の3ページ上限で回されたもの)はここまで取る
-export const MAX_PAGES_PER_TICK = 3; // 1回の起動で取得・解析するのは最大3ページ(CPU 10ms のため)
+export const MAX_PAGES_PER_TICK = 3; // 直前情報は1回の起動で最大3ページ
+export const DEFAULT_TICK_PAGE_LIMIT = 5; // 直前情報とオッズを合わせた1回の起動のページ数(CPU 10ms・実行時間のため)
+export const MAX_TICK_PAGE_LIMIT = 8;
 export const PAGE_INTERVAL_MS = 1500; // 応答の終わりから1.5秒以上空ける
 export const UPSTREAM_TIMEOUT_MS = 20000;
 export const DEFAULT_DAILY_LIMIT = 300;
@@ -97,4 +99,11 @@ export function shouldDispatch(pending, lastDispatchMs, nowMs) {
 /** 締切までの分。 */
 export function minutesBefore(closedAtMs, nowMs) {
   return (closedAtMs - nowMs) / 60000;
+}
+
+/** 環境変数 TICK_PAGE_LIMIT → 1回の起動の合計ページ数(1〜8。不正なら既定5)。 */
+export function parseTickPageLimit(text) {
+  const s = String(text ?? "").trim();
+  if (!/^\d+$/.test(s) || Number(s) < 1) return DEFAULT_TICK_PAGE_LIMIT;
+  return Math.min(Number(s), MAX_TICK_PAGE_LIMIT);
 }

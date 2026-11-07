@@ -10,6 +10,13 @@ export function syntheticHtml({ posted = true } = {}) {
   return fs.readFileSync(path.join(FIXTURES, posted ? "ok.synthetic.html" : "not_posted.synthetic.html"), "utf8");
 }
 
+const ODDS_FIXTURES = path.resolve(FIXTURES, "../official_odds");
+/** 締切前オッズの共通の合成HTML(tests/fixtures/official_odds/)。 */
+export function oddsHtml(type) {
+  const page = { tf: "oddstf", "2tf": "odds2tf", "3t": "odds3t" }[type];
+  return fs.readFileSync(path.join(ODDS_FIXTURES, `${page}.synthetic.html`), "utf8");
+}
+
 /** R2 の偽物(get → {text()} | null、put、head)。 */
 export function makeBucket(initial = {}) {
   const store = new Map(Object.entries(initial).map(([k, v]) => [k, typeof v === "string" ? v : JSON.stringify(v)]));

@@ -6,7 +6,7 @@
 // 3. 解析結果の JSON だけを R2 の beforeinfo/YYYYMMDD/SS-RR.json に保存(HTML は保存しない)
 // 4. 保存したレースがあれば、GitHub の workflow_dispatch を1回だけ送る(前回から4分未満なら次の起動に回す)
 //
-// env: DATA(R2 binding)、WINDOW_START_MIN / WINDOW_END_MIN / LAST_CHANCE_MIN(取得の時間帯。既定15/10/5)、GH_TOKEN(secret)、DAILY_LIMIT(既定300。超えたらその日は止める)、GITHUB_REPO、GITHUB_WORKFLOW、DISPATCH_MODE
+// env: DATA(R2 binding)、TICK_PAGE_LIMIT(1回の起動の合計ページ数。既定5)、ODDS_*(src/odds.mjs)、WINDOW_START_MIN / WINDOW_END_MIN / LAST_CHANCE_MIN(取得の時間帯。既定15/10/5)、GH_TOKEN(secret)、DAILY_LIMIT(既定300。超えたらその日は止める)、GITHUB_REPO、GITHUB_WORKFLOW、DISPATCH_MODE
 // ログには件数・状態・race_id・所要時間だけを出す。トークン・展示タイムなどの値・HTML は出さない。
 
 import {
@@ -16,6 +16,7 @@ import {
   USER_AGENT,
   shouldFetch,
   parseWindow,
+  parseTickPageLimit,
   emptyState,
   formatJstIso,
   jstDateString,
@@ -31,6 +32,7 @@ import {
   waitBeforeNext,
 } from "./core.mjs";
 import { parseBeforeinfo } from "./parse.mjs";
+import { oddsStateKey, oddsStoppedKey, parseOddsDailyLimit, runOdds } from "./odds.mjs";
 
 export const DEFAULT_REPO = "misaki777/boatrace-yoso";
 export const DEFAULT_WORKFLOW = "daily.yml";
@@ -63,6 +65,9 @@ export default {
       limit_per_day: parseDailyLimit(env.DAILY_LIMIT),
       races_recorded: Object.keys(state.races).length,
       stopped: stopped ? stopped.reason : null,
+      odds_used_today: ((await readJson(env.DATA, oddsStateKey(date))) ?? { count: 0 }).count,
+      odds_limit_per_day: parseOddsDailyLimit(env.ODDS_DAILY_LIMIT),
+      odds_stopped: ((await readJson(env.DATA, oddsStoppedKey(date))) ?? { reason: null }).reason,
     };
     return new Response(JSON.stringify(body), { headers: { "content-type": "application/json; charset=utf-8" } });
   },
@@ -82,10 +87,28 @@ async function writeJson(bucket, key, value) {
   await bucket.put(key, JSON.stringify(value), { httpMetadata: { contentType: "application/json" } });
 }
 
-/** 1回の起動の処理。戻り値は要約(テスト用。ログにも同じものを出す)。 */
+/**
+ * 1回の起動の処理。直前情報を先に(最大3ページ)、残りのページ数でオッズの記録(src/odds.mjs)を取る。
+ * 2つは停止・上限を別々に持つ(片方が止まっても、もう片方は続ける)。ページの間隔(1.5秒)は共通。
+ * 戻り値は要約(テスト用。ログにも同じものを出す)。
+ */
 export async function runTick(env, deps) {
   const startMs = deps.now();
   const date = jstDateString(startMs);
+  const shared = { lastEnd: null, fetched: 0, tickLimit: parseTickPageLimit(env.TICK_PAGE_LIMIT) };
+  const schedule = await readJson(env.DATA, scheduleKey(date));
+  if (!schedule || !Array.isArray(schedule.races)) {
+    const s = { event: "tick", date, result: "no_schedule", elapsed_ms: deps.now() - startMs };
+    deps.log(s);
+    return { ...s, odds: { result: "no_schedule", fetched: 0 } };
+  }
+  const summary = await runBeforeinfo(env, deps, { date, startMs, schedule, shared });
+  summary.odds = await runOdds(env, deps, { date, schedule, shared, fetchPage, readJson, writeJson });
+  return summary;
+}
+
+/** 直前情報の部分。 */
+async function runBeforeinfo(env, deps, { date, startMs, schedule, shared }) {
   const bucket = env.DATA;
   const summary = { event: "tick", date, fetched: 0, saved: [], statuses: {}, dispatched: false };
   const finish = (extra = {}) => {
@@ -95,8 +118,6 @@ export async function runTick(env, deps) {
   };
 
   if (await readJson(bucket, stoppedKey(date))) return finish({ result: "stopped" });
-  const schedule = await readJson(bucket, scheduleKey(date));
-  if (!schedule || !Array.isArray(schedule.races)) return finish({ result: "no_schedule" });
 
   const state = { ...emptyState(), ...((await readJson(bucket, stateKey(date))) ?? {}) };
   const limit = parseDailyLimit(env.DAILY_LIMIT);
@@ -114,15 +135,15 @@ export async function runTick(env, deps) {
   candidates.sort((a, b) => a.closedMs - b.closedMs || (a.race.race_id < b.race.race_id ? -1 : 1));
   summary.candidates = candidates.length;
 
-  let lastEnd = null;
   let stopReason = null;
+  const biMax = Math.min(MAX_PAGES_PER_TICK, shared.tickLimit);
   for (const c of candidates) {
-    if (summary.fetched >= MAX_PAGES_PER_TICK) break; // 残りは次の起動へ
+    if (summary.fetched >= biMax) break; // 残りは次の起動へ
     if (state.count >= limit) {
       stopReason = `1日の上限(${limit}ページ)に達しました`;
       break;
     }
-    const wait = waitBeforeNext(lastEnd, deps.now());
+    const wait = waitBeforeNext(shared.lastEnd, deps.now());
     if (wait > 0) await deps.sleep(wait);
     // 待っている間に4分前を過ぎたら取らない
     const minutes = minutesBefore(c.closedMs, deps.now());
@@ -131,7 +152,9 @@ export async function runTick(env, deps) {
     const { race } = c;
     const t0 = deps.now();
     const res = await fetchPage(deps, officialUrl(race.jcd, race.rno, date));
-    lastEnd = deps.now();
+    const lastEnd = deps.now();
+    shared.lastEnd = lastEnd;
+    shared.fetched += 1;
     state.count += 1;
     summary.fetched += 1;
 
@@ -197,7 +220,7 @@ export async function runTick(env, deps) {
   return finish({ result: stopReason ? "stopped_now" : "ok", used_today: state.count, limit_per_day: limit });
 }
 
-async function fetchPage(deps, url) {
+export async function fetchPage(deps, url) {
   const controller = typeof AbortController === "function" ? new AbortController() : null;
   let timer = null;
   const timeout = new Promise((resolve) => {

@@ -58,7 +58,7 @@
 
 <div class="page">
   <h1>部品カタログ</h1>
-  <p class="note">デザイナーB 案 v1.0 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
+  <p class="note">デザイナーB 案 v1.1 / tokens.css + components.css のみで描画(外部CDNなし)。表示幅 360〜430px を想定。</p>
 
   <div class="themebar">
     <div class="seg" role="tablist" aria-label="表示モード">
@@ -708,6 +708,49 @@
   <nav class="tabbar tabbar--5" style="border:1px solid var(--c-border);border-radius:var(--radius-md)">
     <a href="#"><svg><use href="#i-race"/></svg>レース</a><a href="#"><svg><use href="#i-chart"/></svg>成績</a><a href="#" aria-current="page"><svg><use href="#i-list"/></svg>分析</a><a href="#"><svg><use href="#i-wallet"/></svg>収支</a><a href="#"><svg><use href="#i-more"/></svg>その他</a>
   </nav>
+
+  <!-- ===== v1.1 ===== -->
+  <h2>33. 展開予想の拡張(一言・艇ごと・スタート隊形)</h2>
+  <div class="card tenkai">
+    <p class="tk-summary"><span><span class="tk-summary__type">カドまくり警戒</span><span class="boat boat--sm boat-4">4</span> 4号艇(カド)が3コースより先に出る確率 52%</span></p>
+    <h3 style="margin:0">艇ごとの決まり手</h3>
+    <ul class="tkboat">
+      <li class="tkboat__row"><span class="boat boat-1">1</span><span class="tkboat__course">1コース</span><span class="tkboat__techs"><span class="tktag tktag--main" style="--p:.55">逃げ <b>55%</b></span></span></li>
+      <li class="tkboat__row"><span class="boat boat-2">2</span><span class="tkboat__course">2コース</span><span class="tkboat__techs"><span class="tktag" style="--p:.09">差し <b>9%</b></span><span class="tktag" style="--p:.03">まくり <b>3%</b></span></span></li>
+      <li class="tkboat__row"><span class="boat boat-3">3</span><span class="tkboat__course">3コース</span><span class="tkboat__techs"><span class="tktag" style="--p:.06">まくり <b>6%</b></span><span class="tktag" style="--p:.04">まくり差し <b>4%</b></span></span></li>
+      <li class="tkboat__row"><span class="boat boat-4">4</span><span class="tkboat__course">4コース</span><span class="tkboat__techs"><span class="tktag" style="--p:.07">まくり <b>7%</b></span><span class="tktag" style="--p:.03">まくり差し <b>3%</b></span></span></li>
+      <li class="tkboat__row"><span class="boat boat-5">5</span><span class="tkboat__course">5コース</span><span class="tkboat__techs"><span class="tktag" style="--p:.02">まくり差し <b>2%</b></span></span></li>
+      <li class="tkboat__row"><span class="boat boat-6">6</span><span class="tkboat__course">6コース</span><span class="tkboat__none">1%以上の決まり手なし</span></li>
+    </ul>
+    <h3 style="margin:0">スタート隊形</h3>
+    <div id="sform"></div>
+    <div class="oddsnote"><svg><use href="#i-info"/></svg><span>着順の確率とは別のモデルで計算しているため、数字が一致しないことがあります。</span></div>
+  </div>
+  <p class="note">一言は型の名前 + 艇番 + %だけ。艇ごとの表は確率の大きい順の札(★ = そのレースで最も大きい組合せ、札の下の細い棒 = 確率)。隊形は 50% の破線より右が「内より先の見込みが高い」(▲ と数字が藍)。</p>
+
+  <h2>34. 仮想の購入者(累計収支・人ごとの成績・振り返り)</h2>
+  <div class="row" style="margin-bottom:6px"><span class="periodtag periodtag--live">実運用</span><span class="u-muted" style="font-size:11px">11/2〜11/7 · 1レース1,000円で固定</span></div>
+  <div class="card stack">
+    <div class="pchips" id="pchips"></div>
+    <div id="lines"></div>
+    <p class="note" style="margin:0">表示は最大4人 + 基準(1号艇さん)。線は 色 + 線の形 + 端の印 + 端の名前で区別する。並びは固定で、回収率の順に並べ替えない。</p>
+  </div>
+  <h3>人ごとの成績</h3>
+  <div class="pcards">
+    <div class="pcard pcard--base"><div class="pcard__head"><span class="pcard__name">1号艇さん</span><span class="basetag">基準</span><span class="pcard__how">1号艇の単勝 1点(モデルを使わない基準)</span></div>
+      <dl class="pcard__stats"><div class="is-wide"><dt>回収率(95%区間)</dt><dd>76.2%<small>72〜80% · 区間が100%より下</small></dd></div><div><dt>的中率</dt><dd>50.4%</dd></div><div><dt>レース</dt><dd>610</dd></div><div><dt>最長連敗</dt><dd>9</dd></div><div><dt>最大の落ち込み</dt><dd>−98,000円</dd></div></dl></div>
+    <div class="pcard"><div class="pcard__head"><span class="pcard__name">単勝さん</span><span class="pcard__how">モデルの本命の単勝 1点</span></div>
+      <dl class="pcard__stats"><div class="is-wide"><dt>回収率(95%区間)</dt><dd>83.9%<small>74〜95%</small></dd></div><div><dt>的中率</dt><dd>48.0%</dd></div><div><dt>レース</dt><dd>610</dd></div><div><dt>最長連敗</dt><dd>7</dd></div><div><dt>最大の落ち込み</dt><dd>−98,000円</dd></div></dl></div>
+    <div class="pcard is-lown"><div class="pcard__head"><span class="pcard__name">外枠穴さん</span><span class="lown-tag"></span><span class="pcard__how">外側(4〜6コース)で展示ST・展示タイムがともに1位の艇がいるレースだけ。その艇と上位2艇の2連複 2点</span></div>
+      <dl class="pcard__stats"><div class="is-wide"><dt>回収率(95%区間)</dt><dd>131.0%<small>55〜220% · 100%をまたぐ。42レース・件数が少ないため参考程度</small></dd></div><div><dt>的中率</dt><dd>14.3%</dd></div><div><dt>レース</dt><dd>42</dd></div><div><dt>最長連敗</dt><dd>11</dd></div><div><dt>最大の落ち込み</dt><dd>−16,000円</dd></div></dl></div>
+  </div>
+  <h3>振り返り(過去の検証と実運用の両方で上がったものだけ)</h3>
+  <ol class="reflects">
+    <li class="reflect"><span class="reflect__kind">買わない</span><p>荒れ狙いさんは、「向かい風6m以上」のレースで回収率が42%でした。このレースを買わないと、過去の検証で 71%→78%、実運用で 69%→75% でした。</p><div class="reflect__nums"><span>実運用 <b>214</b>レース</span><span class="reflect__straddle">区間は100%をまたがない</span></div></li>
+    <li class="reflect is-lown"><span class="reflect__kind">点数を減らす</span><p>荒れ狙いさんは、上位10点を上位5点にすると、過去の検証で 71%→74%、実運用で 69%→72% でした。</p><div class="reflect__nums"><span>実運用 <b>88</b>レース</span><span class="lown-tag"></span><span class="reflect__straddle">区間が100%をまたぐ</span></div></li>
+    <li class="reflect"><span class="reflect__kind">券種を変える</span><p>ボックスさんは、3連単ボックスを2連単の上位3点にすると、過去の検証で 74%→79%、実運用で 72%→77% でした。</p><div class="reflect__nums"><span>実運用 <b>602</b>レース</span></div></li>
+  </ol>
+  <p class="note">方向は「買わない・点数を減らす・券種を変える」の3つだけ。金額を増やす・取り返す提案は出さない。「最適」「必ず」「勝てる」は使わない。</p>
 </div>
 
 <script src="charts.js"></script>
@@ -958,6 +1001,34 @@ document.getElementById('fetcherrors').innerHTML = fetchStates.map(e => `
   const v = [[.47,.16,.14,.12,.07,.03],[.64,.13,.09,.08,.04,.02],[.45,.17,.15,.13,.07,.03],[.48,.15,.14,.12,.08,.03]];
   const n = [[2100,2100,2100,2100,2100,180],[2300,2300,2300,150,2300,2300],[180,180,180,180,180,25],[25,25,25,25,25,25]];
   document.getElementById('heat').innerHTML = C.heatmap(['戸田','大村','平和島','江戸川'], ['1','2','3','4','5','6'], v.map((r,i) => r.map((x,j) => ({v:x, n:n[i][j]}))), {corner:'場＼コース', label:'場とコースごとの1着率'});
+})();
+// ---- v1.1: スタート隊形・仮想の購入者 ----
+(function () {
+  const C = window.BRCharts;
+  document.getElementById('sform').innerHTML = C.startFormation([1,2,3,4,5,6].map(c => ({course:c, entry:c})),
+    {ahead_of_inner:{'2':.41,'3':.38,'4':.52,'5':.33,'6':.30}, kado_ahead_of_3:.52, top_start:{'1':.22,'2':.15,'3':.14,'4':.24,'5':.13,'6':.12}});
+  const days = ['11/2','11/3','11/4','11/5','11/6','11/7'];
+  const people = [
+    {id:'win_fav', name:'単勝さん', values:[-12000,-25000,-31000,-52000,-70000,-98000]},
+    {id:'boat1', name:'1号艇さん', base:true, values:[-18000,-40000,-61000,-83000,-120000,-145000]},
+    {id:'in_nige', name:'イン逃げさん', values:[-30000,-41000,-90000,-86000,-131000,-160000]},
+    {id:'app', name:'アプリさん', values:[-25000,-60000,-48000,-105000,-120000,-176000]},
+    {id:'box3', name:'ボックスさん', values:[-40000,-71000,-95000,-120000,-152000,-190000]},
+    {id:'outer_ana', name:'外枠穴さん', values:[null,6000,4000,14000,9000,13000], lown:true},
+  ];
+  let selected = new Set(['win_fav','app','outer_ana']);
+  function render() {
+    const base = people.find(p => p.base), sel = people.filter(p => !p.base && selected.has(p.id));
+    document.getElementById('lines').innerHTML = C.lines([...sel, base], days, {label:'仮想の購入者の累計収支'});
+    let slot = 0;
+    document.getElementById('pchips').innerHTML = people.map(p => {
+      if (p.base) return `<button class="pchip pchip--base" aria-pressed="true" aria-disabled="true">${C.lineSwatch('base')}${p.name}(基準・常に表示)</button>`;
+      const on = selected.has(p.id), sw = on ? C.lineSwatch(slot++) : '';
+      return `<button class="pchip" data-id="${p.id}" aria-pressed="${on}" ${!on && selected.size >= 4 ? 'disabled title="同時に表示できるのは4人まで"' : ''}>${sw}${p.name}</button>`;
+    }).join('');
+    document.querySelectorAll('.pchip[data-id]').forEach(b => b.addEventListener('click', () => { const id = b.dataset.id; selected.has(id) ? selected.delete(id) : selected.add(id); render(); }));
+  }
+  render();
 })();
 </script>
 </body>

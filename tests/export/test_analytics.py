@@ -93,7 +93,7 @@ def test_rankings_keep_two_days(tmp_path):
 
 SAMPLE = REPO / "docs" / "data" / "sample" / "analytics"
 LIMIT_KIND = {"stadiums.json": "stadiums", "model_weakness.json": "model_weakness", "simulator.json": "simulator",
-              "index.json": "index"}
+              "index.json": "index", "personas.json": "personas"}
 
 
 @pytest.mark.skipif(not SAMPLE.exists(), reason="サンプルが無い")
@@ -119,3 +119,68 @@ def test_sample_analytics_files():
     # シミュレーターは検証と実運用を分ける
     sim = json.loads((SAMPLE / "simulator.json").read_text())
     assert "validation" in sim and "live" in sim
+
+
+def _persona_body(n_days=4, reflections=False):
+    def row(i, races):
+        r = {"id": f"p{i}", "name": f"さん{i}", "description": "x", "is_baseline": i == 1, "races_available": races,
+             "races_bought": races, "stake": races * 1000, "return": races * 900, "profit": -races * 100,
+             "level": ar.sample_level(races), "roi": 0.912345, "roi_ci95": [0.8, 1.0123456], "hit_rate": 0.31,
+             "max_losing_streak": 5, "max_drawdown_yen": 1000,
+             "by_day": [{"day": f"2026-11-{d + 1:02d}", "races_bought": 10, "stake": 10000 + d * 137 * i,
+                         "return": 9000 + d * 7919 % 9973, "profit": -1000 - d * 31 * i, "cum_profit": -d * 977 * i,
+                         "level": "insufficient", "roi": 0.9}
+                        for d in range(n_days)],
+             "by_week": [{"week": "2026-W45", "races_bought": races, "stake": 1, "return": 1, "profit": 0,
+                          "cum_profit": 0, "roi": 1.0}]}
+        if reflections:
+            r["reflections"] = ["荒れたレースで外した"]
+        return r
+    return {"budget_per_race_yen": 1000, "rules": "固定",
+            "live": {"from": "2026-11-02", "to": "2026-11-06", "app_strategy_changes": [],
+                     "rows": [row(i, 12 if i == 2 else 300) for i in range(10)]},
+            "history": {"from": "2026-10-01", "to": "2026-10-31", "note": "後知恵を含む",
+                        "rows": [{k: v for k, v in row(i, 4000).items() if k != "by_day"} for i in range(10)]}}
+
+
+def test_personas_levels_rounding_reflections(tmp_path):
+    an.export_personas("2026-11-02", "2026-11-06", (tmp_path,), GEN,
+                       builder=lambda f, t: _persona_body(reflections=True))
+    obj = json.loads((tmp_path / "analytics" / "personas.json").read_text())
+    rows = obj["live"]["rows"]
+    assert len(rows) == 10 and rows[1]["is_baseline"] is True
+    assert rows[0]["roi"] == 0.9123 and rows[0]["roi_ci95"] == [0.8, 1.0123]
+    assert rows[2]["level"] == "insufficient" and rows[2]["roi"] is None and rows[2]["roi_ci95"] is None
+    assert rows[2]["stake"] == 12000                                     # 件数・金額は残す
+    assert rows[0]["by_day"][0]["roi"] is None                           # 日ごとの少数も率なし
+    assert rows[0]["by_week"][0]["level"] == "normal"                    # level が無ければ件数から付ける
+    assert rows[0]["reflections"] == ["荒れたレースで外した"]
+    assert obj["history"]["explanation"] == "後知恵を含む" and obj["live"]["by_day_thinned"] is False
+    assert check_forbidden(obj) == []
+
+
+def test_personas_thins_daily_when_too_big(tmp_path):
+    an.export_personas("2026-11-02", "2026-11-06", (tmp_path,), GEN, builder=lambda f, t: _persona_body(n_days=400))
+    obj = json.loads((tmp_path / "analytics" / "personas.json").read_text())
+    assert obj["live"]["by_day_thinned"] is True and all("by_day" not in r for r in obj["live"]["rows"])
+    assert all(r["by_week"] for r in obj["live"]["rows"])
+
+
+def test_personas_forbidden(tmp_path):
+    body = _persona_body()
+    body["live"]["rows"][0]["purchases"] = [{"race_id": "x"}]
+    with pytest.raises(SchemaError):
+        an.export_personas("a", "b", (tmp_path,), GEN, builder=lambda f, t: body)
+
+
+@pytest.mark.skipif(not (SAMPLE / "personas.json").exists(), reason="サンプルが無い")
+def test_sample_personas():
+    p = SAMPLE / "personas.json"
+    obj = json.loads(p.read_text())
+    ar.check_size("personas", len(gzip.compress(p.read_bytes())))
+    assert check_forbidden(obj) == []
+    ids = [r["id"] for r in obj["live"]["rows"]]
+    assert ids == ["win_fav", "boat1", "in_nige", "app", "box3", "quinella3", "steady", "upset", "outer_ana",
+                   "select10"]
+    assert any(r["is_baseline"] for r in obj["live"]["rows"]) and obj["history"]["rows"]
+    assert "app_strategy_changes" in obj["live"]

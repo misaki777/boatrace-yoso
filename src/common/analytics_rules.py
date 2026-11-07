@@ -228,6 +228,7 @@ SIZE_LIMITS_GZIP: dict[str, int] = {
     "model_weakness": 80 * KB,
     "simulator": 150 * KB,
     "weekly": 20 * KB,
+    "personas": 30 * KB,  # 仮想の購入者(spec/11 8章)
 }
 
 

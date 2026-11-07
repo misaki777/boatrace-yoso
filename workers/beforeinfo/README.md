@@ -30,12 +30,36 @@ Cloudflare の Cron Trigger で5分ごとに起動し、締切の15〜10分前�
 ログ(`wrangler tail`): 1ページごとに `race_id`・`status`・`minutes_before_close`・所要時間、起動ごとに件数・使用数・結果。
 **トークン・展示タイムなどの値・HTML は出さない**(テストで確認)。稼働後は `status` と `minutes_before_close` を見て時間帯を調整する。
 
+## 締切前オッズの記録(同じ Worker に同居。spec/13)
+
+無料プランの Cron Trigger が上限(5つ)のため、同じ5分ごとの起動の中で、直前情報の後に動きます(`src/odds.mjs`)。
+
+- 対象: schedule の全レース。締切の **8〜3分前**(`ODDS_WINDOW_START_MIN`〜`ODDS_WINDOW_END_MIN`)に、
+  単勝・複勝(`oddstf`)と2連単・2連複(`odds2tf`)を **1回ずつ** 取る。3連単は `ODDS_TYPES="tf,2tf,3t"` で追加(既定は取らない)。
+  失敗したページも取り直さない。
+- 保存: R2 の `odds/YYYYMMDD/SS-RR.json`(非公開)。HTML は保存しない。形:
+  `{race_id, closed_at, pages: {tf: {status, fetched_at, minutes_before_close, odds_time_label, is_final_odds}, ...}, odds: {win, place, exacta, quinella[, trifecta]}}`。
+  `odds` の形は odds-proxy・Python(`spec/07` 2.6)と同じ。取れたページが1つも無いレースは保存しない(状態にだけ残す)。
+- 解析は `workers/odds-proxy/src/parse.mjs` をそのまま import(共通 fixture `tests/fixtures/official_odds/` で Python と一致を確認済み。
+  wrangler が1つにまとめてデプロイする)。
+- 優先順位と1回の起動のページ数: **直前情報が先**(最大3ページ)、残りの枠(合計 `TICK_PAGE_LIMIT`、既定5)でオッズを **締切が近い順** に。
+  間隔は両方を通して1.5秒以上。1回の起動は最大 約5×(10秒+1.5秒) ≒ 1分(Cron の起動は15分まで動ける)。CPU は1ページ1ms未満の見込み。
+- 上限・停止は直前情報と **別**: 1日 `ODDS_DAILY_LIMIT`(既定300)ページ、公式の 403/429、3回続けての失敗で
+  `odds/YYYYMMDD/_stopped.json` を書き、その日の **オッズの取得だけ** を止める(直前情報は続ける。逆も同じ)。
+  状態は `odds/YYYYMMDD/_state.json`。再開は `_stopped.json` を消す(下の「止める・再開する」のパスを `odds/` に替える)。
+- ログ: `"event":"odds_page"` に race_id・券種・状態・締切までの分・所要時間だけ。オッズの数値・公式の表記は出さない。
+- `GET /` の状態に `odds_used_today`・`odds_limit_per_day`・`odds_stopped` を追加。
+- 公式へのアクセスは、直前情報 約150〜300 + オッズ 約300(2ページ×約150レース)ページ/日。odds-proxy(スマホからの取得)とは別に数える。
+
+注意: 窓の既定は 8〜3分前(指示の例は 7〜4分前)。Cron が5分ごとなので、幅が5分より狭いと窓に入らないレースが出るため。
+
 ## ファイル
 
 | ファイル | 内容 |
 |---|---|
 | `src/index.mjs` | Cron の処理(`runTick`)と GitHub への dispatch。`fetch` は状態の要約だけを返す(取得しない) |
 | `src/parse.mjs` | HTML の解析(Python の `parse_beforeinfo` と同じ切り出し方・正規表現) |
+| `src/odds.mjs` | 締切前オッズの記録(窓・上限・停止・保存) |
 | `src/core.mjs` | 時刻・窓の判定・R2 のキー・上限などの小さな関数 |
 | `test/*.test.mjs` | テスト(公式サイト・GitHub にはアクセスしない) |
 | `wrangler.toml.example` | 設定の雛形 |

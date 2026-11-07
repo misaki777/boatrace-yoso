@@ -126,7 +126,7 @@ def fit_calibration(method: str, Z: np.ndarray, y: np.ndarray) -> dict:
     if method == "temperature":
         return {"method": method, "params": {"T": T}}
     r = minimize(lambda x: multi_logloss(softmax(Z / np.exp(x[0]) + np.r_[0.0, x[1:]][None, :]), y),
-                 np.r_[np.log(T), np.zeros(N_CLASSES - 1)], method="L-BFGS-B")
+                 np.r_[np.log(T), np.zeros(Z.shape[1] - 1)], method="L-BFGS-B")
     return {"method": method, "params": {"T": float(np.exp(r.x[0])), "b": [0.0, *map(float, r.x[1:])]}}
 
 

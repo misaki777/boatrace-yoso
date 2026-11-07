@@ -6,6 +6,7 @@
     python -m src.export.analytics --what model [--from 2026-11-02 --to 2026-11-04]
     python -m src.export.analytics --what weekly --week 2026-W45
     python -m src.export.analytics --what simulator [--from ... --to ...]
+    python -m src.export.analytics --what personas [--from ... --to ...]   # 仮想の購入者10人(spec 11 8章)
     python -m src.export.analytics --what all --date D          # 上の全部(週は前の週)
     python -m src.export.analytics --what all --date D --sample # docs/data/sample(-local)/analytics/ に作る
 
@@ -261,6 +262,63 @@ def export_simulator(live_from, live_to, out_dirs, generated_at, builder: Callab
 
 
 # ---------------------------------------------------------------------------
+# 仮想の購入者 10人(E-16、spec 11 8章)
+# ---------------------------------------------------------------------------
+
+RATE_KEYS = ("roi", "roi_ci95", "hit_rate")
+
+
+def _apply_levels(v: Any) -> Any:
+    """件数の区分が insufficient の集計は、率(回収率・区間・的中率)を null にする(件数・金額は残す)。
+
+    level が無く races_bought があるときは、その件数から区分を付ける。
+    """
+    if isinstance(v, list):
+        return [_apply_levels(x) for x in v]
+    if not isinstance(v, dict):
+        return v
+    out = {k: _apply_levels(x) for k, x in v.items()}
+    if "races_bought" in out and "level" not in out:
+        out["level"] = ar.sample_level(out["races_bought"])
+    if out.get("level") == ar.SAMPLE_INSUFFICIENT:
+        for k in RATE_KEYS:
+            if k in out:
+                out[k] = None
+    return out
+
+
+def _thin_daily(obj: dict[str, Any]) -> dict[str, Any]:
+    """サイズ上限を超えるときに、live の日ごとの推移を外す(週ごとだけ残す)。"""
+    import copy
+
+    o = copy.deepcopy(obj)
+    for row in (o.get("live") or {}).get("rows", []):
+        row.pop("by_day", None)
+    o["live"]["by_day_thinned"] = True
+    return o
+
+
+def build_personas_json(body: dict[str, Any], generated_at: str) -> dict[str, Any]:
+    """build_personas の結果を公開用にする: 小数4桁、NaN → null、件数不足の率を null、説明文のキー名の変更。
+
+    reflections(各人の反省点の文。モデル担当があとで足す)は、あればそのまま通す。
+    """
+    obj = _envelope("personas", generated_at, **_apply_levels(clean(body)))
+    obj.setdefault("live", {})["by_day_thinned"] = False
+    return obj
+
+
+def export_personas(live_from, live_to, out_dirs, generated_at, builder: Callable | None = None) -> Path:
+    if builder is None:
+        from src.model.personas import build_personas as builder
+    obj = build_personas_json(builder(live_from, live_to), generated_at)
+    size = len(gzip.compress(dumps(obj).encode("utf-8")))
+    if size > ar.SIZE_LIMITS_GZIP["personas"]:
+        obj = _thin_daily(obj)          # それでも超えれば write_analytics が失敗させる
+    return write_analytics(obj, "personas.json", "personas", out_dirs)
+
+
+# ---------------------------------------------------------------------------
 # index.json
 # ---------------------------------------------------------------------------
 
@@ -279,7 +337,7 @@ def build_index(base: Path, generated_at: str) -> dict[str, Any]:
                 m[k] = o[k]
         return m
 
-    for name in ("stadiums", "model_weakness", "simulator"):
+    for name in ("stadiums", "model_weakness", "simulator", "personas"):
         p = root / f"{name}.json"
         if p.exists():
             files[name] = meta(p)
@@ -326,6 +384,8 @@ def run(what: str, d: Date | None, week: str | None, d_from: str | None, d_to: s
         done.append(export_weekly(week or previous_iso_week(d), out_dirs, generated_at))
     if what in ("simulator", "all"):
         done.append(export_simulator(live_from, live_to, out_dirs, generated_at))
+    if what in ("personas", "all"):
+        done.append(export_personas(live_from, live_to, out_dirs, generated_at))
     write_index(out_dirs, generated_at)
     return done
 
@@ -333,7 +393,7 @@ def run(what: str, d: Date | None, week: str | None, d_from: str | None, d_to: s
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="分析用の公開JSON(spec 11)")
     ap.add_argument("--what", required=True,
-                    choices=("stadiums", "rankings", "cube", "model", "weekly", "simulator", "all"))
+                    choices=("stadiums", "rankings", "cube", "model", "weekly", "simulator", "personas", "all"))
     ap.add_argument("--date", default=None, help="YYYY-MM-DD(rankings の日、既定は今日)")
     ap.add_argument("--week", default=None, help="YYYY-Www(既定は前の週)")
     ap.add_argument("--from", dest="d_from", default=None, help="実運用の集計の開始日")

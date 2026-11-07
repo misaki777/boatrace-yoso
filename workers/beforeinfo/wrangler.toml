@@ -25,6 +25,12 @@ LAST_CHANCE_MIN = "5"      # 1回の起動の上限(3ページ)で回された�
 GITHUB_REPO = "misaki777/boatrace-yoso"
 GITHUB_WORKFLOW = "daily.yml"
 DISPATCH_MODE = "lock"
+TICK_PAGE_LIMIT = "5"       # 1回の起動で取る合計ページ数(直前情報が先に最大3、残りでオッズ)。1〜8
+# 締切前オッズの記録(odds/YYYYMMDD/SS-RR.json)。上限・停止は直前情報とは別
+ODDS_TYPES = "tf,2tf"       # 3連単も取るなら "tf,2tf,3t"
+ODDS_WINDOW_START_MIN = "8" # 締切の何分前から
+ODDS_WINDOW_END_MIN = "3"   # 何分前まで(Cron が5分ごとなので、幅は5分以上に。2以上)
+ODDS_DAILY_LIMIT = "300"
 
 [observability]
 enabled = true

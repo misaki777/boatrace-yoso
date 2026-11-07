@@ -1227,3 +1227,119 @@ tr.is-lown td { color: var(--c-text-3); }
 /* 小タブをアプリバーの下に固定 */
 .subtabs--sticky { position: sticky; top: var(--appbar-h, 52px); z-index: 9; background: var(--c-surface); }
 .subtabs--fill > * { flex: 1 1 0; min-width: 0; padding: 0 2px; font-size: var(--size-xs); }
+
+/* =====================================================================
+   v1.1 追加: 展開予想の拡張(spec/10 3.4)・仮想の購入者(spec/11 8〜9章)
+   ===================================================================== */
+
+/* ---------- 展開の一言 ----------
+   <p class="tk-summary"><span class="tk-summary__type">カドまくり警戒</span><span><span class="boat boat--sm boat-4">4</span> 4号艇(カド)が3コースより先に出る確率 52%</span></p>
+   型の名前 + 艇番 + 数字だけ。断定語は使わない(文言は spec/09 tenkai.summary.*) */
+.tk-summary { display: flex; align-items: flex-start; gap: var(--space-3); margin: 0; padding: 10px var(--space-4); border-radius: var(--radius-sm); background: var(--c-accent-weak); color: var(--c-text); font-size: var(--size-sm); line-height: 1.55; border-left: 4px solid var(--c-accent); }
+.tk-summary::before { content: "“"; font-size: 28px; line-height: .9; font-weight: var(--weight-heavy); color: var(--c-accent-text); flex: none; }
+.tk-summary__type { display: block; font-weight: var(--weight-heavy); font-size: var(--size-md); color: var(--c-accent-text); }
+.tk-summary .boat { vertical-align: -4px; margin-right: 2px; }
+
+/* ---------- 艇ごとの決まり手の表 ----------
+   行 = 艇(枠番バッジ + 予定コース)、右に「逃げ 55%」などの札(確率の大きい順、1%未満は省略)。札の中に細い棒 */
+.tkboat { list-style: none; margin: 0; padding: 0; }
+.tkboat__row { display: grid; grid-template-columns: auto 3.2em minmax(0, 1fr); align-items: center; gap: var(--space-3); min-height: 40px; border-top: 1px solid var(--c-border); padding: 4px 0; }
+.tkboat__row:first-child { border-top: 0; }
+.tkboat__course { font-size: var(--size-2xs); color: var(--c-text-3); white-space: nowrap; }
+.tkboat__techs { display: flex; flex-wrap: wrap; gap: 4px; }
+.tktag { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px 2px; border-radius: var(--radius-xs); border: 1px solid var(--c-border-strong); background: var(--c-surface); font-size: var(--size-xs); font-weight: var(--weight-bold); white-space: nowrap; font-variant-numeric: tabular-nums; overflow: hidden; }
+.tktag::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: calc(var(--p, 0) * 100%); background: var(--c-bar-fill); }
+.tktag b { font-weight: var(--weight-heavy); }
+.tktag--main { border: 2px solid var(--c-accent); color: var(--c-accent-text); }
+.tktag--main::before { content: "★"; font-size: .85em; }
+.tktag--main::after { background: var(--c-bar-fill-top); }
+.tkboat__none { font-size: var(--size-2xs); color: var(--c-text-3); }
+
+/* ---------- スタート隊形(BRCharts.startFormation) ---------- */
+.sform { display: flex; flex-direction: column; font-size: var(--size-xs); }
+.sform__kado { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px var(--space-3); padding: 8px var(--space-3); margin-bottom: var(--space-3); border-radius: var(--radius-sm); background: var(--c-surface-2); font-size: var(--size-xs); color: var(--c-text-2); }
+.sform__kado b { font-size: var(--size-lg); color: var(--c-text); }
+.sform__kado .sform__meter { grid-column: 1 / -1; }
+.sform__meter { position: relative; display: block; height: 8px; border-radius: 4px; background: var(--c-bar-track); }
+.sform__meter > i { position: absolute; inset: 0 auto 0 0; width: calc(var(--p) * 100%); border-radius: inherit; background: var(--c-bar-fill-top); }
+.sform__meter::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1.5px dashed var(--c-text-2); }
+.kado-tag { display: inline-flex; align-items: center; height: 18px; padding: 0 5px; border-radius: 3px; border: 1.5px solid var(--c-text); font-size: 10px; font-weight: var(--weight-heavy); color: var(--c-text); }
+.sform__head, .sform__row { display: grid; grid-template-columns: 6.2em minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+.sform__head { font-size: var(--size-2xs); color: var(--c-text-3); font-weight: var(--weight-bold); padding-bottom: 4px; }
+.sform__row { min-height: 38px; border-top: 1px solid var(--c-border); }
+.sform__row.is-kado { background: var(--c-surface-2); }
+.sform__lane { display: flex; align-items: center; gap: 5px; }
+.sform__cno { width: 1.2em; text-align: center; font-weight: var(--weight-heavy); color: var(--c-text-2); font-variant-numeric: tabular-nums; }
+.sform__ahead, .sform__top { display: grid; grid-template-columns: auto minmax(0, 1fr) 2.8em; align-items: center; gap: 4px; }
+.sform__top { grid-template-columns: minmax(0, 1fr) 2.8em; }
+.sform__ahead b, .sform__top b { text-align: right; font-variant-numeric: tabular-nums; }
+.sform__arrow { color: var(--c-text-3); font-size: 10px; }
+.sform__ahead.is-likely .sform__arrow { color: var(--c-accent-text); }
+.sform__ahead.is-likely b { color: var(--c-accent-text); }
+.sform__ahead.is-none { color: var(--c-text-3); font-size: var(--size-2xs); }
+.sform__bar { position: relative; height: 8px; border-radius: 4px; background: var(--c-bar-track); }
+.sform__bar > i:first-child { position: absolute; inset: 0 auto 0 0; width: calc(min(var(--p), 1) * 100%); border-radius: inherit; background: var(--c-bar-fill); }
+.sform__ahead.is-likely .sform__bar > i:first-child { background: var(--c-bar-fill-top); }
+.sform__bar > i.half { position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1.5px dashed var(--c-text-2); }
+.sform__top.is-max b::before { content: "★"; color: var(--c-accent-text); }
+.sform__top.is-max .sform__bar > i { background: var(--c-bar-fill-top); }
+.sform__foot { font-size: var(--size-2xs); color: var(--c-text-3); margin-top: 6px; line-height: 1.5; }
+
+/* ---------- 多系列の折れ線(BRCharts.lines) ----------
+   色 + 線の形(実線・破線・点線・一点鎖線)+ 端の印(●■▲◆)+ 端の名前。基準(1号艇さん)は灰の破線・印なし */
+.lines .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.lines .ln.is-lown { stroke-width: 1.5; opacity: .7; }
+.lines .zero { stroke: var(--c-text-2); stroke-width: 1.2; }
+.lines .zero-lbl { fill: var(--c-text-2); font-size: 10px; font-weight: 700; }
+.lines .vmark { stroke: var(--c-text-2); stroke-width: 1; stroke-dasharray: 3 3; }
+.lines .vmark-lbl { fill: var(--c-text-2); font-size: 10px; }
+.lines .end-lbl { font-size: 10.5px; font-weight: 700; }
+.lines .mk { stroke: var(--c-surface); stroke-width: 1.5; }
+.ln-s1 { stroke: var(--c-series-1); } .mk.ln-s1, .end-lbl.ln-s1 { fill: var(--c-series-1); }
+.ln-s2 { stroke: var(--c-series-2); } .mk.ln-s2, .end-lbl.ln-s2 { fill: var(--c-series-2); }
+.ln-s3 { stroke: var(--c-series-3); } .mk.ln-s3, .end-lbl.ln-s3 { fill: var(--c-series-3); }
+.ln-s4 { stroke: var(--c-series-4); } .mk.ln-s4, .end-lbl.ln-s4 { fill: var(--c-series-4); }
+.ln-base { stroke: var(--c-series-base); } .end-lbl.ln-base { fill: var(--c-series-base); }
+.ln-swatch { width: 28px; height: 10px; flex: none; }
+.ln-swatch .ln { fill: none; stroke-width: 2; }
+.ln-swatch .mk { stroke: var(--c-surface); stroke-width: 1; }
+
+/* ---------- 表示する人の選択チップ ----------
+   <button class="pchip" aria-pressed="true"><svg class="ln-swatch">…</svg>単勝さん</button>。選択中は線の見本を出す(凡例を兼ねる)。
+   基準(1号艇さん)は .pchip--base で常に表示(押せない)。同時に選べるのは4人まで(5人目は disabled + 理由) */
+.pchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pchip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: var(--radius-pill); border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-text-2); font: inherit; font-size: var(--size-xs); font-weight: var(--weight-bold); cursor: pointer; }
+.pchip .ln-swatch { display: none; }
+.pchip[aria-pressed="true"] { color: var(--c-text); border: 2px solid var(--c-text); }
+.pchip[aria-pressed="true"] .ln-swatch { display: block; }
+.pchip--base { border-style: dashed; cursor: default; }
+.pchip--base .ln-swatch { display: block; }
+.pchip:disabled:not(.pchip--base) { color: var(--c-text-3); border-style: dotted; cursor: not-allowed; }
+.pchip:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+/* ---------- 人ごとの成績カード ----------
+   並びは固定(spec/11 8.1 の順)。回収率の順に並べ替えない。「おすすめ」「最適」は使わない */
+.pcard { border: 1px solid var(--c-border); border-radius: var(--radius-md); background: var(--c-surface); padding: var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+.pcard__head { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.pcard__name { font-size: var(--size-md); font-weight: var(--weight-heavy); }
+.pcard__how { font-size: var(--size-2xs); color: var(--c-text-3); width: 100%; line-height: 1.5; }
+.pcard__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px var(--space-3); margin: 0; }
+.pcard__stats dt { font-size: var(--size-2xs); color: var(--c-text-3); }
+.pcard__stats dd { margin: 0; font-size: var(--size-md); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+.pcard__stats dd small { display: block; font-size: var(--size-2xs); font-weight: var(--weight-regular); color: var(--c-text-3); }
+.pcard__stats .is-wide { grid-column: span 2; }
+.pcard.is-lown .pcard__stats dd { color: var(--c-text-3); }
+.pcard--base { border-style: dashed; }
+.pcards { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* ---------- 振り返り(反省点の自動表示) ----------
+   <ol class="reflects"><li class="reflect"><p>…</p><div class="reflect__nums">検証 81%→88% · 実運用 79%→85%(212R)</div></li></ol>
+   方向は「買わない・点数を減らす・券種を変える」の3つだけ(金額を増やす提案は出さない)。件数が少ないものは .is-lown + 参考 */
+.reflects { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.reflect { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px var(--space-3); padding: var(--space-3); border-radius: var(--radius-sm); background: var(--c-surface-2); font-size: var(--size-sm); line-height: 1.55; }
+.reflect__kind { grid-row: span 2; display: inline-flex; align-items: center; justify-content: center; height: 22px; padding: 0 6px; border-radius: 3px; border: 1px solid var(--c-border-strong); background: var(--c-surface); font-size: 10px; font-weight: var(--weight-heavy); color: var(--c-text-2); white-space: nowrap; }
+.reflect p { margin: 0; }
+.reflect__nums { font-size: var(--size-2xs); color: var(--c-text-2); font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; gap: 2px var(--space-3); align-items: center; }
+.reflect__nums b { color: var(--c-text); }
+.reflect.is-lown p { color: var(--c-text-2); }
+.reflect__straddle { font-size: var(--size-2xs); color: var(--c-text-2); }
