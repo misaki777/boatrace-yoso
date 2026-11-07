@@ -8,7 +8,7 @@
 | state/recent.tar.gz                | 当月・前月の raw(openapi・turnmark)と odds の interim、     | 取得・保存   |
 |                                    | 直近400日分の月の interim(races・entries・payouts)、取得ログ |              |
 | state/predictions.tar.gz           | 確定済みの予想 data/predictions/ の全部(記録なので消さない) | 取得・保存   |
-| state/models.tar.gz                | 採用中のモデル(latest が指すもの。展開予想 models/tenkai/ も)と、その eval・backtest の要約 | 取得・保存 |
+| state/models.tar.gz                | 採用中のモデル(latest が指すもの。展開予想 models/tenkai/・tenkai2/ も)と、その eval・backtest の要約 | 取得・保存 |
 | archive/raw/YYYY-MM.tar.gz         | 月ごとの raw(openapi・turnmark)                             | 前日確定ジョブがその月を保存 |
 | archive/interim/YYYY-MM.tar.gz     | 月ごとの interim                                             | 前日確定ジョブがその月を保存 |
 
@@ -241,8 +241,9 @@ def models_files(root: Path = ROOT) -> list[str]:
         files += (root / "models" / variant_of(mid) / mid).rglob("*")
         files += (root / "reports/eval" / mid).rglob("*")
         files += (root / "reports/backtest" / mid).glob("*/summary.json")
-    # 展開予想: models/tenkai/<variant>/latest が指す models/tenkai/<variant>/<id>/(src/model/tenkai.py)
-    for p in sorted((root / "models/tenkai").glob("*/latest")):
+    # 展開予想: models/{tenkai,tenkai2}/<variant>/latest が指す models/{tenkai,tenkai2}/<variant>/<id>/
+    # (src/model/tenkai.py・tenkai2.py)
+    for p in sorted([*(root / "models/tenkai").glob("*/latest"), *(root / "models/tenkai2").glob("*/latest")]):
         mid = p.read_text(encoding="utf-8").strip()
         if mid:
             files += [p, *(p.parent / mid).rglob("*")]

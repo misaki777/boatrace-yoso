@@ -66,10 +66,13 @@ ensure_state() {
 tenkai_and_cards() {
   local v="$1"
   run "$PY" -m src.features.build_tenkai --variant "$v" --date "$D" --state "$(state_file "$D")"
+  # 踏み込んだ展開予想(tenkai2)も同じ当日の特徴量(data/features/today/YYYYMMDD_tenkai_{variant}.parquet)を読む
   if [ "$v" = "pre" ]; then
     run "$PY" -m src.model.predict_tenkai --date "$D" --variant pre
+    run "$PY" -m src.model.tenkai2 --predict --date "$D" --variant pre
   else
     run "$PY" -m src.model.predict_tenkai --date "$D" --variant preview --per-race-lock
+    run "$PY" -m src.model.tenkai2 --predict --date "$D" --variant preview --per-race-lock
   fi
   run "$PY" -m src.features.racer_cards --date "$D" --state "$(state_file "$D")"
 }

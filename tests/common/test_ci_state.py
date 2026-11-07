@@ -40,11 +40,14 @@ def tree(tmp_path):
         "reports/backtest/pre_20261104_db90/top_k_test/bets.parquet",
         "models/tenkai/pre/tenkai_pre_20261105_c283/model.txt",
         "models/tenkai/pre/tenkai_pre_20261101_aaaa/model.txt",
+        "models/tenkai2/pre/tenkai2_pre_20261107_36e9/who.txt",
+        "models/tenkai2/pre/tenkai2_pre_20261101_bbbb/who.txt",
     ]:
         _touch(r, rel)
     _touch(r, "models/latest", "pre_20261104_db90\n")
     _touch(r, "models/preview/latest", "preview_20261104_0b0e\n")
     _touch(r, "models/tenkai/pre/latest", "tenkai_pre_20261105_c283\n")
+    _touch(r, "models/tenkai2/pre/latest", "tenkai2_pre_20261107_36e9\n")
     return r
 
 
@@ -78,7 +81,9 @@ def test_models_only_latest(tree):
     assert "reports/backtest/pre_20261104_db90/top_k_test/summary.json" in files
     assert "models/tenkai/pre/latest" in files
     assert "models/tenkai/pre/tenkai_pre_20261105_c283/model.txt" in files
-    assert not any("9c45" in f or "bets.parquet" in f or "aaaa" in f for f in files)
+    assert "models/tenkai2/pre/latest" in files
+    assert "models/tenkai2/pre/tenkai2_pre_20261107_36e9/who.txt" in files
+    assert not any("9c45" in f or "bets.parquet" in f or "aaaa" in f or "bbbb" in f for f in files)
 
 
 def test_lookback_months():
@@ -145,10 +150,13 @@ def test_ci_run_daytime_order():
         pytest.skip("pre 予想が無い環境")
     assert mods == ["src.collect.fetch", "src.features.build_interim", "src.features.build_features",
                     "src.features.build_features", "src.model.predict", "src.features.build_tenkai",
-                    "src.model.predict_tenkai", "src.features.racer_cards", "src.export.export_day",
+                    "src.model.predict_tenkai", "src.model.tenkai2", "src.features.racer_cards", "src.export.export_day",
                     "src.export.export_index", "src.export.phase3b"]
-    assert any("predict_tenkai --date 2026-11-05 --variant preview --per-race-lock" in c
-               for c in _dry("daytime", "2026-11-05"))
+    day = _dry("daytime", "2026-11-05")
+    assert any("predict_tenkai --date 2026-11-05 --variant preview --per-race-lock" in c for c in day)
+    assert any("tenkai2 --predict --date 2026-11-05 --variant preview --per-race-lock" in c for c in day)
+    mo = [c.split()[2] for c in _dry("morning", "2026-11-05") if c.startswith("python")]
+    assert mo.index("src.features.build_tenkai") < mo.index("src.model.tenkai2") < mo.index("src.export.export_day")
 
 
 def test_ci_run_morning_tenkai_and_cards():

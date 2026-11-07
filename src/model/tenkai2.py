@@ -182,8 +182,44 @@ def _baselines(y: np.ndarray, n_class: int, train_y: np.ndarray, hist: pd.DataFr
     return {"B0": tk.multi_logloss(np.tile(prior, (len(y), 1)), y), "B1": tk.multi_logloss(B1, y)}
 
 
-def train_all(variant: str, periods: Periods | None = None) -> tuple[dict, dict, dict]:
-    """A・B のモデルを学習・較正・評価する。戻り値は (boosters, meta, report)。"""
+# 小さくしたモデルの設定(日次ジョブで取得するモデルの容量を抑えるため)。学習率を上げて木の数を減らし、
+# 葉の数を減らし、葉の最小件数を増やす。faster_2〜6 は1つの二値モデルにまとめる(pair_k 列で区別)
+COMPACT_PARAMS = {"learning_rate": 0.1, "num_leaves": 15, "min_data_in_leaf": 200}
+PAIRS = (2, 3, 4, 5, 6)
+
+
+def pair_frame(X: pd.DataFrame, k: int) -> pd.DataFrame:
+    """faster のまとめたモデルの入力: 元の列 + pair_k + 予定 k コース(self_)と k−1 コース(inner_)の値を並べ直した列。
+
+    例: k=4 なら self_national_win_rate = c4_national_win_rate、inner_national_win_rate = c3_national_win_rate。
+    ペアによって見る列が違うのを、モデルが分岐で覚えなくて済むようにする(木を減らし、精度も保つ)。
+    """
+    bases = sorted({c[3:] for c in X.columns if c.startswith("c1_")})
+    add = {"pair_k": float(k)}
+    for b in bases:
+        if f"c{k}_{b}" in X.columns and f"c{k - 1}_{b}" in X.columns:
+            add[f"self_{b}"] = pd.to_numeric(X[f"c{k}_{b}"], errors="coerce")
+            add[f"inner_{b}"] = pd.to_numeric(X[f"c{k - 1}_{b}"], errors="coerce")
+    return X.assign(**add)
+
+
+def _long(X: pd.DataFrame, part: pd.DataFrame) -> tuple[pd.DataFrame, np.ndarray, np.ndarray]:
+    """faster の5つの目的変数を縦に並べた表(pair_frame の列)。戻り値は (X, y, pair)。y<0 の行は除く。"""
+    xs, ys, ks = [], [], []
+    for k in PAIRS:
+        y = part[f"faster_{k}"].to_numpy()
+        m = y >= 0
+        xs.append(pair_frame(X[m], k))
+        ys.append(y[m])
+        ks.append(np.full(m.sum(), k))
+    return pd.concat(xs, ignore_index=True), np.concatenate(ys), np.concatenate(ks)
+
+
+def train_all(variant: str, periods: Periods | None = None, compact: bool = False) -> tuple[dict, dict, dict]:
+    """A・B のモデルを学習・較正・評価する。戻り値は (boosters, meta, report)。
+
+    compact=True: COMPACT_PARAMS で学習し、faster_2〜6 を1つのモデル(faster)にまとめる。
+    """
     lgb = import_lightgbm()
     periods = periods or Periods(**{**DEFAULT_PERIODS.to_dict(), "train_from": DEFAULT_TRAIN_FROM})
     feats, cats = tk.feature_lists(variant)
@@ -207,15 +243,17 @@ def train_all(variant: str, periods: Periods | None = None) -> tuple[dict, dict,
 
     X = {n: prepare_X(p, feats, cats) for n, p in (("tr", tr), ("va", va), ("te", te))}
     tasks = {"who": ("y_who", len(classes)), "top": ("top", 6)}
-    tasks.update({f"faster_{k}": (f"faster_{k}", 2) for k in range(2, 7)})
-    boosters, meta_tasks, report = {}, {}, {"variant": variant, "classes_who": classes, "tasks": {}}
+    if not compact:
+        tasks.update({f"faster_{k}": (f"faster_{k}", 2) for k in range(2, 7)})
+    params = COMPACT_PARAMS if compact else {}
+    boosters, meta_tasks, report = {}, {}, {"variant": variant, "classes_who": classes, "tasks": {}, "compact": compact}
     for name, (col, n_class) in tasks.items():
         mtr, mva, mte = tr[col].to_numpy() >= 0, va[col].to_numpy() >= 0, te[col].to_numpy() >= 0
         if n_class == 2:
-            b = _fit_binary(lgb, X["tr"][mtr], tr[col].to_numpy()[mtr], X["va"][mva], va[col].to_numpy()[mva], cats, {})
+            b = _fit_binary(lgb, X["tr"][mtr], tr[col].to_numpy()[mtr], X["va"][mva], va[col].to_numpy()[mva], cats, params)
         else:
             b = _fit_multi(lgb, X["tr"][mtr], tr[col].to_numpy()[mtr], X["va"][mva], va[col].to_numpy()[mva],
-                           n_class, cats, {})
+                           n_class, cats, params)
         it = int(b.best_iteration) or int(b.current_iteration())
         Zva = _raw(b, X["va"][mva], it)
         calib, cv = tk.select_calibration(Zva, va[col].to_numpy()[mva], va["date"].to_numpy()[mva])
@@ -231,6 +269,27 @@ def train_all(variant: str, periods: Periods | None = None) -> tuple[dict, dict,
         boosters[name] = b
         meta_tasks[name] = {"best_iteration": it, "calibration": calib, "n_class": n_class, "cv_logloss": cv}
 
+    if compact:
+        # faster_2〜6 をまとめた1つの二値モデル。較正は1つ(valid 全体)、評価はペアごと
+        Xl = {n: _long(X[n], p) for n, p in (("tr", tr), ("va", va), ("te", te))}
+        b = _fit_binary(lgb, Xl["tr"][0], Xl["tr"][1], Xl["va"][0], Xl["va"][1], cats, params)
+        it = int(b.best_iteration) or int(b.current_iteration())
+        va_dates = np.concatenate([va["date"].to_numpy()[va[f"faster_{k}"].to_numpy() >= 0] for k in PAIRS])
+        Zva = _raw(b, Xl["va"][0], it)
+        calib, cv = tk.select_calibration(Zva, Xl["va"][1], va_dates)
+        Pte = _proba(_raw(b, Xl["te"][0], it), calib)
+        for k in PAIRS:
+            m = Xl["te"][2] == k
+            col = f"faster_{k}"
+            mte = te[col].to_numpy() >= 0
+            base = _baselines(Xl["te"][1][m], 2, tr[col].to_numpy(), hist.assign(y=hist[col]), te[mte])
+            report["tasks"][col] = {"test_races": int(m.sum()), "logloss": tk.multi_logloss(Pte[m], Xl["te"][1][m]), **base,
+                                    "calibration": calib["method"], "best_iteration": it,
+                                    "class_mean": {"1": {"pred": float(Pte[m, 1].mean()), "actual": float(Xl["te"][1][m].mean())}}}
+        boosters["faster"] = b
+        meta_tasks["faster"] = {"best_iteration": it, "calibration": calib, "n_class": 2, "cv_logloss": cv,
+                                "pairs": list(PAIRS), "pair_feature": "pair_k", "pair_columns": "self_/inner_(pair_frame)"}
+
     # 整合: A の周辺(決まり手ごとの合計)と既存の展開予想、A の「1コースの逃げ」と本体の1コースの艇の1着確率
     Pwho = _proba(_raw(boosters["who"], X["te"], meta_tasks["who"]["best_iteration"]), meta_tasks["who"]["calibration"])
     report["consistency"] = consistency(te, Pwho, classes, variant)
@@ -240,7 +299,8 @@ def train_all(variant: str, periods: Periods | None = None) -> tuple[dict, dict,
         {k: v["best_iteration"] for k, v in meta_tasks.items()}, sort_keys=True).encode()).hexdigest()[:4]
     meta = {"model_id": mid, "kind": "tenkai2", "variant": variant, "created_at": created.isoformat(timespec="seconds"),
             "train_until": periods.train_to, "periods": periods.to_dict(), "features": feats, "categorical": cats,
-            "classes_who": classes, "tasks": meta_tasks, "seed": SEED}
+            "classes_who": classes, "tasks": meta_tasks, "seed": SEED, "compact": compact,
+            "params": params}
     report["model_id"] = mid
     return boosters, meta, report
 
@@ -287,10 +347,16 @@ def model_root(variant: str, models_dir=MODELS_DIR) -> Path:
 
 
 def save(boosters: dict, meta: dict, models_dir=MODELS_DIR, set_latest: bool = False) -> Path:
+    """モデルを書く。compact のモデルは、数値の桁を丸めて小さくする(model_compact。しきい値は丸めない)。"""
+    from src.model.model_compact import compact_text
+
     d = model_root(meta["variant"], models_dir) / meta["model_id"]
     d.mkdir(parents=True, exist_ok=True)
     for name, b in boosters.items():
-        b.save_model(str(d / f"{name}.txt"), num_iteration=meta["tasks"][name]["best_iteration"])
+        f = d / f"{name}.txt"
+        b.save_model(str(f), num_iteration=meta["tasks"][name]["best_iteration"])
+        if meta.get("compact"):
+            f.write_text(compact_text(f.read_text(encoding="utf-8")), encoding="utf-8")
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     if set_latest:
         (model_root(meta["variant"], models_dir) / "latest").write_text(meta["model_id"] + "\n", encoding="utf-8")
@@ -327,8 +393,12 @@ def predict_detail(feats: pd.DataFrame, boosters: dict, meta: dict) -> pd.DataFr
     for k in range(1, 7):
         out[f"p_top_c{k}"] = Pt[:, k - 1]
     for k in range(2, 7):
-        n = f"faster_{k}"
-        out[f"p_faster_c{k}"] = _proba(_raw(boosters[n], X, t[n]["best_iteration"]), t[n]["calibration"])[:, 1]
+        if "faster" in t:  # 小さくした形(1つのモデルで pair_k を変えて5回予想する)
+            out[f"p_faster_c{k}"] = _proba(_raw(boosters["faster"], pair_frame(X, k), t["faster"]["best_iteration"]),
+                                           t["faster"]["calibration"])[:, 1]
+        else:
+            n = f"faster_{k}"
+            out[f"p_faster_c{k}"] = _proba(_raw(boosters[n], X, t[n]["best_iteration"]), t[n]["calibration"])[:, 1]
     out["headline"] = [headline(r, meta["classes_who"]) for r in out.to_dict("records")]
     out["model_id"] = meta["model_id"]
     out["variant"] = meta["variant"]
@@ -456,6 +526,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="踏み込んだ展開予想")
     parser.add_argument("--variant", default="pre", choices=list(VARIANTS))
     parser.add_argument("--set-latest", action="store_true")
+    parser.add_argument("--compact", action="store_true", help="小さくした設定で学習する(日次ジョブ用)")
     parser.add_argument("--predict", action="store_true")
     parser.add_argument("--date")
     parser.add_argument("--model-id", default="latest")
@@ -469,10 +540,13 @@ def main() -> None:
     if args.predict:
         predict_main(args)
         return
-    boosters, meta, report = train_all(args.variant)
+    boosters, meta, report = train_all(args.variant, compact=args.compact)
     d = save(boosters, meta, args.models_dir, args.set_latest)
-    (REPORTS_DIR / f"tenkai2_{args.variant}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (REPORTS_DIR / f"tenkai2_{args.variant}.md").write_text(render(report), encoding="utf-8")
+    tag = args.variant + ("_compact" if args.compact else "")
+    (REPORTS_DIR / f"tenkai2_{tag}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (REPORTS_DIR / f"tenkai2_{tag}.md").write_text(render(report), encoding="utf-8")
+    size = sum(f.stat().st_size for f in d.glob("*.txt"))
+    print(f"モデルの大きさ(圧縮前): {size / 1e6:.1f}MB")
     for n, r in report["tasks"].items():
         print(f"{n}: logloss {r['logloss']:.4f}  B0 {r['B0']:.4f}  B1 {r['B1']:.4f}")
     print(f"→ {d}")

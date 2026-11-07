@@ -49,3 +49,22 @@ def test_headline_mixed():
     h = t2.headline(_row(p_who_c1_nige=0.15, p_who_c3_makuri=0.13, p_who_c4_makuri=0.0, p_top_c3=0.23), cls)
     assert h.startswith("混戦。最も確率が高いのは1号艇の逃げ(15%)、次いで3号艇のまくり(13%)。")
     assert "本線" not in h
+
+
+def test_pair_frame():
+    X = pd.DataFrame({"c3_st": [0.15], "c4_st": [0.12], "c3_rate": [5.0], "c4_rate": [6.0], "c1_st": [0.1], "c1_rate": [7.0],
+                      "c2_st": [0.2], "c2_rate": [4.0], "stadium_number": [1]})
+    f = t2.pair_frame(X, 4)
+    assert f["pair_k"].iloc[0] == 4 and f["self_st"].iloc[0] == 0.12 and f["inner_st"].iloc[0] == 0.15
+    assert f["self_rate"].iloc[0] == 6.0 and "stadium_number" in f
+
+
+def test_compact_text_keeps_thresholds():
+    from src.model.model_compact import compact_text
+
+    txt = "\n".join(["tree", "tree_sizes=10 20", "", "Tree=0", "threshold=0.123456789012345",
+                     "leaf_value=0.123456789012345 -1.5e-07", "end of trees", "", "feature_importances:", "x=3", "",
+                     "parameters:", "[a: 1]", ""])
+    out = compact_text(txt, 6)
+    assert "tree_sizes" not in out and "feature_importances" not in out and "parameters:" in out
+    assert "threshold=0.123456789012345" in out and "leaf_value=0.123457 -1.5e-07" in out
