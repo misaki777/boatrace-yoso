@@ -1,8 +1,9 @@
 // Phase 3b の表示(spec/10、DA-6、文言 spec/09 7章): 展開予想(W-15)・選手カード(W-16)・モデルの更新履歴(W-17)
-import { html, cls } from '../html.js';
+import { html, raw, cls } from '../html.js';
+import '../charts.js';
 import { fmtNumber } from '../format.js';
 import { boat, helpBtn, emptyBox } from '../parts.js';
-import { t } from '../wording.js';
+import { t, WORDING } from '../wording.js';
 
 const pct = (p) => (typeof p === 'number' ? Math.round(p * 100) : 0);
 const FEW_N = 10; // 選手カード: 件数10未満は薄く
@@ -15,15 +16,41 @@ export function tenkaiCard(prediction) {
   const parts = [['tk-nige', '逃げ', tk.nige], ['tk-sashi', '差し', tk.sashi], ['tk-makuri', 'まくり', tk.makuri], ['tk-makurizashi', 'まくり差し', tk.makurisashi], ['tk-other', 'その他', other]];
   const rows = [['逃げ', tk.nige, true], ['差し', tk.sashi], ['まくり', tk.makuri], ['まくり差し', tk.makurisashi], ['抜き', tk.nuki], ['恵まれ', tk.megumare]];
   return html`<section class="card" aria-label="${t('tenkai.heading')}">
-    <div class="card__head"><h2 class="card__title">${t('tenkai.heading')} ${helpBtn('help.tenkai')}</h2><span class="right">${tk.model_id || ''}</span></div>
+    <div class="card__head"><h2 class="card__title">${t('tenkai.heading')} ${helpBtn('help.tenkai')}</h2><span class="right">${(tk.detail_version || tk.version) === 'preview' ? t('label.version_preview') : ''} ${tk.model_id || ''}</span></div>
     <div class="card__body tenkai">
       <div class="tenkai__hero">${boat(tk.course1_entry || 1, { size: 'lg' })}<div class="tenkai__hero-text"><span class="tenkai__hero-label">${t('tenkai.nige', { entry: tk.course1_entry || 1, pct: '' }).replace(/\s*%$/, '')}</span><span class="tenkai__hero-val">${pct(tk.nige)}<small>%</small></span></div></div>
       <div><div class="tkbar" aria-hidden="true">${parts.map(([c, , p]) => html`<i class="${c}" style="--p:${(p || 0).toFixed(3)}"></i>`)}</div>
       <div class="tkbar-labels" aria-hidden="true">${parts.map(([, n, p]) => html`<span style="--p:${(p || 0).toFixed(3)}">${n} ${pct(p)}%</span>`)}</div></div>
       <ul class="tk-rows">${rows.map(([n, p, main]) => html`<li class="${cls('tk-row', main && 'is-main')}"><span class="tk-row__name">${n}</span><div class="pbar" style="--p:${(p || 0).toFixed(3)}"><span class="pbar__fill"></span></div><span class="tk-row__pct">${pct(p)}%</span></li>`)}</ul>
     </div>
+    ${tenkaiExt(tk)}
     <p class="card__note">${t('tenkai.note')}</p>
   </section>`;
+}
+
+/** 展開予想の拡張(W-15b): 展開の一言・艇ごとの決まり手・スタート隊形。項目が無ければそれぞれ出さない */
+const TECH_NAMES = { nige: '逃げ', sashi: '差し', makuri: 'まくり', makurisashi: 'まくり差し', nuki: '抜き', megumare: '恵まれ' };
+function tenkaiExt(tk) {
+  const out = [];
+  const sm = tk.summary;
+  if (sm && (sm.type || sm.text)) {
+    const text = sm.type && WORDING[`tenkai.summary.${sm.type}`] ? t(`tenkai.summary.${sm.type}`, sm.params || {}) : sm.text;
+    if (text) out.push(html`<p class="tk-summary"><span>${text}</span></p><p class="card__note" style="padding:2px 0 0">決まった型の文です。断定するものではありません。</p>`);
+  }
+  if (Array.isArray(tk.by_boat) && tk.by_boat.length) {
+    const rows = tk.by_boat.map((b) => {
+      const techs = Object.keys(TECH_NAMES).filter((k) => typeof b[k] === 'number' && b[k] >= 0.01).sort((x, y) => b[y] - b[x]);
+      return html`<li class="tkboat__row">${boat(b.entry)}<span class="tkboat__course">${b.course}コース</span><span class="tkboat__techs">${techs.length ? techs.map((k, i) => html`<span class="${cls('tktag', i === 0 && 'tktag--main')}" style="--p:${b[k]}">${TECH_NAMES[k]} <b>${pct(b[k])}%</b></span>`) : html`<span class="faint">(1%未満)</span>`}</span></li>`;
+    });
+    out.push(html`<h3 class="tk-sub">${t('tenkai.by_boat.heading')}</h3><ul class="tkboat">${rows}</ul>`);
+  }
+  if (tk.start && typeof tk.start === 'object' && window.BRCharts && window.BRCharts.startFormation) {
+    const courses = (tk.by_boat || []).map((b) => ({ course: b.course, entry: b.entry }));
+    for (let c = 1; c <= 6; c++) if (!courses.some((x) => x.course === c)) courses.push({ course: c, entry: c });
+    courses.sort((a, b) => a.course - b.course);
+    out.push(html`<h3 class="tk-sub">${t('tenkai.start.heading')}</h3>${raw(window.BRCharts.startFormation(courses, tk.start))}`); // カドの帯は startFormation が出す
+  }
+  return out.length ? html`<div class="card__body tenkai-ext">${out}</div>` : '';
 }
 
 const PLACE = (code) => {

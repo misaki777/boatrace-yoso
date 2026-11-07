@@ -6,7 +6,7 @@ import { tabbar } from '../parts.js';
 import { t, WORDING_META } from '../wording.js';
 import { SCHEMA_VERSION, isSample, isLocalData, dataBase } from '../data.js';
 
-export const APP_VERSION = '0.11.0';
+export const APP_VERSION = '0.12.0';
 
 /** S5 本体。index は読めていなければ null */
 export function aboutView({ index, dayModel, banners }) {

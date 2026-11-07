@@ -187,13 +187,21 @@ export function personasBlock({ data, ui }) {
     <td><b>${pName(r)}</b>${r.is_baseline ? html` <span class="basetag">基準</span>` : ''}${r.level === 'few' ? refTag(r.races_bought) : ''}<small class="faint" style="display:block;min-width:12em">${pDesc(r)}</small></td>
     ${roiCell(r)}<td>${r.level === 'insufficient' || r.hit_rate === null ? '—' : fmtPct(r.hit_rate, 0)}</td><td class="n">${fmtNumber(r.races_bought)}R</td><td>${r.max_losing_streak ?? '—'}</td><td>${r.max_drawdown_yen !== undefined && r.max_drawdown_yen !== null ? `−${fmtNumber(r.max_drawdown_yen)}円` : '—'}</td></tr>`)}</tbody></table></div>`;
   const sel = rows.find((r) => r.id === ui.preflect) || rows.find((r) => !r.is_baseline) || rows[0];
-  const refl = sel && (sel.reflections || (block.reflections || {})[sel.id]);
+  // 振り返り(personas.json の reflections: {loss_breakdown, candidates, texts, explanation})。texts は型で作った文をそのまま出す
+  const refl = sel && sel.reflections && typeof sel.reflections === 'object' ? sel.reflections : null;
+  const texts = refl && Array.isArray(refl.texts) ? refl.texts : [];
+  const cands = refl && Array.isArray(refl.candidates) ? refl.candidates : [];
+  const fewCands = cands.filter((c) => c.level && c.level !== 'normal').length;
+  const straddle = cands.some((c) => c.ci_crosses_100 || (Array.isArray(c.roi_ci95) && c.roi_ci95[0] < 1 && c.roi_ci95[1] > 1));
   const reflectBody = sel ? html`<div class="reflectbox">
     <label class="field__label" for="reflect-who">人を選ぶ</label>
     <select class="select" id="reflect-who" data-reflect>${rows.map((r) => html`<option value="${r.id}" ${raw(r.id === sel.id ? 'selected' : '')}>${pName(r)}</option>`)}</select>
     <p class="card__note" style="padding:8px 0 0">${t('reflect.intro')}</p>
-    ${src === 'live' && sel.races_bought < C().RULES.okN ? html`<p class="card__note" style="padding:4px 0 0"><span class="lown-tag"></span> ${t('reflect.few')}</p>` : ''}
-    ${Array.isArray(refl) && refl.length ? html`<ol class="reflect__list">${refl.slice(0, 3).map((x) => html`<li>${t(`reflect.${x.type}`, { persona: pName(sel), ...(x.params || x) })}${x.ci_narrow === false || x.ci_note ? html` ${t('reflect.ci_note')}` : ''}</li>`)}</ol>` : html`<p>${t('reflect.none')}</p>`}
+    ${sel.races_bought < C().RULES.okN ? html`<p class="card__note" style="padding:4px 0 0"><span class="lown-tag"></span> ${t('reflect.few')}</p>` : ''}
+    ${src === 'history' ? html`<p class="card__note" style="padding:4px 0 0">振り返りは実運用の欄で表示します。</p>`
+      : texts.length ? html`<ol class="reflect__list">${texts.map((x) => html`<li>${x}</li>`)}</ol>
+        <p class="card__note" style="padding:6px 0 0">改善の候補 ${cands.length}件${fewCands ? `(うち件数が少なく参考程度のもの ${fewCands}件)` : ''}。${straddle ? t('reflect.ci_note') : ''}${refl.explanation ? ` ${refl.explanation}` : ''}</p>`
+        : html`<p>${t('reflect.none')}</p>`}
   </div>` : '';
   return html`
     ${card(t('personas.heading'), '', html`<p>${t('personas.intro')}</p><p><b>${t('personas.no_recommend')}</b></p><p class="card__note" style="padding:4px 0 0">${t('personas.fixed_stake')}</p>`)}

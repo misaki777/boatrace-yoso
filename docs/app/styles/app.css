@@ -702,3 +702,5 @@ details.fold.fold--flow > .flow { padding: 0 var(--sp-3) var(--sp-3); }
 h2.sechead { font-size: var(--fs-s); }
 
 .reflectbox .select { width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }
+.tk-sub { font-size: var(--fs-m); margin: 12px 0 6px; }
+.tenkai-ext { padding-top: 0; }
