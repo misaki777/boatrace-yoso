@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ボートレース予想ツールのしくみ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* レイアウト: 1カラムの読み物。見出しの横に6艇の色の帯(1白 2黒 3赤 4青 5黄 6緑)を置く */
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --fg:#14232b; --muted:#56666e; --line:#d5dfe3;
+  --accent:#0d6e8a; --accent-soft:#e1eff3; --warn:#9a5b00; --warn-soft:#fbf1e1;
+  --b1:#ffffff; --b2:#1b1b1b; --b3:#d7282f; --b4:#1f5fbf; --b5:#f2c500; --b6:#1f9a4a; --b1-edge:#9aa7ad;
+  --f-display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d171c; --surface:#13222a; --fg:#e3ecef; --muted:#9db0b8; --line:#26414c;
+  --accent:#5cc3df; --accent-soft:#16323c; --warn:#f0b35a; --warn-soft:#33270f; --b1-edge:#5f7680; --b2:#3a3a3a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d171c; --surface:#13222a; --fg:#e3ecef; --muted:#9db0b8; --line:#26414c;
+  --accent:#5cc3df; --accent-soft:#16323c; --warn:#f0b35a; --warn-soft:#33270f; --b1-edge:#5f7680; --b2:#3a3a3a; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.8}
+.wrap{max-width:820px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+.lanes{display:flex;height:6px;border-radius:3px;overflow:hidden;max-width:180px}
+.lanes i{flex:1}
+.lanes i:nth-child(1){background:var(--b1);box-shadow:inset 0 0 0 1px var(--b1-edge)}
+.lanes i:nth-child(2){background:var(--b2)}.lanes i:nth-child(3){background:var(--b3)}
+.lanes i:nth-child(4){background:var(--b4)}.lanes i:nth-child(5){background:var(--b5)}.lanes i:nth-child(6){background:var(--b6)}
+header{display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,5vw,42px);line-height:1.3;margin:0;text-wrap:balance}
+.lead{font-size:17px;color:var(--muted);margin:0;max-width:62ch}
+h2{font-family:var(--f-display);font-weight:400;font-size:24px;margin:0;text-wrap:balance}
+h3{font-size:17px;font-weight:700;margin:0}
+section{display:flex;flex-direction:column;gap:16px}
+p{margin:0;max-width:65ch}
+ul{margin:0;padding-left:1.3em}
+li+li{margin-top:4px}
+.note{background:var(--warn-soft);border-left:4px solid var(--warn);padding:14px 18px;border-radius:0 6px 6px 0}
+.note strong{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.flow span{background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+.flow b{color:var(--accent);font-weight:400}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:420px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;letter-spacing:.04em;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 18px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.group h3{font-size:15px;color:var(--accent)}
+.group ul{font-size:14.5px}
+.group.pv{border-style:dashed}
+.tag{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);padding:1px 7px;border-radius:4px;margin-left:6px;vertical-align:2px}
+.rank{counter-reset:r;list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.rank li{counter-increment:r;display:flex;gap:12px;align-items:baseline}
+.rank li::before{content:counter(r);font-family:var(--f-mono);font-weight:600;color:var(--accent);min-width:1.2em}
+code{font-family:var(--f-mono);font-size:.9em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="lanes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <h1>ボートレース予想ツールのしくみ</h1>
+  <p class="lead">個人用に作っている予想ツールです。過去10年分のレース結果を機械学習で学び、各レースで「誰が勝ちそうか」を確率で出して、スマホのアプリで見られるようにしています。</p>
+  <div class="note"><strong>はじめに</strong>　ボートレースの払戻率は約75%で、買い続ければお金は減るのが基本です。このツールは「回収率100%超え」を目標に検証を続けているもので、儲かることを保証するものではありません。今のところ、どの買い方も100%には届いていません。</div>
+</header>
+
+<section>
+  <h2>全体の流れ</h2>
+  <div class="flow" aria-label="データの流れ">
+    <span>公式データ</span><b>→</b><span>整形(Parquet)</span><b>→</b><span>特徴量</span><b>→</b><span>LightGBM</span><b>→</b><span>組み合わせの確率</span><b>→</b><span>アプリ用 JSON</span><b>→</b><span>スマホ(PWA)</span>
+  </div>
+  <ul>
+    <li>朝に「前日版の予想」、締切前に「直前版の予想」を出します。</li>
+    <li>予想は出した時点で確定し、あとから書き換えません。結果を見てから直す「後出し」を防ぐためです。</li>
+    <li>夜中に前日の結果を取り込み、的中・収支・分析を更新します。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>どのように予想しているか</h2>
+  <ul>
+    <li>各艇の「1着になる確率」を LightGBM(決定木を積み重ねる機械学習)で予測します。</li>
+    <li>学習データは 2016年8月〜直近の約10年分で、1艇1行として約330万行です。</li>
+    <li>出てきた確率には偏りがあるので、コースごとの補正(較正)をかけて、実際の勝率に合わせます。</li>
+    <li>2連単・3連単などの組み合わせの確率は、各艇の1着の確率から <strong>Harville モデル</strong>で計算します。2着・3着は1着ほど実力どおりにならないので、その分を補正しています(γ2=0.7、γ3=0.5)。</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>種類</th><th>出すタイミング</th><th>使う情報</th></tr></thead>
+    <tbody>
+      <tr><td>前日版</td><td>朝</td><td>出走表、過去の成績</td></tr>
+      <tr><td>直前版</td><td>締切前</td><td>上に加えて、展示タイム・スタート展示・気象などの直前情報</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>予想に使っているパラメータ</h2>
+  <p>前日版は43個、直前版はそれに直前情報の16個を足して使っています。</p>
+  <div class="groups">
+    <div class="group"><h3>レース</h3><ul><li>場、レース番号</li><li>グレード、開催の何日目か</li><li>レースの種類</li></ul></div>
+    <div class="group"><h3>選手(出走表)</h3><ul><li>枠番(1〜6号艇)、級別(A1〜B2)</li><li>年齢、体重</li><li>全国・当地の勝率、2連率、3連率</li><li>平均スタートタイミング</li><li>フライング・出遅れの回数</li><li>地元の選手かどうか</li></ul></div>
+    <div class="group"><h3>機材</h3><ul><li>モーターの2連率・3連率</li><li>ボートの2連率・3連率</li></ul></div>
+    <div class="group"><h3>過去の成績(自前で集計)</h3><ul><li>直近90日の勝率・平均着順・出走数</li><li>その選手がそのコースに入ったときの勝率</li><li>その場・そのコースの直近1年の1着率</li><li>直近90日の実際のスタートタイミング</li><li>進入でコースを変える割合</li><li>今節の平均着順、モーターの今節の成績</li><li>前のレースから空いた日数</li></ul></div>
+    <div class="group"><h3>同じレースの中での比較</h3><ul><li>勝率の順位、トップや平均との差</li><li>スタートの速さ・モーターの順位</li><li>内側の艇の強さ、A1級の人数</li></ul></div>
+    <div class="group pv"><h3>直前情報<span class="tag">直前版</span></h3><ul><li>展示タイムと、その順位・トップとの差</li><li>スタート展示のタイミング、進入コース</li><li>チルト・体重の調整、プロペラ、部品交換</li><li>風速、波の高さ、気温、水温、風向き、天候</li></ul></div>
+  </div>
+  <h3>よく効いているパラメータ(上位5つ)</h3>
+  <ol class="rank">
+    <li>選手のコース別の勝率</li>
+    <li>内側の艇の強さ</li>
+    <li>レース内での勝率の差</li>
+    <li>枠番</li>
+    <li>場・コース別の1着率</li>
+  </ol>
+  <p>展開予想として、別のモデルで決まり手(逃げ・差し・まくり・まくり差しなど)の確率も出しています。</p>
+</section>
+
+<section>
+  <h2>アプリでできること</h2>
+  <ul>
+    <li><strong>推奨の買い目</strong>　予算と券種を決めると、確率の高い順に買い目を出します。賭け金は定額で、負けたあとに金額を増やす機能は入れていません。</li>
+    <li><strong>予想と結果</strong>　締切後に、予想の確率と当たり外れを並べて見られます。</li>
+    <li><strong>選手カード</strong>　得意なコースや決まり手。</li>
+    <li><strong>分析</strong>　場の傾向、ランキング、モデルの弱点、週のまとめ、シミュレーターなど。</li>
+    <li><strong>仮想の購入者</strong>　「単勝だけ買う人」「1号艇だけ買う人」「穴を狙う人」など13人の買い方で成績を比べ、改善の案も出します。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>技術スタック</h2>
+  <p>すべて無料の範囲で動かしています。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>用途</th><th>使っているもの</th></tr></thead>
+    <tbody>
+      <tr><td>言語</td><td>Python 3.14</td></tr>
+      <tr><td>データ処理</td><td>pandas、NumPy</td></tr>
+      <tr><td>保存形式</td><td>Parquet(pyarrow)。データベースは使っていません</td></tr>
+      <tr><td>機械学習</td><td>LightGBM 4.7(CPU だけで学習。10年分で数分)</td></tr>
+      <tr><td>評価・較正</td><td>scikit-learn</td></tr>
+      <tr><td>テスト</td><td>pytest</td></tr>
+      <tr><td>アプリ</td><td>HTML、CSS、JavaScript(フレームワークなし)の PWA。オフラインでも表示できます</td></tr>
+      <tr><td>定期実行</td><td>GitHub Actions(朝、日中30分ごと、夜中の確定、週次)</td></tr>
+      <tr><td>起動の合図</td><td>Cloudflare Workers の Cron</td></tr>
+      <tr><td>公開</td><td>Cloudflare Workers(静的ファイルの配信)</td></tr>
+      <tr><td>ログイン</td><td>Cloudflare Access と Google ログイン(許可したアカウントだけが見られます)</td></tr>
+      <tr><td>データの保管</td><td>Cloudflare R2</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>モデルは毎月学習し直し、前のモデルより成績が良いことを確かめてから切り替えます。</li>
+    <li>評価には、学習に使っていない期間のデータを使います。</li>
+    <li>外部サイトへのアクセスは1秒以上の間隔を空けて必要最小限にし、拒否されたらその日は止めます。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>検証の結果</h2>
+  <p>3連単を予想の上位から買った場合です(2026年10月の4,729レース。学習に使っていない期間)。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>点数</th><th style="text-align:right">的中率</th><th style="text-align:right">回収率</th></tr></thead>
+    <tbody>
+      <tr><td>1点</td><td class="num">9.7%</td><td class="num">80%</td></tr>
+      <tr><td>5点</td><td class="num">32.8%</td><td class="num">77%</td></tr>
+      <tr><td>20点</td><td class="num">67.4%</td><td class="num">75%</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>点数を増やすと的中率は上がりますが、回収率は払戻率(約75%)に近づきます。</li>
+    <li>「本命が抜けているレースだけ買う」ように絞ると、回収率は80%台後半まで上がりました。それでも100%には届いていません。</li>
+    <li>次は、締切前のオッズとモデルの確率を比べて、割安な買い目だけを選ぶ方法を検証する予定です。</li>
+  </ul>
+</section>
+
+<footer>2026年11月時点の内容です。</footer>
+</div>
+</body>
+</html>
