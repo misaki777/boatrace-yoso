@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>S10 分析 / 仮想の購入者(モック)</title>
+<link rel="stylesheet" href="../visual/tokens.css">
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+<!-- W-22 用。spec/11 8〜9章、文言 spec/09 9〜10章。架空データ。 -->
+<!-- ================================================================= -->
+<section class="state" data-state="live" data-title="仮想の購入者・実運用(件数が少なく全体が参考)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">毎日 1:20 更新</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="true">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <div class="seg"><button aria-selected="true">実運用</button><button aria-selected="false">過去の参考</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">仮想の購入者</h2><span class="right">10人 · 1レース1,000円固定</span></div>
+    <p class="card__note" style="padding-top:6px">決まった買い方を続けた場合の成績を、10人の仮想の購入者で比べています。負けたあとに金額を増やすことはしません。あなたの購入記録は使っていません。<br><b>どの買い方が良いかを勧めるものではありません。</b>成績は期間や件数によって大きく変わります。</p>
+  </section>
+  <p class="disclaimer" style="margin-top:8px">実運用(その日の朝に確定した予想、2026年11月2日から)。11/2〜11/7 · 6日分。<b>件数が少ないため、全体を参考程度に。</b></p>
+  <div class="sechead">表示する人 <span class="count">基準を含む4人(既定)</span></div>
+  <div class="chips" style="margin:8px var(--gutter) 0"><button aria-pressed="true">単勝さん</button><button aria-pressed="true">1号艇さん</button><button aria-pressed="false">イン逃げさん</button><button aria-pressed="true">アプリさん</button><button aria-pressed="false">ボックスさん</button><button aria-pressed="false">2連複さん</button><button aria-pressed="true">堅実さん</button><button aria-pressed="false">荒れ狙いさん</button><button aria-pressed="false">外枠穴さん</button><button aria-pressed="false">厳選さん</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">累計収支の推移</h2><span class="right">日ごと</span></div>
+    <div class="card__body"><svg class="chart" viewBox="0 0 320 180" role="img" aria-label="累計収支の推移"><line class="grid" x1="40" x2="300" y1="20" y2="20"/><text x="34" y="23" text-anchor="end">+5万</text><line class="grid" x1="40" x2="300" y1="60" y2="60"/><text x="34" y="63" text-anchor="end">0</text><line class="grid" x1="40" x2="300" y1="100" y2="100"/><text x="34" y="103" text-anchor="end">−5万</text><line class="grid" x1="40" x2="300" y1="140" y2="140"/><text x="34" y="143" text-anchor="end">−10万</text><line class="base" x1="40" x2="300" y1="60" y2="60"/><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="2,4" points="40,60 92,68 144,80 196,74 248,92 300,96"/><text x="302" y="99" style="font-size:9px;fill:var(--c-text)">単勝</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="6,3" points="40,60 92,70 144,77 196,85 248,90 300,102"/><text x="302" y="108" style="font-size:9px;fill:var(--c-text)">1号艇</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="1.5,3" points="40,60 92,52 144,66 196,62 248,70 300,78"/><text x="302" y="76" style="font-size:9px;fill:var(--c-text)">アプリ</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="8,3,2,3" points="40,60 92,58 144,56 196,64 248,60 300,66"/><text x="302" y="64" style="font-size:9px;fill:var(--c-text)">堅実</text><text x="40" y="172">11/2</text><text x="300" y="172" text-anchor="end">11/7</text></svg><p class="fewnote"><span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="2,4"/></svg>単勝さん</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="6,3"/></svg>1号艇さん(基準)</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="1.5,3"/></svg>アプリさん</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="8,3,2,3"/></svg>堅実さん</span><br>線の種類と右端の名前で区別。0の点線より上がプラス。</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">人ごとの成績</h2><span class="right">610レース</span></div>
+    <div class="card__body" style="padding:6px 0 4px"><div class="tbl-wrap"><table class="tbl ptbl"><thead><tr><th>人(並びは固定)</th><th>回収率<br>95%区間</th><th>的中率</th><th>件数</th><th>最長連敗</th><th>最大の落ち込み</th></tr></thead><tbody><tr class="few"><td class="l"><b>単勝さん</b><span class="ci">全レースで本命の単勝を1点</span></td><td><b>83.9%</b><span class="ref">参考</span><span class="ci">74〜95</span></td><td>48%</td><td>610R</td><td>7連敗</td><td>−98,000</td></tr><tr class="few"><td class="l"><b><span class="chip chip--pre" style="height:18px">基準</span> 1号艇さん</b><span class="ci">モデルを使わず1号艇の単勝(比べるための基準)</span></td><td><b>78.1%</b><span class="ref">参考</span><span class="ci">71〜86</span></td><td>51%</td><td>610R</td><td>9連敗</td><td>−133,600</td></tr><tr class="few"><td class="l"><b>イン逃げさん</b><span class="ci">1-2-3・1-2-4・1-3-2・1-3-4 の4点</span></td><td><b>70.2%</b><span class="ref">参考</span><span class="ci">52〜91</span></td><td>16%</td><td>610R</td><td>31連敗</td><td>−182,000</td></tr><tr class="few"><td class="l"><b>アプリさん</b><span class="ci">アプリが示す既定の買い方のとおり</span></td><td><b>91.0%</b><span class="ref">参考</span><span class="ci">68〜117</span></td><td>17%</td><td>610R</td><td>38連敗</td><td>−54,900</td></tr><tr class="few"><td class="l"><b>ボックスさん</b><span class="ci">上位3艇の3連単ボックス6点</span></td><td><b>76.4%</b><span class="ref">参考</span><span class="ci">55〜100</span></td><td>9%</td><td>610R</td><td>54連敗</td><td>−144,000</td></tr><tr class="few"><td class="l"><b>2連複さん</b><span class="ci">2連複の上位3点</span></td><td><b>85.5%</b><span class="ref">参考</span><span class="ci">70〜102</span></td><td>35%</td><td>610R</td><td>12連敗</td><td>−88,400</td></tr><tr class="few"><td class="l"><b>堅実さん</b><span class="ci">「堅」のレースだけ、2連単の上位3点</span></td><td><b>97.2%</b><span class="ref">参考</span><span class="ci">80〜116</span></td><td>42%</td><td>148R</td><td>6連敗</td><td>−21,000</td></tr><tr class="few"><td class="l"><b>荒れ狙いさん</b><span class="ci">「荒」のレースだけ、3連単の上位10点</span></td><td><b>64.8%</b><span class="ref">参考</span><span class="ci">30〜112</span></td><td>4%</td><td>172R</td><td>61連敗</td><td>−60,500</td></tr><tr><td class="l"><b>外枠穴さん</b><span class="ci">外の艇が展示で1位のレースだけ、2連複2点</span></td><td colspan="5"><span class="insuf">件数不足(18レース)</span></td></tr><tr class="few"><td class="l"><b>厳選さん</b><span class="ci">1日10レースだけ、3連単の上位5点</span></td><td><b>88.0%</b><span class="ref">参考</span><span class="ci">61〜120</span></td><td>20%</td><td>60R</td><td>14連敗</td><td>−19,800</td></tr></tbody></table></div></div>
+    <p class="card__note">並びは固定(回収率の順に並べ替えません)。最大の落ち込み = 累計収支の最大ドローダウン。区間が100%をまたぐ人は、プラスともマイナスとも言えません。週ごとの表は下の「週ごと」から。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">反省点</h2><span class="right">人を選ぶ: <select style="font:inherit;height:32px"><option>荒れ狙いさん</option><option>単勝さん</option></select></span></div>
+    <p class="card__note" style="padding-top:6px">負けの内訳から、過去の検証と実運用の両方で回収率が上がった改善だけを示しています。改善は「買わない」「点数を減らす」「券種を変える」の3つの方向だけで、金額を増やす方向は扱いません。</p>
+    <div class="reflect few"><span class="ref" style="margin:0">参考</span> 実運用の件数が少ないため、参考程度に見てください。<ol><li>荒れ狙いさんは、江戸川のレースで回収率が31%でした。江戸川を買わないと、過去の検証で72%→79%、実運用で65%→71%でした(実運用 158レース)。ただし、この差は件数に対して小さく、偶然の可能性があります。</li><li>荒れ狙いさんは、確率6位以下の買い目の回収率が48%でした。上位5点に減らすと、過去の検証で72%→77%、実運用で65%→69%でした(実運用 172レース)。</li></ol></div>
+    <div class="reflect"><b>単勝さん</b>: 過去の検証と実運用の両方で回収率が上がる改善は、今のところ見つかっていません。</div>
+  </section>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<!-- ================================================================= -->
+<section class="state" data-state="backtest" data-title="仮想の購入者・過去の参考(後知恵の注意)">
+<div class="app">
+  <header class="appbar">
+    <h1 class="appbar__title" style="padding-left:8px">分析</h1>
+    <span class="appbar__updated">毎日 1:20 更新</span>
+  </header>
+  <nav class="subtabs" role="tablist"><a role="tab" aria-selected="false">場</a><a role="tab" aria-selected="false">今日の選手</a><a role="tab" aria-selected="false">モデル</a><a role="tab" aria-selected="true">買い方</a><a role="tab" aria-selected="false">あなた</a></nav>
+  <div class="seg"><button aria-selected="false">実運用</button><button aria-selected="true">過去の参考</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">仮想の購入者</h2><span class="right">10人 · 1レース1,000円固定</span></div>
+    <p class="card__note" style="padding-top:6px">決まった買い方を続けた場合の成績を、10人の仮想の購入者で比べています。負けたあとに金額を増やすことはしません。あなたの購入記録は使っていません。<br><b>どの買い方が良いかを勧めるものではありません。</b>成績は期間や件数によって大きく変わります。</p>
+  </section>
+  <div class="hindsight" role="note"><b>過去の参考(学習に使っていない期間を、後から計算したもの)。実際より良く見えることがあります。</b>過去のデータで、条件を見てから比べた成績です。たまたま良かった条件が上に出やすく、これから同じ成績になるとは限りません。</div>
+  <div class="sechead">表示する人 <span class="count">基準を含む4人(既定)</span></div>
+  <div class="chips" style="margin:8px var(--gutter) 0"><button aria-pressed="true">単勝さん</button><button aria-pressed="true">1号艇さん</button><button aria-pressed="false">イン逃げさん</button><button aria-pressed="true">アプリさん</button><button aria-pressed="false">ボックスさん</button><button aria-pressed="false">2連複さん</button><button aria-pressed="true">堅実さん</button><button aria-pressed="false">荒れ狙いさん</button><button aria-pressed="false">外枠穴さん</button><button aria-pressed="false">厳選さん</button></div>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">累計収支の推移</h2><span class="right">日ごと</span></div>
+    <div class="card__body"><svg class="chart" viewBox="0 0 320 180" role="img" aria-label="累計収支の推移"><line class="grid" x1="40" x2="300" y1="20" y2="20"/><text x="34" y="23" text-anchor="end">+5万</text><line class="grid" x1="40" x2="300" y1="60" y2="60"/><text x="34" y="63" text-anchor="end">0</text><line class="grid" x1="40" x2="300" y1="100" y2="100"/><text x="34" y="103" text-anchor="end">−5万</text><line class="grid" x1="40" x2="300" y1="140" y2="140"/><text x="34" y="143" text-anchor="end">−10万</text><line class="base" x1="40" x2="300" y1="60" y2="60"/><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="2,4" points="40,60 92,68 144,80 196,74 248,92 300,96"/><text x="302" y="99" style="font-size:9px;fill:var(--c-text)">単勝</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="6,3" points="40,60 92,70 144,77 196,85 248,90 300,102"/><text x="302" y="108" style="font-size:9px;fill:var(--c-text)">1号艇</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="1.5,3" points="40,60 92,52 144,66 196,62 248,70 300,78"/><text x="302" y="76" style="font-size:9px;fill:var(--c-text)">アプリ</text><polyline fill="none" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="8,3,2,3" points="40,60 92,58 144,56 196,64 248,60 300,66"/><text x="302" y="64" style="font-size:9px;fill:var(--c-text)">堅実</text><text x="40" y="172">11/2</text><text x="300" y="172" text-anchor="end">11/7</text></svg><p class="fewnote"><span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="2,4"/></svg>単勝さん</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="6,3"/></svg>1号艇さん(基準)</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="1.5,3"/></svg>アプリさん</span> <span class="legend-line"><svg viewBox="0 0 26 8"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--c-chart-line)" stroke-width="2" stroke-dasharray="8,3,2,3"/></svg>堅実さん</span><br>線の種類と右端の名前で区別。0の点線より上がプラス。</p></div>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">人ごとの成績</h2><span class="right">2025-09〜2026-10 · 54,200レース</span></div>
+    <div class="card__body" style="padding:6px 0 4px"><div class="tbl-wrap"><table class="tbl ptbl"><thead><tr><th>人(並びは固定)</th><th>回収率<br>95%区間</th><th>的中率</th><th>件数</th><th>最長連敗</th><th>最大の落ち込み</th></tr></thead><tbody><tr><td class="l"><b>単勝さん</b><span class="ci">全レースで本命の単勝を1点</span></td><td><b>83.9%</b><span class="ci">74〜95</span></td><td>48%</td><td>610R</td><td>7連敗</td><td>−98,000</td></tr><tr><td class="l"><b><span class="chip chip--pre" style="height:18px">基準</span> 1号艇さん</b><span class="ci">モデルを使わず1号艇の単勝(比べるための基準)</span></td><td><b>78.1%</b><span class="ci">71〜86</span></td><td>51%</td><td>610R</td><td>9連敗</td><td>−133,600</td></tr><tr><td class="l"><b>イン逃げさん</b><span class="ci">1-2-3・1-2-4・1-3-2・1-3-4 の4点</span></td><td><b>70.2%</b><span class="ci">52〜91</span></td><td>16%</td><td>610R</td><td>31連敗</td><td>−182,000</td></tr><tr><td class="l"><b>アプリさん</b><span class="ci">アプリが示す既定の買い方のとおり</span></td><td><b>91.0%</b><span class="ci">68〜117</span></td><td>17%</td><td>610R</td><td>38連敗</td><td>−54,900</td></tr><tr><td class="l"><b>ボックスさん</b><span class="ci">上位3艇の3連単ボックス6点</span></td><td><b>76.4%</b><span class="ci">55〜100</span></td><td>9%</td><td>610R</td><td>54連敗</td><td>−144,000</td></tr><tr><td class="l"><b>2連複さん</b><span class="ci">2連複の上位3点</span></td><td><b>85.5%</b><span class="ci">70〜102</span></td><td>35%</td><td>610R</td><td>12連敗</td><td>−88,400</td></tr><tr class="few"><td class="l"><b>堅実さん</b><span class="ci">「堅」のレースだけ、2連単の上位3点</span></td><td><b>97.2%</b><span class="ref">参考</span><span class="ci">80〜116</span></td><td>42%</td><td>148R</td><td>6連敗</td><td>−21,000</td></tr><tr class="few"><td class="l"><b>荒れ狙いさん</b><span class="ci">「荒」のレースだけ、3連単の上位10点</span></td><td><b>64.8%</b><span class="ref">参考</span><span class="ci">30〜112</span></td><td>4%</td><td>172R</td><td>61連敗</td><td>−60,500</td></tr><tr><td class="l"><b>外枠穴さん</b><span class="ci">外の艇が展示で1位のレースだけ、2連複2点</span></td><td colspan="5"><span class="insuf">件数不足(18レース)</span></td></tr><tr class="few"><td class="l"><b>厳選さん</b><span class="ci">1日10レースだけ、3連単の上位5点</span></td><td><b>88.0%</b><span class="ref">参考</span><span class="ci">61〜120</span></td><td>20%</td><td>60R</td><td>14連敗</td><td>−19,800</td></tr></tbody></table></div></div>
+    <p class="card__note">並びは固定(回収率の順に並べ替えません)。最大の落ち込み = 累計収支の最大ドローダウン。区間が100%をまたぐ人は、プラスともマイナスとも言えません。週ごとの表は下の「週ごと」から。</p>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2 class="card__title">反省点</h2><span class="right">人を選ぶ: <select style="font:inherit;height:32px"><option>荒れ狙いさん</option><option>単勝さん</option></select></span></div>
+    <p class="card__note" style="padding-top:6px">負けの内訳から、過去の検証と実運用の両方で回収率が上がった改善だけを示しています。改善は「買わない」「点数を減らす」「券種を変える」の3つの方向だけで、金額を増やす方向は扱いません。</p>
+    <div class="reflect few"><span class="ref" style="margin:0">参考</span> 実運用の件数が少ないため、参考程度に見てください。<ol><li>荒れ狙いさんは、江戸川のレースで回収率が31%でした。江戸川を買わないと、過去の検証で72%→79%、実運用で65%→71%でした(実運用 158レース)。ただし、この差は件数に対して小さく、偶然の可能性があります。</li><li>荒れ狙いさんは、確率6位以下の買い目の回収率が48%でした。上位5点に減らすと、過去の検証で72%→77%、実運用で65%→69%でした(実運用 172レース)。</li></ol></div>
+    <div class="reflect"><b>単勝さん</b>: 過去の検証と実運用の両方で回収率が上がる改善は、今のところ見つかっていません。</div>
+  </section>
+  <nav class="tabbar tabbar--5">
+    <a href="#/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>レース</a>
+    <a href="#/performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 16l4-5 3 3 6-7"/></svg>成績</a>
+    <a href="#/analytics" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg>分析</a>
+    <a href="#/ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>収支</a>
+    <a href="#/about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>その他</a>
+  </nav>
+</div>
+</section>
+
+<script src="mock.js"></script>
+</body>
+</html>

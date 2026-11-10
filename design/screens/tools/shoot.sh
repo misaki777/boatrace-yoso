@@ -28,6 +28,7 @@ LIST=(
   "s3-performance:p3a:2000" "s8-ledger:normal:2000" "s8-ledger:over:760" "s8-ledger:empty:760" "s9-marks:normal:900"
   "s1-home:stale:760" "s2-race:tenkai:900" "s2-race:racer-card:1300" "s2-race:racer-card-none:800" "s5-about:models:1000"
   "s10-analytics:stadium:1500" "s10-analytics:cube:1100" "s10-analytics:players:900" "s10-analytics:model:1500" "s10-analytics:sim:1200" "s10-analytics:you:900"
+  "s2-race:tenkai-ext:1200" "s10-personas:live:2100" "s10-personas:backtest:2100"
   "s2-race:fetch-partial:1100" "s2-race:fetch-nokey:1000" "s2-race:fetch-errors:1500" "s2-race:source-manual:1100"
 )
 THEME="${THEME:-light}"
