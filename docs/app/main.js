@@ -154,6 +154,13 @@ async function refresh() {
 
 function statusBanners(entries) {
   const shown = entries.filter(Boolean);
+  const authFailed = shown.find((e) => e.refreshError && e.refreshError.kind === 'auth');
+  if (authFailed) {
+    const at = fmtUpdated(authFailed.json.generated_at, todayJst());
+    return html`<div class="banner banner--warn" role="status"><span class="banner__icon" aria-hidden="true">⚠</span>
+      <div class="banner__body"><b class="banner__title">ログインの期限が切れました(${at}時点のデータを表示中)</b><span class="banner__text">もう一度ログインすると、最新のデータに切り替わります。</span></div>
+      <button class="banner__action btn btn--small" data-action="relogin">再ログイン</button></div>`;
+  }
   const stale = shown.find((e) => e.fromCache && !e.revalidating);
   const failed = shown.find((e) => e.refreshError);
   if (!stale && !failed) return '';
@@ -191,7 +198,9 @@ function errorBox(err, { title } = {}) {
     text: info.text,
     detail: info.detail,
     role: 'alert',
-    action: info.needsAppUpdate
+    action: info.needsLogin
+      ? html`<button class="btn btn--primary" data-action="relogin">再ログイン</button>`
+      : info.needsAppUpdate
       ? html`<button class="btn btn--primary" data-action="reload-app">アプリを再読み込み</button>`
       : html`<button class="btn btn--primary" data-action="reload">再読み込み</button>`,
   });
@@ -668,6 +677,11 @@ document.addEventListener('click', (e) => {
     case 'reload':
       e.preventDefault();
       refresh();
+      break;
+    case 'relogin':
+      // ページを開き直すと、Cloudflare Access がログイン画面へ転送する(ログイン後にこの画面へ戻る)
+      e.preventDefault();
+      location.reload();
       break;
     case 'reload-app':
       e.preventDefault();

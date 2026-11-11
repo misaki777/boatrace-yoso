@@ -6,7 +6,7 @@ import { tabbar } from '../parts.js';
 import { t, WORDING_META } from '../wording.js';
 import { SCHEMA_VERSION, isSample, isLocalData, dataBase } from '../data.js';
 
-export const APP_VERSION = '0.12.1';
+export const APP_VERSION = '0.12.2';
 
 /** S5 本体。index は読めていなければ null */
 export function aboutView({ index, dayModel, banners }) {
@@ -46,6 +46,7 @@ export function aboutView({ index, dayModel, banners }) {
         <p>締切前オッズがあるレースでは、期待値(確率 × オッズ)をランク A(1.2以上)・B(1.0〜1.2)・C(0.8〜1.0)・D(0.8未満)で示します。公開版はランクだけで、オッズの数値は公開しません。締切前のオッズは締切までに変わるので、投票は投票アプリの最新オッズで確かめてください。</p>
         <p>印 ◎○▲△ は1着確率の1〜4位。堅さは1着確率の最大値で、${high}%以上を「堅」、${mid}〜${high}%を「中」、${mid}%未満を「荒」としています。</p>
       </div>
+      <a class="linkrow" href="system.html" target="_blank" rel="noopener">システムの説明 <small>予想のしかた・使っているデータ・技術・画面</small></a>
     </section>
 
     <section class="card">

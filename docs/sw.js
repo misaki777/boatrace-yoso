@@ -4,7 +4,7 @@
 //   (画面はこのヘッダを見て「オフライン表示中(21:05時点)」を出す)
 // - パスはすべてこのファイルの場所からの相対(GitHub Pages のサブパス /boatrace-yoso/ で動かすため)
 
-const APP_VERSION = '0.12.1';
+const APP_VERSION = '0.12.2';
 const APP_CACHE = `br-app-${APP_VERSION}`;
 const DATA_CACHE = 'br-data-v1'; // app/data.js の DATA_CACHE と合わせる
 
@@ -98,7 +98,10 @@ async function networkFirst(req) {
   const cache = await caches.open(DATA_CACHE);
   const key = req.url.split('?')[0];
   try {
-    const res = await fetch(req, { cache: 'no-cache' });
+    // Cloudflare Access のログインが切れると、ログイン画面への転送(302)になる。
+    // 転送を追わずに受け取り、401 と印(X-SW-Auth)を返す(ページ側で「再ログイン」を出す)
+    const res = await fetch(req, { cache: 'no-cache', redirect: 'manual' });
+    if (isAuthResponse(res)) return authExpiredResponse();
     if (res.ok) await cache.put(key, res.clone());
     return res;
   } catch (e) {
@@ -109,6 +112,15 @@ async function networkFirst(req) {
     const body = await cached.blob();
     return new Response(body, { status: 200, statusText: 'OK', headers });
   }
+}
+
+/** ログイン切れの応答か(転送・401・403) */
+function isAuthResponse(res) {
+  return res.type === 'opaqueredirect' || (res.status >= 300 && res.status < 400) || res.status === 401 || res.status === 403;
+}
+
+function authExpiredResponse() {
+  return new Response('{"error":"auth"}', { status: 401, headers: { 'Content-Type': 'application/json', 'X-SW-Auth': '1' } });
 }
 
 /** アプリ本体: キャッシュ優先、無ければネットワーク(取れたらキャッシュに入れる) */

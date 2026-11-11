@@ -137,15 +137,24 @@ export function lastFetchedAt() {
   return latest;
 }
 
+/** ログインの期限切れの応答か(Service Worker の印・転送・401・403) */
+export function isAuthExpired(res) {
+  if (!res) return false;
+  if (res.headers && res.headers.get && res.headers.get('X-SW-Auth') === '1') return true;
+  return res.type === 'opaqueredirect' || (res.status >= 300 && res.status < 400) || res.status === 401 || res.status === 403;
+}
+
 async function fetchJson(path, validate) {
   await resolveBase();
   let res;
   try {
     // ブラウザの HTTP キャッシュは再検証させる(GitHub Pages は max-age=600 を返すため)
-    res = await fetch(DATA_BASE + path, { cache: 'no-cache' });
+    // 転送は追わない(Cloudflare Access のログイン切れを見分けるため)
+    res = await fetch(DATA_BASE + path, { cache: 'no-cache', redirect: 'manual' });
   } catch (e) {
     throw new DataError('network', path, e && e.message);
   }
+  if (isAuthExpired(res)) throw new DataError('auth', path, res.status);
   if (res.status === 404) throw new DataError('notfound', path, 404);
   if (!res.ok) throw new DataError('http', path, res.status);
   // 初回の表示ではまだ Service Worker が通信を仲介していないので、ページ側でもキャッシュに入れておく
@@ -204,6 +213,8 @@ export function describeError(err) {
   switch (err.kind) {
     case 'network':
       return { title: 'データを読み込めませんでした', text: '通信状態を確認して、もう一度読み込んでください。前回のデータも端末に残っていません。', detail: `${file} の取得に失敗(ネットワークエラー)` };
+    case 'auth':
+      return { title: 'ログインの期限が切れました', text: 'もう一度ログインすると、最新のデータを読み込めます。', detail: `${file} の取得でログインを求められました`, needsLogin: true };
     case 'notfound':
       return { title: 'データが見つかりません', text: 'まだ作成されていないか、削除された可能性があります。', detail: `${file} が見つかりません(404)` };
     case 'http':
