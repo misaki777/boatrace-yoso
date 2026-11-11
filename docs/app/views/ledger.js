@@ -4,7 +4,7 @@ import { html, raw, cls } from '../html.js';
 import { fmtYen, fmtSignedYen, fmtRoi, betTypeLabel, fmtNumber, fmtPct } from '../format.js';
 import { fmtDateTime } from '../time.js';
 import { tabbar, combo, boat, reloadButton, helpBtn } from '../parts.js';
-import { wilson } from '../ledger.js';
+import { wilson, groupByRace } from '../ledger.js';
 import { t } from '../wording.js';
 import '../charts.js'; // デザイナーB の charts.js(window.BRCharts。依存なし)
 
@@ -75,7 +75,8 @@ const RES_CLASS = { hit: 'res--hit', miss: 'res--miss', refund: 'res--refund', s
 
 /** S8 本体(design/screens s8-ledger.html の並び) */
 export function ledgerView({ s, daily, months, warnings, budget, spent, ui, raceName, busy, dbError, backupAt, backupStale }) {
-  const list = s.rows.slice().reverse().slice(0, ui.showAll ? undefined : 30);
+  const groups = groupByRace(s.rows);
+  const list = groups.slice(0, ui.showAll ? undefined : 30);
   const range = s.rows.length ? `${fmtDateTime(s.rows[0].bet.bought_at).slice(5, 10).replace('-', '/')}〜 · ${fmtNumber(s.count)}件` : '';
   return html`
     <header class="appbar"><h1 class="appbar__title is-pad">収支</h1>${reloadButton(busy)}<button class="iconbtn" data-action="ledger-toggle" data-what="form" aria-label="記録を足す" aria-expanded="${String(!!ui.formOpen)}">＋</button></header>
@@ -97,14 +98,24 @@ export function ledgerView({ s, daily, months, warnings, budget, spent, ui, race
       </div>
       <div class="card__body">${profitChart(daily)}</div>
     </section>
-    <div class="sechead">記録 <span class="count">新しい順</span><span class="right">的中・不的中は同じ大きさ</span></div>
+    <div class="sechead">記録 <span class="count">レースごと・新しい順</span><span class="right">タップで買い目を開く</span></div>
     <div class="list" aria-label="購入記録">
-      ${list.length ? list.map((row) => html`<div class="ledger-row">
-        <div class="ledger-row__main"><span class="faint small">${fmtDateTime(row.bet.bought_at).slice(5).replace('-', '/')}</span><br><a href="#/race/${row.bet.race_id}"><b>${raceName(row.bet.race_id)} ${betTypeLabel(row.bet.bet_type)}</b></a><br>${combo(row.bet.combination, { size: 'sm' })} <span class="small faint">${row.bet.source === 'model' ? t('label.model_top') : row.bet.source === 'mixed' ? 'モデル+自分' : '自分'}</span></div>
-        <div class="ledger-row__num"><span class="${cls('res', RES_CLASS[row.status])}">${RES_TEXT[row.status]}${row.payout !== null ? ` ${fmtSignedYen(row.payout - row.bet.amount)}` : ''}</span><span class="small faint">${fmtNumber(row.bet.amount)}円 → ${row.payout !== null ? `${fmtNumber(row.payout)}円` : '—'}</span></div>
-        <button class="iconbtn" data-action="ledger-delete" data-id="${row.bet.id}" aria-label="この記録を消す">✕</button>
-      </div>`) : html`<p class="card__note" style="padding-top:8px">まだ記録がありません。レース詳細の「${t('label.record_bet')}」か、右上の「＋」から記録できます。</p>`}
-      ${s.rows.length > 30 ? html`<button class="more more--inset" data-action="ledger-all">${ui.showAll ? 'たたむ' : `すべて表示(${s.rows.length}件)`}</button>` : ''}
+      ${list.length ? list.map((g) => html`<details class="ledger-race">
+        <summary class="ledger-race__sum">
+          <span class="ledger-race__main"><span class="faint small">${fmtDateTime(g.last).slice(5, 16).replace('-', '/')} · ${g.rows.length}点</span><b>${raceName(g.race_id)}</b></span>
+          <span class="ledger-row__num"><span class="${cls('res', RES_CLASS[g.status])}">${RES_TEXT[g.status]}${g.pending ? '' : ` ${fmtSignedYen(g.profit)}`}</span><span class="small faint">${fmtNumber(g.stake)}円 → ${g.pending && g.status !== 'hit' ? '—' : `${fmtNumber(g.ret)}円`}</span></span>
+          <span class="ledger-race__chev" aria-hidden="true">›</span>
+        </summary>
+        <div class="ledger-race__body">
+          <a class="small" href="#/race/${g.race_id}">レースの詳細を見る</a>
+          ${g.rows.map((row) => html`<div class="ledger-row">
+            <div class="ledger-row__main"><span class="faint small">${fmtDateTime(row.bet.bought_at).slice(11, 16)} · ${betTypeLabel(row.bet.bet_type)} · ${row.bet.source === 'model' ? t('label.model_top') : row.bet.source === 'mixed' ? 'モデル+自分' : '自分'}</span><br>${combo(row.bet.combination, { size: 'sm' })}</div>
+            <div class="ledger-row__num"><span class="${cls('res', RES_CLASS[row.status])}">${RES_TEXT[row.status]}</span><span class="small faint">${fmtNumber(row.bet.amount)}円 → ${row.payout !== null ? `${fmtNumber(row.payout)}円` : '—'}</span></div>
+            <button class="iconbtn" data-action="ledger-delete" data-id="${row.bet.id}" aria-label="この記録を消す">✕</button>
+          </div>`)}
+        </div>
+      </details>`) : html`<p class="card__note" style="padding-top:8px">まだ記録がありません。レース詳細の「${t('label.record_bet')}」か、右上の「＋」から記録できます。</p>`}
+      ${groups.length > 30 ? html`<button class="more more--inset" data-action="ledger-all">${ui.showAll ? 'たたむ' : `すべて表示(${groups.length}レース)`}</button>` : ''}
     </div>
     <p class="disclaimer" style="margin-top:6px">払戻は結果から自動で計算します(保存しません)。</p>
     ${months.length ? html`<section class="card" aria-label="月別"><div class="card__head"><h2 class="card__title">月別</h2></div><div class="card__body" style="padding:8px 0 4px"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>月</th><th>件数</th><th>購入</th><th>払戻</th><th>収支</th></tr></thead><tbody>${months.map((m) => html`<tr><td>${m.month}</td><td>${m.count}</td><td>${fmtNumber(m.stake)}</td><td>${fmtNumber(m.ret)}</td><td class="${m.ret - m.stake >= 0 ? 'is-plus' : 'is-minus'}">${fmtSignedYen(m.ret - m.stake)}</td></tr>`)}</tbody></table></div></div></section>` : ''}

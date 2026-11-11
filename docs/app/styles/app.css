@@ -704,3 +704,17 @@ h2.sechead { font-size: var(--fs-s); }
 .reflectbox .select { width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }
 .tk-sub { font-size: var(--fs-m); margin: 12px 0 6px; }
 .tenkai-ext { padding-top: 0; }
+
+/* 収支の記録: レースごとに開閉(details) */
+.ledger-race { border-top: 1px solid var(--c-border); }
+.ledger-race__sum { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; gap: var(--sp-2); align-items: center; padding: 10px var(--sp-3); cursor: pointer; list-style: none; font-size: var(--fs-s); }
+.ledger-race__sum::-webkit-details-marker { display: none; }
+.ledger-race__sum:focus-visible { outline: 2px solid var(--c-focus); outline-offset: -2px; }
+.ledger-race__main { display: flex; flex-direction: column; min-width: 0; }
+.ledger-race__main b { font-size: var(--fs-m); overflow-wrap: anywhere; }
+.ledger-race__chev { justify-self: end; color: var(--c-border-strong); transition: transform .15s; font-size: 18px; line-height: 1; }
+.ledger-race[open] .ledger-race__chev { transform: rotate(90deg); }
+.ledger-race__body { padding: 0 0 6px var(--sp-3); background: var(--c-bg); }
+.ledger-race__body > a { display: inline-block; padding: 6px var(--sp-3) 6px 0; }
+.ledger-race__body .ledger-row { padding-left: 0; }
+@media (prefers-reduced-motion: reduce) { .ledger-race__chev { transition: none; } }

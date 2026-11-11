@@ -154,3 +154,32 @@ export function wilson(k, n) {
   const h = z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n));
   return [(c - h) / d, (c + h) / d];
 }
+
+/**
+ * 記録の表示用に、summarize の rows をレースごとにまとめる(新しいレースが先)。
+ * status: 1点でも的中なら hit。結果待ちが残れば pending。全部返還なら refund。それ以外は miss。
+ * stake・ret は結果の出た分と結果待ちを分けず、購入の合計と払戻の合計(結果待ちの払戻は 0 として数える)。
+ */
+export function groupByRace(rows) {
+  const map = new Map();
+  rows.forEach((row) => {
+    const id = row.bet.race_id;
+    if (!map.has(id)) map.set(id, { race_id: id, rows: [], stake: 0, ret: 0, last: row.bet.bought_at });
+    const g = map.get(id);
+    g.rows.push(row);
+    g.stake += row.bet.amount;
+    g.ret += row.payout || 0;
+    if (row.bet.bought_at > g.last) g.last = row.bet.bought_at;
+  });
+  const groups = [...map.values()];
+  groups.forEach((g) => {
+    const st = g.rows.map((r) => r.status);
+    g.status = st.includes('hit') ? 'hit'
+      : st.includes('pending') ? 'pending'
+        : st.every((x) => x === 'refund') ? 'refund'
+          : st.includes('special') ? 'special' : 'miss';
+    g.pending = st.includes('pending');
+    g.profit = g.ret - g.stake;
+  });
+  return groups.sort((a, b) => (a.last < b.last ? 1 : a.last > b.last ? -1 : 0));
+}

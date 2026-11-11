@@ -36,6 +36,8 @@ check('投資・払戻・収支(確定分)', [s.stake, s.ret, s.profit], [1500, 
 check('未確定の投資', s.pendingStake, 100);
 check('最大ドローダウン', s.maxDrawdown, 500);
 check('連敗(今・最大)', [s.currentStreak, s.maxStreak], [0, 2]);
+check('レースごと(新しい順・状態・購入・払戻・点数)', lg.groupByRace(s.rows).map((x) => `${x.race_id}:${x.status}:${x.stake}:${x.ret}:${x.rows.length}`),
+  ['R6:special:200:200:1', 'R5:pending:100:0:1', 'R4:refund:500:500:1', 'R3:miss:200:100:2', 'R2:miss:300:0:1', 'R1:hit:300:5500:2']);
 check('結果の無いレース(race 不明)は未確定', lg.settleBet(b('x', 'R9', '1-2-3', 100, '09'), null).status, 'pending');
 check('予算 80%', lg.budgetWarnings({ day_limit: 1000, month_limit: null, streak_warn: 5 }, { daySpent: 800, monthSpent: 0, currentStreak: 0 }).map((w) => `${w.kind}:${w.level}`), ['day:near']);
 check('予算 100%・月・連敗', lg.budgetWarnings({ day_limit: 1000, month_limit: 5000, streak_warn: 3 }, { daySpent: 1200, monthSpent: 4000, currentStreak: 3 }).map((w) => `${w.kind}:${w.level}`), ['day:over', 'month:near', 'streak:over']);
